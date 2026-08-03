@@ -1,0 +1,25 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #0b0b0d;
+  color: white;
+
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.content-fade-in {
+  animation: content-fade-in 0.8s ease both;
+}
+
+@keyframes content-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
