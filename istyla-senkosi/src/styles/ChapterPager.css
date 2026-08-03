@@ -1,4 +1,4 @@
-.chapter-pager { position:fixed; z-index:20; left:50%; bottom:28px; transform:translateX(-50%); display:flex; align-items:center; gap:34px; }
+.chapter-pager { position:fixed; z-index:20; left:50%; bottom:28px; transform:translateX(-50%); display:flex; align-items:center; gap:34px; padding:10px 22px; background:rgba(13,13,13,.62); backdrop-filter:blur(6px); border-radius:999px; }
 .pager-link { display:flex; align-items:center; gap:8px; color:#f5f1e9; font:600 9px Montserrat,Arial,sans-serif; letter-spacing:1.3px; text-decoration:none; white-space:nowrap; }
 .pager-link span { color:#c8b39b; }
 .pager-link b { color:#d38912; font:700 10px Montserrat,Arial,sans-serif; }

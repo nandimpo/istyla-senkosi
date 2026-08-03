@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetChapterReady } from "../context/ChapterReadyContext";
 import VideoIntro from "../components/VideoIntro";
-import nextVideo from "../assets/Chapter 4_Reflection/Intro Video - Reflection.mp4";
+import entryVideo from "../assets/Chapter 3_Skothane/Video/Intro Video - Skothane.mp4";
 import img1 from "../assets/Chapter 3_Skothane/Skothane/skhothane-1.jpg";
 import img2 from "../assets/Chapter 3_Skothane/Skothane/skhothane-2.jpg";
 import img3 from "../assets/Chapter 3_Skothane/Skothane/skhothane-3.jpg";
@@ -28,7 +28,7 @@ function Skhothane() {
   const navigate = useNavigate();
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [showTransition, setShowTransition] = useState(false);
+  const [introSeen, setIntroSeen] = useState(false);
   const [showGallery, setShowGallery] = useState(true);
   const [soundOn, setSoundOn] = useState(true);
   const pointerStartX = useRef(null);
@@ -38,12 +38,12 @@ function Skhothane() {
 
   useEffect(() => {
     if (!ready) return undefined;
-    const timer = setTimeout(() => setShowTransition(true), 1400);
+    const timer = setTimeout(() => navigate("/reflection"), 1400);
     return () => clearTimeout(timer);
-  }, [ready]);
+  }, [ready, navigate]);
 
   useEffect(() => {
-    if (showTransition) return undefined;
+    if (!introSeen) return undefined;
     const audio = audioRef.current;
     if (!audio) return undefined;
     audio.muted = !soundOn;
@@ -58,7 +58,7 @@ function Skhothane() {
       window.removeEventListener("pointerdown", resumeOnFirstInteraction);
       window.removeEventListener("keydown", resumeOnFirstInteraction);
     };
-  }, [showTransition, soundOn]);
+  }, [introSeen, soundOn]);
 
   const goTo = (target) => {
     const next = Math.min(images.length - 1, Math.max(0, target));
@@ -87,8 +87,8 @@ function Skhothane() {
   const groupCount = Math.ceil(images.length / GROUP_SIZE);
   const activeGroup = Math.floor(current / GROUP_SIZE);
 
-  if (showTransition) {
-    return <VideoIntro src={nextVideo} label="NEXT: 04 / REFLECTION" onFinish={() => navigate("/reflection")} />;
+  if (!introSeen) {
+    return <VideoIntro src={entryVideo} label="03 / SKHOTHANE" onFinish={() => setIntroSeen(true)} />;
   }
 
   return (

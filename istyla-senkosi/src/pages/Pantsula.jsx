@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSetChapterReady } from "../context/ChapterReadyContext";
 import VideoIntro from "../components/VideoIntro";
-import nextVideo from "../assets/Chapter 3_Skothane/Video/Intro Video - Skothane.mp4";
+import entryVideo from "../assets/Chapter 2_Pantsula/Video/Intro Video- Pantsula.mp4";
 import readyImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-0-ready.jpg";
 import stanceImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-1-stance.jpg";
 import stepImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-2-step.jpg";
@@ -25,7 +25,7 @@ function Pantsula() {
   const navigate = useNavigate();
   const [activeBeat, setActiveBeat] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
-  const [showTransition, setShowTransition] = useState(false);
+  const [introSeen, setIntroSeen] = useState(false);
   const [showGallery, setShowGallery] = useState(true);
   const audioContext = useRef(null);
   const audioRef = useRef(null);
@@ -34,12 +34,12 @@ function Pantsula() {
 
   useEffect(() => {
     if (!ready) return undefined;
-    const timer = setTimeout(() => setShowTransition(true), 1400);
+    const timer = setTimeout(() => navigate("/skhothane"), 1400);
     return () => clearTimeout(timer);
-  }, [ready]);
+  }, [ready, navigate]);
 
   useEffect(() => {
-    if (showTransition) return undefined;
+    if (!introSeen) return undefined;
     const audio = audioRef.current;
     if (!audio) return undefined;
     audio.muted = !soundOn;
@@ -54,7 +54,7 @@ function Pantsula() {
       window.removeEventListener("pointerdown", resumeOnFirstInteraction);
       window.removeEventListener("keydown", resumeOnFirstInteraction);
     };
-  }, [showTransition, soundOn]);
+  }, [introSeen, soundOn]);
 
   const playBeat = (index) => {
     if (!soundOn) return;
@@ -82,8 +82,8 @@ function Pantsula() {
 
   const currentScene = activeBeat === 0 ? "TAP THE FIRST BEAT" : activeBeat === beats.length ? "THE DANCE IS ALIVE" : `${beats[activeBeat - 1]} UNLOCKED`;
 
-  if (showTransition) {
-    return <VideoIntro src={nextVideo} label="NEXT: 03 / SKHOTHANE" onFinish={() => navigate("/skhothane")} />;
+  if (!introSeen) {
+    return <VideoIntro src={entryVideo} label="02 / PANTSULA" onFinish={() => setIntroSeen(true)} />;
   }
 
   return <main className="pantsula-page content-fade-in">

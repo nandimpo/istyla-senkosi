@@ -4,7 +4,6 @@ import { useSetChapterReady } from "../context/ChapterReadyContext";
 import VideoIntro from "../components/VideoIntro";
 import johannesburgMap from "../assets/Introduction/Map of Johannesburg.png";
 import welcomeVideo from "../assets/Introduction/Intro- Video.mp4";
-import swenkaVideo from "../assets/Chapter 1_Swenka/Video/BLACK GOSLING  EDGARS  REBRAND  SWENKAS (Intro video).mp4";
 import backgroundTrack from "../assets/audio/Music/Kwesta - Spirit (Official Music Video) ft Wale ft. Wale (Intro page).mp3";
 import img1976 from "../assets/Chapter 1_Swenka/Images/Editorial/1976- Man with suit.jpg";
 import imgFashionEditorial from "../assets/Chapter 1_Swenka/Images/Editorial/Fashion editorial September 2020.jpg";
@@ -47,7 +46,6 @@ function Introduction() {
   const [progress, setProgress] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const [introSeen, setIntroSeen] = useState(false);
-  const [showTransition, setShowTransition] = useState(false);
   const [muted, setMuted] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
   const pathRef = useRef(null);
@@ -63,7 +61,7 @@ function Introduction() {
   }, [ready]);
 
   useEffect(() => {
-    if (!introSeen || showTransition) return undefined;
+    if (!introSeen) return undefined;
     const audio = audioRef.current;
     if (!audio) return undefined;
     audio.muted = muted;
@@ -78,7 +76,7 @@ function Introduction() {
       window.removeEventListener("pointerdown", resumeOnFirstInteraction);
       window.removeEventListener("keydown", resumeOnFirstInteraction);
     };
-  }, [introSeen, showTransition, muted]);
+  }, [introSeen, muted]);
 
   const toggleSound = () => setMuted((current) => !current);
 
@@ -107,10 +105,6 @@ function Introduction() {
     return <VideoIntro src={welcomeVideo} label="THE JOURNEY BEGINS" onFinish={() => setIntroSeen(true)} />;
   }
 
-  if (showTransition) {
-    return <VideoIntro src={swenkaVideo} label="NEXT: 01 / SWENKA" onFinish={() => navigate("/swenka")} />;
-  }
-
   return (
     <main className="introduction content-fade-in">
       <audio ref={audioRef} src={backgroundTrack} loop muted={muted} autoPlay />
@@ -131,7 +125,7 @@ function Introduction() {
           <div className="gallery-overlay">
             <p className="gallery-kicker">A visual reference</p>
             <h2>EDITORIAL ARCHIVE</h2>
-            <button className="gallery-continue" onClick={() => setShowTransition(true)}>CONTINUE <span>→</span></button>
+            <button className="gallery-continue" onClick={() => navigate("/swenka")}>CONTINUE <span>→</span></button>
           </div>
         </section>
       ) : (

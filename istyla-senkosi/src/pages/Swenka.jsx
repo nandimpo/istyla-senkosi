@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSetChapterReady } from "../context/ChapterReadyContext";
 import VideoIntro from "../components/VideoIntro";
-import nextVideo from "../assets/Chapter 2_Pantsula/Video/Intro Video- Pantsula.mp4";
+import entryVideo from "../assets/Chapter 1_Swenka/Video/BLACK GOSLING  EDGARS  REBRAND  SWENKAS (Intro video).mp4";
 import portraitImage from "../assets/Chapter 1_Swenka/Images/Editorial/Man with yellow and blue suit.jpg";
+import backgroundTrack from "../assets/audio/Music/Miriam Makeba - Welela (Official Video).mp3";
 import editorial1 from "../assets/Chapter 1_Swenka/Images/Editorial/1976- Man with suit.jpg";
 import editorial2 from "../assets/Chapter 1_Swenka/Images/Editorial/Fashion editorial September 2020.jpg";
 import editorial3 from "../assets/Chapter 1_Swenka/Images/Editorial/Inkabi nation.jpg";
@@ -34,8 +35,10 @@ function Swenka() {
   const navigate = useNavigate();
   const [placed, setPlaced] = useState([]);
   const [dragged, setDragged] = useState(null);
-  const [showTransition, setShowTransition] = useState(false);
+  const [introSeen, setIntroSeen] = useState(false);
   const [showGallery, setShowGallery] = useState(true);
+  const [soundOn, setSoundOn] = useState(true);
+  const audioRef = useRef(null);
   const ready = placed.length === elements.length;
   useSetChapterReady(ready);
   const placeElement = (id) => {
@@ -46,17 +49,36 @@ function Swenka() {
 
   useEffect(() => {
     if (!ready) return undefined;
-    const timer = setTimeout(() => setShowTransition(true), 1400);
+    const timer = setTimeout(() => navigate("/pantsula"), 1400);
     return () => clearTimeout(timer);
-  }, [ready]);
+  }, [ready, navigate]);
 
-  if (showTransition) {
-    return <VideoIntro src={nextVideo} label="NEXT: 02 / PANTSULA" onFinish={() => navigate("/pantsula")} />;
+  useEffect(() => {
+    if (!introSeen) return undefined;
+    const audio = audioRef.current;
+    if (!audio) return undefined;
+    audio.muted = !soundOn;
+    audio.play().catch(() => {});
+
+    const resumeOnFirstInteraction = () => {
+      if (!audio.muted) audio.play().catch(() => {});
+    };
+    window.addEventListener("pointerdown", resumeOnFirstInteraction, { once: true });
+    window.addEventListener("keydown", resumeOnFirstInteraction, { once: true });
+    return () => {
+      window.removeEventListener("pointerdown", resumeOnFirstInteraction);
+      window.removeEventListener("keydown", resumeOnFirstInteraction);
+    };
+  }, [introSeen, soundOn]);
+
+  if (!introSeen) {
+    return <VideoIntro src={entryVideo} label="01 / SWENKA" onFinish={() => setIntroSeen(true)} />;
   }
 
-  if (showGallery) {
-    return <main className="swenka-page content-fade-in">
-      <header className="swenka-header"><span>01 / SWENKA</span><span>THE ART OF PRESENTATION</span></header>
+  return <main className="swenka-page content-fade-in">
+    <audio ref={audioRef} src={backgroundTrack} loop muted={!soundOn} autoPlay />
+    <header className="swenka-header"><span>01 / SWENKA</span><span>THE ART OF PRESENTATION</span></header>
+    {showGallery ? (
       <section className="swenka-editorial">
         <div className="swenka-editorial-collage" aria-hidden="true">
           {EDITORIAL_GALLERY.map((src, index) => (
@@ -69,63 +91,61 @@ function Swenka() {
           <button className="swenka-editorial-continue" onClick={() => setShowGallery(false)}>BEGIN <span>→</span></button>
         </div>
       </section>
-    </main>;
-  }
-
-  return <main className="swenka-page content-fade-in">
-    <header className="swenka-header"><span>01 / SWENKA</span><span>THE ART OF PRESENTATION</span></header>
-    <section className="swenka-stage">
-      <div className="swenka-copy">
-        <p className="chapter-tag">01 / SWENKA</p>
-        <h1>PRECISION.<br />DISCIPLINE.<br />RESPECT.</h1>
-        <p>Swenka is more than style.<br />It&apos;s about how you carry<br />yourself.</p>
-        <strong>DRAG THE ELEMENTS<br />ONTO THE PHOTO</strong>
-        <i></i>
-      </div>
-      <div className="fashion-portrait">
-        <div className="portrait-frame">
-          <img src={portraitImage} alt="A man in a yellow hat and dark suit, mid dance move" />
-          {elements.map(({ id, zone }) => {
+    ) : (
+      <section className="swenka-stage">
+        <div className="swenka-copy">
+          <p className="chapter-tag">01 / SWENKA</p>
+          <h1>PRECISION.<br />DISCIPLINE.<br />RESPECT.</h1>
+          <p>Swenka is more than style.<br />It&apos;s about how you carry<br />yourself.</p>
+          <strong>DRAG THE ELEMENTS<br />ONTO THE PHOTO</strong>
+          <i></i>
+          <button className={`swenka-sound-toggle ${soundOn ? "on" : ""}`} onClick={() => setSoundOn(!soundOn)}>{soundOn ? "SOUND ON" : "SOUND OFF"}<span aria-hidden="true" /></button>
+        </div>
+        <div className="fashion-portrait">
+          <div className="portrait-frame">
+            <img src={portraitImage} alt="A man in a yellow hat and dark suit, mid dance move" />
+            {elements.map(({ id, zone }) => {
+              const isPlaced = placed.includes(id);
+              return (
+                <div
+                  key={id}
+                  className={`puzzle-zone ${isPlaced ? "revealed" : ""}`}
+                  style={{ left: `${zone.left}%`, top: `${zone.top}%`, width: `${zone.width}%`, height: `${zone.height}%` }}
+                  onDragOver={(event) => event.preventDefault()}
+                  onDrop={() => placeElement(dragged)}
+                  onClick={() => dragged && placeElement(dragged)}
+                  role="button"
+                  tabIndex={isPlaced ? -1 : 0}
+                  aria-label={isPlaced ? `${id} revealed` : `Drop ${id} here`}
+                >
+                  {!isPlaced && <span>{id}</span>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+        <aside className="wardrobe">
+          <p>ELEMENTS</p>
+          {elements.map(({ id, thumb }) => {
             const isPlaced = placed.includes(id);
             return (
-              <div
+              <button
                 key={id}
-                className={`puzzle-zone ${isPlaced ? "revealed" : ""}`}
-                style={{ left: `${zone.left}%`, top: `${zone.top}%`, width: `${zone.width}%`, height: `${zone.height}%` }}
-                onDragOver={(event) => event.preventDefault()}
-                onDrop={() => placeElement(dragged)}
-                onClick={() => dragged && placeElement(dragged)}
-                role="button"
-                tabIndex={isPlaced ? -1 : 0}
-                aria-label={isPlaced ? `${id} revealed` : `Drop ${id} here`}
+                draggable={!isPlaced}
+                disabled={isPlaced}
+                onDragStart={() => setDragged(id)}
+                onClick={() => setDragged(id)}
+                className={`${dragged === id ? "selected" : ""} ${isPlaced ? "used" : ""}`}
               >
-                {!isPlaced && <span>{id}</span>}
-              </div>
+                <span className="item-preview" style={{ backgroundImage: `url(${portraitImage})`, backgroundPosition: `${thumb.x}% ${thumb.y}%` }} />
+                <span>⠿</span>
+                <b>{id}{isPlaced ? " ✓" : ""}</b>
+              </button>
             );
           })}
-        </div>
-      </div>
-      <aside className="wardrobe">
-        <p>ELEMENTS</p>
-        {elements.map(({ id, thumb }) => {
-          const isPlaced = placed.includes(id);
-          return (
-            <button
-              key={id}
-              draggable={!isPlaced}
-              disabled={isPlaced}
-              onDragStart={() => setDragged(id)}
-              onClick={() => setDragged(id)}
-              className={`${dragged === id ? "selected" : ""} ${isPlaced ? "used" : ""}`}
-            >
-              <span className="item-preview" style={{ backgroundImage: `url(${portraitImage})`, backgroundPosition: `${thumb.x}% ${thumb.y}%` }} />
-              <span>⠿</span>
-              <b>{id}{isPlaced ? " ✓" : ""}</b>
-            </button>
-          );
-        })}
-      </aside>
-    </section>
+        </aside>
+      </section>
+    )}
   </main>;
 }
 export default Swenka;
