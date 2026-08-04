@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" translate="no">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/istyla-senkosi/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google" content="notranslate" />
+    <title>istyla-senkosi</title>
+    <script>
+      (function () {
+        if (window.location.search[1] === "/") {
+          var decode = decodeURIComponent(
+            window.location.search.slice(2).replace(/~and~/g, "&"),
+          );
+          window.history.replaceState(
+            null,
+            null,
+            window.location.pathname.slice(0, -1) +
+              decode +
+              window.location.hash,
+          );
+        }
+      })();
+    </script>
+    <script type="module" crossorigin src="/istyla-senkosi/assets/index-CFu6sWfs.js"></script>
+    <link rel="stylesheet" crossorigin href="/istyla-senkosi/assets/index-DyOa_xW9.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
