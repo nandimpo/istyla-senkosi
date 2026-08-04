@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSetChapterReady } from "../context/ChapterReadyContext";
 import VideoIntro from "../components/VideoIntro";
@@ -48,6 +48,7 @@ function Introduction() {
   const [introSeen, setIntroSeen] = useState(false);
   const [muted, setMuted] = useState(false);
   const [showGallery, setShowGallery] = useState(false);
+  const [handlePoint, setHandlePoint] = useState({ x: 172, y: 60 });
   const pathRef = useRef(null);
   const audioRef = useRef(null);
   const drag = useRef({ active: false, startY: 0, startProgress: 0 });
@@ -82,6 +83,14 @@ function Introduction() {
     };
   }, [introSeen, muted]);
 
+  useLayoutEffect(() => {
+    if (pathRef.current) {
+      const newPathLength = pathRef.current.getTotalLength();
+      const point = pathRef.current.getPointAtLength(progress * newPathLength);
+      setHandlePoint(point);
+    }
+  }, [progress]);
+
   const toggleSound = () => setMuted((current) => !current);
 
   const handlePointerDown = (event) => {
@@ -112,13 +121,6 @@ function Introduction() {
     }
   };
 
-  const pathLength = pathRef.current?.getTotalLength?.() ?? 0;
-  const handlePoint = pathLength
-    ? (pathRef.current?.getPointAtLength?.(progress * pathLength) ?? {
-        x: 172,
-        y: 60,
-      })
-    : { x: 172, y: 60 };
   const mapX = NORTH_FOCUS.x + (SOUTHWEST_FOCUS.x - NORTH_FOCUS.x) * progress;
   const mapY = NORTH_FOCUS.y + (SOUTHWEST_FOCUS.y - NORTH_FOCUS.y) * progress;
 
