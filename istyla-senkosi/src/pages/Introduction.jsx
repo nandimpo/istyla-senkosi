@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSetChapterReady } from "../context/ChapterReadyContext";
 import VideoIntro from "../components/VideoIntro";
@@ -70,8 +70,12 @@ function Introduction() {
     const resumeOnFirstInteraction = () => {
       if (!audio.muted) audio.play().catch(() => {});
     };
-    window.addEventListener("pointerdown", resumeOnFirstInteraction, { once: true });
-    window.addEventListener("keydown", resumeOnFirstInteraction, { once: true });
+    window.addEventListener("pointerdown", resumeOnFirstInteraction, {
+      once: true,
+    });
+    window.addEventListener("keydown", resumeOnFirstInteraction, {
+      once: true,
+    });
     return () => {
       window.removeEventListener("pointerdown", resumeOnFirstInteraction);
       window.removeEventListener("keydown", resumeOnFirstInteraction);
@@ -82,7 +86,11 @@ function Introduction() {
 
   const handlePointerDown = (event) => {
     setHasStarted(true);
-    drag.current = { active: true, startY: event.clientY, startProgress: progress };
+    drag.current = {
+      active: true,
+      startY: event.clientY,
+      startProgress: progress,
+    };
     event.currentTarget.setPointerCapture(event.pointerId);
   };
   const handlePointerMove = (event) => {
@@ -90,19 +98,38 @@ function Introduction() {
     const deltaY = event.clientY - drag.current.startY;
     setProgress(clamp(drag.current.startProgress + deltaY / DRAG_RANGE, 0, 1));
   };
-  const handlePointerUp = () => { drag.current.active = false; };
+  const handlePointerUp = () => {
+    drag.current.active = false;
+  };
   const handleKeyDown = (event) => {
-    if (event.key === "ArrowDown") { setHasStarted(true); setProgress((p) => clamp(p + 0.12, 0, 1)); }
-    if (event.key === "ArrowUp") { setHasStarted(true); setProgress((p) => clamp(p - 0.12, 0, 1)); }
+    if (event.key === "ArrowDown") {
+      setHasStarted(true);
+      setProgress((p) => clamp(p + 0.12, 0, 1));
+    }
+    if (event.key === "ArrowUp") {
+      setHasStarted(true);
+      setProgress((p) => clamp(p - 0.12, 0, 1));
+    }
   };
 
-  const pathLength = pathRef.current ? pathRef.current.getTotalLength() : 0;
-  const handlePoint = pathLength ? pathRef.current.getPointAtLength(progress * pathLength) : { x: 172, y: 60 };
+  const pathLength = pathRef.current?.getTotalLength?.() ?? 0;
+  const handlePoint = pathLength
+    ? (pathRef.current?.getPointAtLength?.(progress * pathLength) ?? {
+        x: 172,
+        y: 60,
+      })
+    : { x: 172, y: 60 };
   const mapX = NORTH_FOCUS.x + (SOUTHWEST_FOCUS.x - NORTH_FOCUS.x) * progress;
   const mapY = NORTH_FOCUS.y + (SOUTHWEST_FOCUS.y - NORTH_FOCUS.y) * progress;
 
   if (!introSeen) {
-    return <VideoIntro src={welcomeVideo} label="THE JOURNEY BEGINS" onFinish={() => setIntroSeen(true)} />;
+    return (
+      <VideoIntro
+        src={welcomeVideo}
+        label="THE JOURNEY BEGINS"
+        onFinish={() => setIntroSeen(true)}
+      />
+    );
   }
 
   return (
@@ -111,7 +138,16 @@ function Introduction() {
       <header className="intro-header">
         <div className="intro-header-left">
           <Link to="/">HOME</Link>
-          <button className={`intro-sound-toggle ${muted ? "" : "on"}`} onClick={toggleSound} aria-label={muted ? "Turn background music on" : "Turn background music off"}>{muted ? "SOUND OFF" : "SOUND ON"}<span aria-hidden="true" /></button>
+          <button
+            className={`intro-sound-toggle ${muted ? "" : "on"}`}
+            onClick={toggleSound}
+            aria-label={
+              muted ? "Turn background music on" : "Turn background music off"
+            }
+          >
+            {muted ? "SOUND OFF" : "SOUND ON"}
+            <span aria-hidden="true" />
+          </button>
         </div>
         <span>INTRODUCTION / 02</span>
       </header>
@@ -119,50 +155,119 @@ function Introduction() {
         <section className="editorial-gallery">
           <div className="gallery-collage" aria-hidden="true">
             {EDITORIAL_GALLERY.map((src, index) => (
-              <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.4}s` }} />
+              <img
+                key={src}
+                src={src}
+                alt=""
+                style={{ animationDelay: `${index * -1.4}s` }}
+              />
             ))}
           </div>
           <div className="gallery-overlay">
             <p className="gallery-kicker">A visual reference</p>
             <h2>EDITORIAL ARCHIVE</h2>
-            <button className="gallery-continue" onClick={() => navigate("/swenka")}>CONTINUE <span>→</span></button>
+            <button
+              className="gallery-continue"
+              onClick={() => navigate("/swenka")}
+            >
+              CONTINUE <span>→</span>
+            </button>
           </div>
         </section>
       ) : (
-      <section className="journey-map">
-        <div className={`journey-mapbg ${hasStarted ? "visible" : ""}`} aria-hidden="true">
-          <img src={johannesburgMap} alt="" style={{ objectPosition: `${mapX}% ${mapY}%` }} />
-        </div>
-        <p className="intro-label">A journey through place, style and identity</p>
-        <div className="place north"><b>Johannesburg</b><span>North</span><i /></div>
-        <svg className="journey-line" viewBox="0 0 300 430" aria-hidden="true">
-          <path ref={pathRef} d="M172 60 C162 128 146 173 185 215 S129 290 154 352" />
-          <circle className="journey-end" cx="154" cy="352" r="12" />
-          {!hasStarted && <text className="drag-hint" x={handlePoint.x + 20} y={handlePoint.y + 4}>DRAG DOWN</text>}
-          {!hasStarted && <circle className="journey-ping" cx={handlePoint.x} cy={handlePoint.y} r="9" />}
-          {!hasStarted && <circle className="journey-ping journey-ping-delay" cx={handlePoint.x} cy={handlePoint.y} r="9" />}
-          <circle
-            className={`journey-handle ${!hasStarted ? "idle" : ""}`}
-            cx={handlePoint.x}
-            cy={handlePoint.y}
-            r="9"
-            tabIndex={0}
-            role="slider"
-            aria-label="Drag down to travel from Johannesburg North to Soweto"
-            aria-valuenow={Math.round(progress * 100)}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerUp}
-            onKeyDown={handleKeyDown}
-          />
-        </svg>
-        <div className="place soweto"><b>Soweto</b><i /></div>
-        <div className="intro-copy"><h1>I&apos;VE ALWAYS<br />BEEN FROM HERE<span>...</span></h1><p>This is my journey back to understand.</p></div>
-        <button className="scroll-cue" onClick={() => setShowGallery(true)} aria-label="Continue to the editorial archive"><span>SCROLL</span><i aria-hidden="true" /></button>
-      </section>
+        <section className="journey-map">
+          <div
+            className={`journey-mapbg ${hasStarted ? "visible" : ""}`}
+            aria-hidden="true"
+          >
+            <img
+              src={johannesburgMap}
+              alt=""
+              style={{ objectPosition: `${mapX}% ${mapY}%` }}
+            />
+          </div>
+          <p className="intro-label">
+            A journey through place, style and identity
+          </p>
+          <div className="place north">
+            <b>Johannesburg</b>
+            <span>North</span>
+            <i />
+          </div>
+          <svg
+            className="journey-line"
+            viewBox="0 0 300 430"
+            aria-hidden="true"
+          >
+            <path
+              ref={pathRef}
+              d="M172 60 C162 128 146 173 185 215 S129 290 154 352"
+            />
+            <circle className="journey-end" cx="154" cy="352" r="12" />
+            {!hasStarted && (
+              <text
+                className="drag-hint"
+                x={handlePoint.x + 20}
+                y={handlePoint.y + 4}
+              >
+                DRAG DOWN
+              </text>
+            )}
+            {!hasStarted && (
+              <circle
+                className="journey-ping"
+                cx={handlePoint.x}
+                cy={handlePoint.y}
+                r="9"
+              />
+            )}
+            {!hasStarted && (
+              <circle
+                className="journey-ping journey-ping-delay"
+                cx={handlePoint.x}
+                cy={handlePoint.y}
+                r="9"
+              />
+            )}
+            <circle
+              className={`journey-handle ${!hasStarted ? "idle" : ""}`}
+              cx={handlePoint.x}
+              cy={handlePoint.y}
+              r="9"
+              tabIndex={0}
+              role="slider"
+              aria-label="Drag down to travel from Johannesburg North to Soweto"
+              aria-valuenow={Math.round(progress * 100)}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerCancel={handlePointerUp}
+              onKeyDown={handleKeyDown}
+            />
+          </svg>
+          <div className="place soweto">
+            <b>Soweto</b>
+            <i />
+          </div>
+          <div className="intro-copy">
+            <h1>
+              I&apos;VE ALWAYS
+              <br />
+              BEEN FROM HERE<span>...</span>
+            </h1>
+            <p>This is my journey back to understand.</p>
+          </div>
+          <button
+            className="scroll-cue"
+            onClick={() => setShowGallery(true)}
+            aria-label="Continue to the editorial archive"
+          >
+            <span>SCROLL</span>
+            <i aria-hidden="true" />
+          </button>
+        </section>
       )}
     </main>
   );
