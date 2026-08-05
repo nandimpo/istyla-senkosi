@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useActiveSection, useRegisterSection } from "../context/ActiveSectionContext";
+import { useRegisterSection } from "../context/ActiveSectionContext";
 import { useChapterReady } from "../context/ChapterGateContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
 import { scrollToChapter } from "../utils/scrollToChapter";
@@ -29,20 +29,14 @@ const SWIPE_THRESHOLD = 45;
 function Skhothane() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [showGallery, setShowGallery] = useState(true);
   const [soundOn, setSoundOn] = useState(true);
   const pointerStartX = useRef(null);
   const audioRef = useRef(null);
   const sectionRef = useRef(null);
   const ready = current === images.length - 1;
-  const activeId = useActiveSection();
   useRegisterSection("skhothane", sectionRef);
   useSectionAudio({ id: "skhothane", audioRef, soundOn });
   useChapterReady("skhothane", ready);
-
-  useEffect(() => {
-    if (activeId === "skhothane") setShowGallery(true);
-  }, [activeId]);
 
   useEffect(() => {
     if (!ready) return undefined;
@@ -87,7 +81,6 @@ function Skhothane() {
       </div>
       <audio ref={audioRef} src={backgroundTrack} loop />
       <header className="skhothane-header"><span>03 / SKHOTHANE</span><span>LUXURY AS LANGUAGE</span></header>
-      {showGallery ? (
       <section className="skhothane-editorial">
         <div className="skhothane-editorial-collage" aria-hidden="true">
           {EDITORIAL_GALLERY.map((src, index) => (
@@ -97,10 +90,9 @@ function Skhothane() {
         <div className="skhothane-editorial-overlay">
           <p className="skhothane-editorial-kicker">A visual reference</p>
           <h2>EDITORIAL ARCHIVE</h2>
-          <button className="skhothane-editorial-continue" onClick={() => setShowGallery(false)}>BEGIN <span>→</span></button>
+          <a className="skhothane-editorial-continue" href="#skhothane-stage">BEGIN <span>→</span></a>
         </div>
       </section>
-      ) : (
       <section className="skhothane-stage" id="skhothane-stage">
           <div className="skhothane-copy">
             <p className="chapter-tag">03 / SKHOTHANE</p>
@@ -163,7 +155,6 @@ function Skhothane() {
             )}
           </div>
         </section>
-      )}
     </section>
   );
 }

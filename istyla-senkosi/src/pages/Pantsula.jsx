@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useActiveSection, useRegisterSection } from "../context/ActiveSectionContext";
+import { useRegisterSection } from "../context/ActiveSectionContext";
 import { useChapterReady } from "../context/ChapterGateContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
 import { scrollToChapter } from "../utils/scrollToChapter";
@@ -26,19 +26,13 @@ const EDITORIAL_GALLERY = [editorial1, editorial2, editorial3, editorial4];
 function Pantsula() {
   const [activeBeat, setActiveBeat] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
-  const [showGallery, setShowGallery] = useState(true);
   const audioContext = useRef(null);
   const audioRef = useRef(null);
   const sectionRef = useRef(null);
   const ready = activeBeat === beats.length;
-  const activeId = useActiveSection();
   useRegisterSection("pantsula", sectionRef);
   useSectionAudio({ id: "pantsula", audioRef, soundOn });
   useChapterReady("pantsula", ready);
-
-  useEffect(() => {
-    if (activeId === "pantsula") setShowGallery(true);
-  }, [activeId]);
 
   useEffect(() => {
     if (!ready) return undefined;
@@ -81,7 +75,6 @@ function Pantsula() {
     </div>
     <audio ref={audioRef} src={backgroundTrack} loop />
     <header className="pantsula-header"><span>02 / PANTSULA</span><span>MOVE TO THE RHYTHM</span></header>
-    {showGallery ? (
     <section className="pantsula-editorial">
       <div className="pantsula-editorial-collage" aria-hidden="true">
         {EDITORIAL_GALLERY.map((src, index) => (
@@ -91,10 +84,9 @@ function Pantsula() {
       <div className="pantsula-editorial-overlay">
         <p className="pantsula-editorial-kicker">A visual reference</p>
         <h2>EDITORIAL ARCHIVE</h2>
-        <button className="pantsula-editorial-continue" onClick={() => setShowGallery(false)}>BEGIN <span>→</span></button>
+        <a className="pantsula-editorial-continue" href="#pantsula-stage">BEGIN <span>→</span></a>
       </div>
     </section>
-    ) : (
     <section className="pantsula-stage" id="pantsula-stage">
         <div className="pantsula-copy">
           <p className="chapter-tag">02 / PANTSULA</p>
@@ -110,7 +102,6 @@ function Pantsula() {
           <div className="beat-map" aria-label="Pantsula beat map">{beats.map((beat, index) => <button key={beat} className={`beat beat-${index + 1} ${index < activeBeat ? "complete" : ""} ${index === activeBeat ? "ready" : ""}`} disabled={index !== activeBeat} onClick={() => activateBeat(index)} aria-label={`${beat}: ${index < activeBeat ? "complete" : index === activeBeat ? "tap now" : "locked"}`}><span>{index + 1}</span></button>)}</div>
         </div>
       </section>
-    )}
   </section>;
 }
 
