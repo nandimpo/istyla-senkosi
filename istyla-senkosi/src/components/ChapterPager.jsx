@@ -1,5 +1,6 @@
 import { useActiveSection } from "../context/ActiveSectionContext";
 import { SECTIONS } from "../constants/sections";
+import { scrollToChapter } from "../utils/scrollToChapter";
 import "../styles/ChapterPager.css";
 
 function ChapterPager() {
@@ -12,14 +13,19 @@ function ChapterPager() {
   const next = isLast ? SECTIONS[0] : SECTIONS[index + 1];
   const nextLabel = index === 0 ? "BEGIN JOURNEY" : isLast ? "START AGAIN" : "NEXT CHAPTER";
 
+  const go = (id) => (event) => {
+    event.preventDefault();
+    scrollToChapter(id);
+  };
+
   return (
     <nav className="chapter-pager" aria-label="Chapter navigation">
       {prev && (
-        <a className="pager-link prev" href={`#${prev.id}`} aria-label={`Previous chapter: ${prev.label}`}>
+        <a className="pager-link prev" href={`#${prev.id}`} onClick={go(prev.id)} aria-label={`Previous chapter: ${prev.label}`}>
           <i aria-hidden="true" /><span>PREV</span><b>{prev.label}</b>
         </a>
       )}
-      <a className="pager-link next" href={`#${next.id}`} aria-label={`${nextLabel}: ${next.label}`}>
+      <a className="pager-link next" href={`#${next.id}`} onClick={go(next.id)} aria-label={`${nextLabel}: ${next.label}`}>
         <span>{nextLabel}</span><b>{next.label}</b><i aria-hidden="true" />
       </a>
     </nav>

@@ -2,6 +2,7 @@
 import { useRegisterSection } from "../context/ActiveSectionContext";
 import { useChapterReady } from "../context/ChapterGateContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
+import { scrollToChapter } from "../utils/scrollToChapter";
 import ChapterVideo from "../components/ChapterVideo";
 import johannesburgMap from "../assets/Introduction/Map of Johannesburg.png";
 import welcomeVideo from "../assets/Introduction/Intro- Video.mp4";
@@ -143,7 +144,14 @@ function Introduction() {
         <div className="gallery-overlay">
           <p className="gallery-kicker">A visual reference</p>
           <h2>EDITORIAL ARCHIVE</h2>
-          <a className="gallery-continue" href="#swenka">
+          <a
+            className="gallery-continue"
+            href="#swenka"
+            onClick={(event) => {
+              event.preventDefault();
+              scrollToChapter("swenka");
+            }}
+          >
             CONTINUE <span>→</span>
           </a>
         </div>

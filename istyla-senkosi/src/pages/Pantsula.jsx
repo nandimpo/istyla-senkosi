@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useActiveSection, useRegisterSection } from "../context/ActiveSectionContext";
 import { useChapterReady } from "../context/ChapterGateContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
+import { scrollToChapter } from "../utils/scrollToChapter";
 import ChapterVideo from "../components/ChapterVideo";
 import entryVideo from "../assets/Chapter 2_Pantsula/Video/Intro Video- Pantsula.mp4";
 import readyImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-0-ready.jpg";
@@ -41,9 +42,7 @@ function Pantsula() {
 
   useEffect(() => {
     if (!ready) return undefined;
-    const timer = setTimeout(() => {
-      document.getElementById("skhothane")?.scrollIntoView({ behavior: "smooth" });
-    }, 1400);
+    const timer = setTimeout(() => scrollToChapter("skhothane"), 1400);
     return () => clearTimeout(timer);
   }, [ready]);
 

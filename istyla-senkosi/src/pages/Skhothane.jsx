@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useActiveSection, useRegisterSection } from "../context/ActiveSectionContext";
 import { useChapterReady } from "../context/ChapterGateContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
+import { scrollToChapter } from "../utils/scrollToChapter";
 import ChapterVideo from "../components/ChapterVideo";
 import entryVideo from "../assets/Chapter 3_Skothane/Video/Intro Video - Skothane.mp4";
 import img1 from "../assets/Chapter 3_Skothane/Skothane/skhothane-1.jpg";
@@ -45,9 +46,7 @@ function Skhothane() {
 
   useEffect(() => {
     if (!ready) return undefined;
-    const timer = setTimeout(() => {
-      document.getElementById("reflection")?.scrollIntoView({ behavior: "smooth" });
-    }, 1400);
+    const timer = setTimeout(() => scrollToChapter("reflection"), 1400);
     return () => clearTimeout(timer);
   }, [ready]);
 

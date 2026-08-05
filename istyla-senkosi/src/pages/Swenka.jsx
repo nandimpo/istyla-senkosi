@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useActiveSection, useRegisterSection } from "../context/ActiveSectionContext";
 import { useChapterReady } from "../context/ChapterGateContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
+import { scrollToChapter } from "../utils/scrollToChapter";
 import ChapterVideo from "../components/ChapterVideo";
 import entryVideo from "../assets/Chapter 1_Swenka/Video/BLACK GOSLING  EDGARS  REBRAND  SWENKAS (Intro video).mp4";
 import portraitImage from "../assets/Chapter 1_Swenka/Images/Editorial/Man with yellow and blue suit.jpg";
@@ -56,9 +57,7 @@ function Swenka() {
 
   useEffect(() => {
     if (!ready) return undefined;
-    const timer = setTimeout(() => {
-      document.getElementById("pantsula")?.scrollIntoView({ behavior: "smooth" });
-    }, 1400);
+    const timer = setTimeout(() => scrollToChapter("pantsula"), 1400);
     return () => clearTimeout(timer);
   }, [ready]);
 
