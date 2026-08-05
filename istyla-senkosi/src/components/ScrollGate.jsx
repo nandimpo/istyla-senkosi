@@ -1,18 +1,15 @@
 import { useEffect } from "react";
 import { useChapterGate, CHAPTER_ORDER } from "../context/ChapterGateContext";
 
-const CLICK_BYPASS_MS = 1200;
-
 function ScrollGate() {
-  const { isUnlocked } = useChapterGate();
+  const { isUnlocked, reach } = useChapterGate();
 
   useEffect(() => {
-    let bypassUntil = 0;
-
     const onClick = (event) => {
-      if (event.target.closest('a[href^="#"]')) {
-        bypassUntil = Date.now() + CLICK_BYPASS_MS;
-      }
+      const link = event.target.closest('a[href^="#"]');
+      if (!link) return;
+      const id = link.getAttribute("href").slice(1);
+      if (CHAPTER_ORDER.includes(id)) reach(id);
     };
 
     const computeCap = () => {
@@ -26,7 +23,6 @@ function ScrollGate() {
     };
 
     const onScroll = () => {
-      if (Date.now() < bypassUntil) return;
       const cap = computeCap();
       if (window.scrollY > cap) {
         window.scrollTo({ top: cap, behavior: "instant" });
@@ -39,7 +35,7 @@ function ScrollGate() {
       document.removeEventListener("click", onClick);
       window.removeEventListener("scroll", onScroll);
     };
-  }, [isUnlocked]);
+  }, [isUnlocked, reach]);
 
   return null;
 }

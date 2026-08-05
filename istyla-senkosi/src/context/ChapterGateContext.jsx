@@ -5,27 +5,30 @@ const ORDER = ["about", "introduction", "swenka", "pantsula", "skhothane", "refl
 const ChapterGateContext = createContext({
   isUnlocked: () => true,
   setReady: () => {},
+  reach: () => {},
 });
 
 export function ChapterGateProvider({ children }) {
-  const [readyMap, setReadyMap] = useState({});
+  // Start with "introduction" (index 1) reached - there's no gate before it.
+  const [furthestIndex, setFurthestIndex] = useState(1);
 
-  const setReady = useCallback((id, ready) => {
-    setReadyMap((prev) => (prev[id] === ready ? prev : { ...prev, [id]: ready }));
+  const reach = useCallback((id) => {
+    const index = ORDER.indexOf(id);
+    if (index === -1) return;
+    setFurthestIndex((current) => Math.max(current, index));
   }, []);
 
-  const isUnlocked = useCallback(
-    (id) => {
-      const index = ORDER.indexOf(id);
-      if (index <= 0) return true;
-      const prevId = ORDER[index - 1];
-      return readyMap[prevId] !== false;
-    },
-    [readyMap],
-  );
+  const setReady = useCallback((id, ready) => {
+    if (!ready) return;
+    const index = ORDER.indexOf(id);
+    if (index === -1) return;
+    setFurthestIndex((current) => Math.max(current, index + 1));
+  }, []);
+
+  const isUnlocked = useCallback((id) => ORDER.indexOf(id) <= furthestIndex, [furthestIndex]);
 
   return (
-    <ChapterGateContext.Provider value={{ isUnlocked, setReady }}>
+    <ChapterGateContext.Provider value={{ isUnlocked, setReady, reach }}>
       {children}
     </ChapterGateContext.Provider>
   );
