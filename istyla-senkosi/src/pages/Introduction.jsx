@@ -1,5 +1,6 @@
-﻿import { useLayoutEffect, useRef, useState } from "react";
+﻿import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useRegisterSection } from "../context/ActiveSectionContext";
+import { useChapterReady } from "../context/ChapterGateContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
 import ChapterVideo from "../components/ChapterVideo";
 import johannesburgMap from "../assets/Introduction/Map of Johannesburg.png";
@@ -45,13 +46,22 @@ function Introduction() {
   const [progress, setProgress] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const [muted, setMuted] = useState(false);
+  const [showGallery, setShowGallery] = useState(false);
   const [handlePoint, setHandlePoint] = useState({ x: 172, y: 60 });
   const pathRef = useRef(null);
   const audioRef = useRef(null);
   const sectionRef = useRef(null);
   const drag = useRef({ active: false, startY: 0, startProgress: 0 });
+  const ready = progress >= 0.92;
   useRegisterSection("introduction", sectionRef);
   useSectionAudio({ id: "introduction", audioRef, soundOn: !muted });
+  useChapterReady("introduction", ready);
+
+  useEffect(() => {
+    if (!ready) return undefined;
+    const timer = setTimeout(() => setShowGallery(true), 1400);
+    return () => clearTimeout(timer);
+  }, [ready]);
 
   useLayoutEffect(() => {
     if (pathRef.current) {
@@ -118,6 +128,27 @@ function Introduction() {
         </div>
         <span>INTRODUCTION / 02</span>
       </header>
+      {showGallery ? (
+      <section className="editorial-gallery" id="introduction-gallery">
+        <div className="gallery-collage" aria-hidden="true">
+          {EDITORIAL_GALLERY.map((src, index) => (
+            <img
+              key={src}
+              src={src}
+              alt=""
+              style={{ animationDelay: `${index * -1.4}s` }}
+            />
+          ))}
+        </div>
+        <div className="gallery-overlay">
+          <p className="gallery-kicker">A visual reference</p>
+          <h2>EDITORIAL ARCHIVE</h2>
+          <a className="gallery-continue" href="#swenka">
+            CONTINUE <span>→</span>
+          </a>
+        </div>
+      </section>
+      ) : (
       <section className="journey-map">
           <div
             className={`journey-mapbg ${hasStarted ? "visible" : ""}`}
@@ -202,34 +233,16 @@ function Introduction() {
             </h1>
             <p>This is my journey back to understand.</p>
           </div>
-          <a
+          <button
             className="scroll-cue"
-            href="#introduction-gallery"
+            onClick={() => setShowGallery(true)}
             aria-label="Continue to the editorial archive"
           >
             <span>SCROLL</span>
             <i aria-hidden="true" />
-          </a>
+          </button>
         </section>
-      <section className="editorial-gallery" id="introduction-gallery">
-        <div className="gallery-collage" aria-hidden="true">
-          {EDITORIAL_GALLERY.map((src, index) => (
-            <img
-              key={src}
-              src={src}
-              alt=""
-              style={{ animationDelay: `${index * -1.4}s` }}
-            />
-          ))}
-        </div>
-        <div className="gallery-overlay">
-          <p className="gallery-kicker">A visual reference</p>
-          <h2>EDITORIAL ARCHIVE</h2>
-          <a className="gallery-continue" href="#swenka">
-            CONTINUE <span>→</span>
-          </a>
-        </div>
-      </section>
+      )}
     </section>
   );
 }

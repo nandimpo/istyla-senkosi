@@ -4,16 +4,18 @@ import ChapterNav from "./components/ChapterNav";
 import MenuNav from "./components/MenuNav";
 import ChapterPager from "./components/ChapterPager";
 import HomeLink from "./components/HomeLink";
+import ScrollGate from "./components/ScrollGate";
 import { ActiveSectionProvider } from "./context/ActiveSectionContext";
+import { ChapterGateProvider } from "./context/ChapterGateContext";
 
 function App() {
-  return <ActiveSectionProvider><Routes>
+  return <ActiveSectionProvider><ChapterGateProvider><Routes>
     <Route path="/" element={<Experience />} />
     <Route path="/introduction" element={<Navigate to="/#introduction" replace />} />
     <Route path="/swenka" element={<Navigate to="/#swenka" replace />} />
     <Route path="/pantsula" element={<Navigate to="/#pantsula" replace />} />
     <Route path="/skhothane" element={<Navigate to="/#skhothane" replace />} />
     <Route path="/reflection" element={<Navigate to="/#reflection" replace />} />
-  </Routes><HomeLink /><ChapterNav /><ChapterPager /><MenuNav /></ActiveSectionProvider>;
+  </Routes><HomeLink /><ChapterNav /><ChapterPager /><MenuNav /><ScrollGate /></ChapterGateProvider></ActiveSectionProvider>;
 }
 export default App;

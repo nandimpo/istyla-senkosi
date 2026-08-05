@@ -1,5 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRegisterSection } from "../context/ActiveSectionContext";
+import { useChapterReady } from "../context/ChapterGateContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
 import ChapterVideo from "../components/ChapterVideo";
 import entryVideo from "../assets/Chapter 1_Swenka/Video/BLACK GOSLING  EDGARS  REBRAND  SWENKAS (Intro video).mp4";
@@ -34,16 +35,27 @@ const EDITORIAL_GALLERY = [
 function Swenka() {
   const [placed, setPlaced] = useState([]);
   const [dragged, setDragged] = useState(null);
+  const [showGallery, setShowGallery] = useState(true);
   const [soundOn, setSoundOn] = useState(true);
   const audioRef = useRef(null);
   const sectionRef = useRef(null);
+  const ready = placed.length === elements.length;
   useRegisterSection("swenka", sectionRef);
   useSectionAudio({ id: "swenka", audioRef, soundOn });
+  useChapterReady("swenka", ready);
   const placeElement = (id) => {
     if (!id || placed.includes(id)) return;
     setPlaced((current) => [...current, id]);
     setDragged(null);
   };
+
+  useEffect(() => {
+    if (!ready) return undefined;
+    const timer = setTimeout(() => {
+      document.getElementById("pantsula")?.scrollIntoView({ behavior: "smooth" });
+    }, 1400);
+    return () => clearTimeout(timer);
+  }, [ready]);
 
   return <section id="swenka" ref={sectionRef} className="swenka-page content-fade-in">
     <div className="chapter-opener">
@@ -54,6 +66,7 @@ function Swenka() {
     </div>
     <audio ref={audioRef} src={backgroundTrack} loop />
     <header className="swenka-header"><span>01 / SWENKA</span><span>THE ART OF PRESENTATION</span></header>
+    {showGallery ? (
     <section className="swenka-editorial">
       <div className="swenka-editorial-collage" aria-hidden="true">
         {EDITORIAL_GALLERY.map((src, index) => (
@@ -63,9 +76,10 @@ function Swenka() {
       <div className="swenka-editorial-overlay">
         <p className="swenka-editorial-kicker">A visual reference</p>
         <h2>EDITORIAL ARCHIVE</h2>
-        <a className="swenka-editorial-continue" href="#swenka-stage">BEGIN <span>→</span></a>
+        <button className="swenka-editorial-continue" onClick={() => setShowGallery(false)}>BEGIN <span>→</span></button>
       </div>
     </section>
+    ) : (
     <section className="swenka-stage" id="swenka-stage">
         <div className="swenka-copy">
           <p className="chapter-tag">01 / SWENKA</p>
@@ -119,6 +133,7 @@ function Swenka() {
           })}
         </aside>
       </section>
+    )}
   </section>;
 }
 export default Swenka;

@@ -24,9 +24,6 @@ body {
   to { opacity: 1; }
 }
 
-.chapter-opener { position: relative; height: 56svh; min-height: 340px; overflow: hidden; display: flex; align-items: flex-end; background: #0d0d0d; }
-.chapter-opener-copy { position: relative; z-index: 1; padding: 0 7vw 34px; }
-.chapter-opener-label { display: block; color: #f5f1e9; font: 700 clamp(28px, 4vw, 54px)/1 "Barlow Condensed", Impact, sans-serif; letter-spacing: 0.02em; text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6); }
-@media (max-width: 650px) {
-  .chapter-opener { height: 44svh; }
-}
+.chapter-opener { position: relative; height: 100svh; min-height: 100svh; overflow: hidden; display: flex; align-items: flex-end; background: #0d0d0d; }
+.chapter-opener-copy { position: relative; z-index: 1; padding: 0 7vw 8vh; }
+.chapter-opener-label { display: block; color: #f5f1e9; font: 700 clamp(38px, 6vw, 78px)/1 "Barlow Condensed", Impact, sans-serif; letter-spacing: 0.02em; text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6); }

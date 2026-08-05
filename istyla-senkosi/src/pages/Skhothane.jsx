@@ -1,5 +1,6 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRegisterSection } from "../context/ActiveSectionContext";
+import { useChapterReady } from "../context/ChapterGateContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
 import ChapterVideo from "../components/ChapterVideo";
 import entryVideo from "../assets/Chapter 3_Skothane/Video/Intro Video - Skothane.mp4";
@@ -27,12 +28,23 @@ const SWIPE_THRESHOLD = 45;
 function Skhothane() {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
+  const [showGallery, setShowGallery] = useState(true);
   const [soundOn, setSoundOn] = useState(true);
   const pointerStartX = useRef(null);
   const audioRef = useRef(null);
   const sectionRef = useRef(null);
+  const ready = current === images.length - 1;
   useRegisterSection("skhothane", sectionRef);
   useSectionAudio({ id: "skhothane", audioRef, soundOn });
+  useChapterReady("skhothane", ready);
+
+  useEffect(() => {
+    if (!ready) return undefined;
+    const timer = setTimeout(() => {
+      document.getElementById("reflection")?.scrollIntoView({ behavior: "smooth" });
+    }, 1400);
+    return () => clearTimeout(timer);
+  }, [ready]);
 
   const goTo = (target) => {
     const next = Math.min(images.length - 1, Math.max(0, target));
@@ -71,6 +83,7 @@ function Skhothane() {
       </div>
       <audio ref={audioRef} src={backgroundTrack} loop />
       <header className="skhothane-header"><span>03 / SKHOTHANE</span><span>LUXURY AS LANGUAGE</span></header>
+      {showGallery ? (
       <section className="skhothane-editorial">
         <div className="skhothane-editorial-collage" aria-hidden="true">
           {EDITORIAL_GALLERY.map((src, index) => (
@@ -80,9 +93,10 @@ function Skhothane() {
         <div className="skhothane-editorial-overlay">
           <p className="skhothane-editorial-kicker">A visual reference</p>
           <h2>EDITORIAL ARCHIVE</h2>
-          <a className="skhothane-editorial-continue" href="#skhothane-stage">BEGIN <span>→</span></a>
+          <button className="skhothane-editorial-continue" onClick={() => setShowGallery(false)}>BEGIN <span>→</span></button>
         </div>
       </section>
+      ) : (
       <section className="skhothane-stage" id="skhothane-stage">
           <div className="skhothane-copy">
             <p className="chapter-tag">03 / SKHOTHANE</p>
@@ -145,6 +159,7 @@ function Skhothane() {
             )}
           </div>
         </section>
+      )}
     </section>
   );
 }
