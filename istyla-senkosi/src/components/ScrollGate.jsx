@@ -1,8 +1,17 @@
 import { useEffect } from "react";
+import { useActiveSection } from "../context/ActiveSectionContext";
 import { useChapterGate, CHAPTER_ORDER } from "../context/ChapterGateContext";
 
 function ScrollGate() {
   const { isUnlocked, reach } = useChapterGate();
+  const activeId = useActiveSection();
+
+  // Whatever section the page is actually showing - via reload scroll
+  // restoration, a direct link, or browser back/forward - counts as reached,
+  // even though no click or completion fired to unlock it.
+  useEffect(() => {
+    reach(activeId);
+  }, [activeId, reach]);
 
   useEffect(() => {
     const onClick = (event) => {

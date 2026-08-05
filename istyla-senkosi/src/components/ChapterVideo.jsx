@@ -16,6 +16,13 @@ function ChapterVideo({ src, className = "" }) {
     else video.pause();
   }, [visible]);
 
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return undefined;
+    video.muted = muted;
+    if (!muted) video.play().catch(() => {});
+  }, [muted]);
+
   const advance = () => {
     window.scrollBy({ top: window.innerHeight, behavior: "smooth" });
   };
