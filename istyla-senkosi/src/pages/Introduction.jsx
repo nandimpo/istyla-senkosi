@@ -1,7 +1,7 @@
-﻿import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useSetChapterReady } from "../context/ChapterReadyContext";
-import VideoIntro from "../components/VideoIntro";
+﻿import { useLayoutEffect, useRef, useState } from "react";
+import { useRegisterSection } from "../context/ActiveSectionContext";
+import { useSectionAudio } from "../hooks/useSectionAudio";
+import ChapterVideo from "../components/ChapterVideo";
 import johannesburgMap from "../assets/Introduction/Map of Johannesburg.png";
 import welcomeVideo from "../assets/Introduction/Intro- Video.mp4";
 import backgroundTrack from "../assets/audio/Music/Kwesta - Spirit (Official Music Video) ft Wale ft. Wale (Intro page).mp3";
@@ -42,46 +42,16 @@ const EDITORIAL_GALLERY = [
 ];
 
 function Introduction() {
-  const navigate = useNavigate();
   const [progress, setProgress] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
-  const [introSeen, setIntroSeen] = useState(false);
   const [muted, setMuted] = useState(false);
-  const [showGallery, setShowGallery] = useState(false);
   const [handlePoint, setHandlePoint] = useState({ x: 172, y: 60 });
   const pathRef = useRef(null);
   const audioRef = useRef(null);
+  const sectionRef = useRef(null);
   const drag = useRef({ active: false, startY: 0, startProgress: 0 });
-  const ready = progress >= 0.92;
-  useSetChapterReady(ready);
-
-  useEffect(() => {
-    if (!ready) return undefined;
-    const timer = setTimeout(() => setShowGallery(true), 1400);
-    return () => clearTimeout(timer);
-  }, [ready]);
-
-  useEffect(() => {
-    if (!introSeen) return undefined;
-    const audio = audioRef.current;
-    if (!audio) return undefined;
-    audio.muted = muted;
-    audio.play().catch(() => {});
-
-    const resumeOnFirstInteraction = () => {
-      if (!audio.muted) audio.play().catch(() => {});
-    };
-    window.addEventListener("pointerdown", resumeOnFirstInteraction, {
-      once: true,
-    });
-    window.addEventListener("keydown", resumeOnFirstInteraction, {
-      once: true,
-    });
-    return () => {
-      window.removeEventListener("pointerdown", resumeOnFirstInteraction);
-      window.removeEventListener("keydown", resumeOnFirstInteraction);
-    };
-  }, [introSeen, muted]);
+  useRegisterSection("introduction", sectionRef);
+  useSectionAudio({ id: "introduction", audioRef, soundOn: !muted });
 
   useLayoutEffect(() => {
     if (pathRef.current) {
@@ -124,22 +94,17 @@ function Introduction() {
   const mapX = NORTH_FOCUS.x + (SOUTHWEST_FOCUS.x - NORTH_FOCUS.x) * progress;
   const mapY = NORTH_FOCUS.y + (SOUTHWEST_FOCUS.y - NORTH_FOCUS.y) * progress;
 
-  if (!introSeen) {
-    return (
-      <VideoIntro
-        src={welcomeVideo}
-        label="THE JOURNEY BEGINS"
-        onFinish={() => setIntroSeen(true)}
-      />
-    );
-  }
-
   return (
-    <main className="introduction content-fade-in">
-      <audio ref={audioRef} src={backgroundTrack} loop muted={muted} autoPlay />
+    <section id="introduction" ref={sectionRef} className="introduction content-fade-in">
+      <div className="chapter-opener">
+        <ChapterVideo src={welcomeVideo} className="chapter-opener-video" />
+        <div className="chapter-opener-copy">
+          <span className="chapter-opener-label">THE JOURNEY BEGINS</span>
+        </div>
+      </div>
+      <audio ref={audioRef} src={backgroundTrack} loop />
       <header className="intro-header">
         <div className="intro-header-left">
-          <Link to="/">HOME</Link>
           <button
             className={`intro-sound-toggle ${muted ? "" : "on"}`}
             onClick={toggleSound}
@@ -153,31 +118,7 @@ function Introduction() {
         </div>
         <span>INTRODUCTION / 02</span>
       </header>
-      {showGallery ? (
-        <section className="editorial-gallery">
-          <div className="gallery-collage" aria-hidden="true">
-            {EDITORIAL_GALLERY.map((src, index) => (
-              <img
-                key={src}
-                src={src}
-                alt=""
-                style={{ animationDelay: `${index * -1.4}s` }}
-              />
-            ))}
-          </div>
-          <div className="gallery-overlay">
-            <p className="gallery-kicker">A visual reference</p>
-            <h2>EDITORIAL ARCHIVE</h2>
-            <button
-              className="gallery-continue"
-              onClick={() => navigate("/swenka")}
-            >
-              CONTINUE <span>→</span>
-            </button>
-          </div>
-        </section>
-      ) : (
-        <section className="journey-map">
+      <section className="journey-map">
           <div
             className={`journey-mapbg ${hasStarted ? "visible" : ""}`}
             aria-hidden="true"
@@ -261,17 +202,35 @@ function Introduction() {
             </h1>
             <p>This is my journey back to understand.</p>
           </div>
-          <button
+          <a
             className="scroll-cue"
-            onClick={() => setShowGallery(true)}
+            href="#introduction-gallery"
             aria-label="Continue to the editorial archive"
           >
             <span>SCROLL</span>
             <i aria-hidden="true" />
-          </button>
+          </a>
         </section>
-      )}
-    </main>
+      <section className="editorial-gallery" id="introduction-gallery">
+        <div className="gallery-collage" aria-hidden="true">
+          {EDITORIAL_GALLERY.map((src, index) => (
+            <img
+              key={src}
+              src={src}
+              alt=""
+              style={{ animationDelay: `${index * -1.4}s` }}
+            />
+          ))}
+        </div>
+        <div className="gallery-overlay">
+          <p className="gallery-kicker">A visual reference</p>
+          <h2>EDITORIAL ARCHIVE</h2>
+          <a className="gallery-continue" href="#swenka">
+            CONTINUE <span>→</span>
+          </a>
+        </div>
+      </section>
+    </section>
   );
 }
 export default Introduction;

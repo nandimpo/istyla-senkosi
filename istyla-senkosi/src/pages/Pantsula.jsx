@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSetChapterReady } from "../context/ChapterReadyContext";
-import VideoIntro from "../components/VideoIntro";
+import { useRef, useState } from "react";
+import { useRegisterSection } from "../context/ActiveSectionContext";
+import { useSectionAudio } from "../hooks/useSectionAudio";
+import ChapterVideo from "../components/ChapterVideo";
 import entryVideo from "../assets/Chapter 2_Pantsula/Video/Intro Video- Pantsula.mp4";
 import readyImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-0-ready.jpg";
 import stanceImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-1-stance.jpg";
@@ -22,39 +22,13 @@ const sceneImages = [readyImage, stanceImage, stepImage, rhythmImage, swingImage
 const EDITORIAL_GALLERY = [editorial1, editorial2, editorial3, editorial4];
 
 function Pantsula() {
-  const navigate = useNavigate();
   const [activeBeat, setActiveBeat] = useState(0);
   const [soundOn, setSoundOn] = useState(true);
-  const [introSeen, setIntroSeen] = useState(false);
-  const [showGallery, setShowGallery] = useState(true);
   const audioContext = useRef(null);
   const audioRef = useRef(null);
-  const ready = activeBeat === beats.length;
-  useSetChapterReady(ready);
-
-  useEffect(() => {
-    if (!ready) return undefined;
-    const timer = setTimeout(() => navigate("/skhothane"), 1400);
-    return () => clearTimeout(timer);
-  }, [ready, navigate]);
-
-  useEffect(() => {
-    if (!introSeen) return undefined;
-    const audio = audioRef.current;
-    if (!audio) return undefined;
-    audio.muted = !soundOn;
-    audio.play().catch(() => {});
-
-    const resumeOnFirstInteraction = () => {
-      if (!audio.muted) audio.play().catch(() => {});
-    };
-    window.addEventListener("pointerdown", resumeOnFirstInteraction, { once: true });
-    window.addEventListener("keydown", resumeOnFirstInteraction, { once: true });
-    return () => {
-      window.removeEventListener("pointerdown", resumeOnFirstInteraction);
-      window.removeEventListener("keydown", resumeOnFirstInteraction);
-    };
-  }, [introSeen, soundOn]);
+  const sectionRef = useRef(null);
+  useRegisterSection("pantsula", sectionRef);
+  useSectionAudio({ id: "pantsula", audioRef, soundOn });
 
   const playBeat = (index) => {
     if (!soundOn) return;
@@ -82,28 +56,28 @@ function Pantsula() {
 
   const currentScene = activeBeat === 0 ? "TAP THE FIRST BEAT" : activeBeat === beats.length ? "THE DANCE IS ALIVE" : `${beats[activeBeat - 1]} UNLOCKED`;
 
-  if (!introSeen) {
-    return <VideoIntro src={entryVideo} label="02 / PANTSULA" onFinish={() => setIntroSeen(true)} />;
-  }
-
-  return <main className="pantsula-page content-fade-in">
-    <audio ref={audioRef} src={backgroundTrack} loop muted={!soundOn} autoPlay />
+  return <section id="pantsula" ref={sectionRef} className="pantsula-page content-fade-in">
+    <div className="chapter-opener">
+      <ChapterVideo src={entryVideo} className="chapter-opener-video" />
+      <div className="chapter-opener-copy">
+        <span className="chapter-opener-label">02 / PANTSULA</span>
+      </div>
+    </div>
+    <audio ref={audioRef} src={backgroundTrack} loop />
     <header className="pantsula-header"><span>02 / PANTSULA</span><span>MOVE TO THE RHYTHM</span></header>
-    {showGallery ? (
-      <section className="pantsula-editorial">
-        <div className="pantsula-editorial-collage" aria-hidden="true">
-          {EDITORIAL_GALLERY.map((src, index) => (
-            <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.4}s` }} />
-          ))}
-        </div>
-        <div className="pantsula-editorial-overlay">
-          <p className="pantsula-editorial-kicker">A visual reference</p>
-          <h2>EDITORIAL ARCHIVE</h2>
-          <button className="pantsula-editorial-continue" onClick={() => setShowGallery(false)}>BEGIN <span>→</span></button>
-        </div>
-      </section>
-    ) : (
-      <section className="pantsula-stage">
+    <section className="pantsula-editorial">
+      <div className="pantsula-editorial-collage" aria-hidden="true">
+        {EDITORIAL_GALLERY.map((src, index) => (
+          <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.4}s` }} />
+        ))}
+      </div>
+      <div className="pantsula-editorial-overlay">
+        <p className="pantsula-editorial-kicker">A visual reference</p>
+        <h2>EDITORIAL ARCHIVE</h2>
+        <a className="pantsula-editorial-continue" href="#pantsula-stage">BEGIN <span>→</span></a>
+      </div>
+    </section>
+    <section className="pantsula-stage" id="pantsula-stage">
         <div className="pantsula-copy">
           <p className="chapter-tag">02 / PANTSULA</p>
           <h1>EVERY STEP<br />TELLS A<br />STORY<span>...</span></h1>
@@ -118,8 +92,7 @@ function Pantsula() {
           <div className="beat-map" aria-label="Pantsula beat map">{beats.map((beat, index) => <button key={beat} className={`beat beat-${index + 1} ${index < activeBeat ? "complete" : ""} ${index === activeBeat ? "ready" : ""}`} disabled={index !== activeBeat} onClick={() => activateBeat(index)} aria-label={`${beat}: ${index < activeBeat ? "complete" : index === activeBeat ? "tap now" : "locked"}`}><span>{index + 1}</span></button>)}</div>
         </div>
       </section>
-    )}
-  </main>;
+  </section>;
 }
 
 export default Pantsula;

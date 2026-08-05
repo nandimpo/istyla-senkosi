@@ -2,4 +2,3 @@
 .global-home-link:hover, .global-home-link:focus-visible { color:#d38912; }
 .global-home-link:focus-visible { outline:1px solid #d38912; outline-offset:5px; }
 @media(max-width:650px) { .global-home-link { top:22px; left:24px; } }
-body:has(.swenka-page) .swenka-header span:first-child, body:has(.introduction) .intro-header a, body:has(.documentary) .home-link, body:has(.skhothane-page) .skhothane-header span:first-child, body:has(.reflection-page) .reflection-header span:first-child { visibility:hidden; }

@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSetChapterReady } from "../context/ChapterReadyContext";
-import VideoIntro from "../components/VideoIntro";
+import { useRef, useState } from "react";
+import { useRegisterSection } from "../context/ActiveSectionContext";
+import { useSectionAudio } from "../hooks/useSectionAudio";
+import ChapterVideo from "../components/ChapterVideo";
 import entryVideo from "../assets/Chapter 3_Skothane/Video/Intro Video - Skothane.mp4";
 import img1 from "../assets/Chapter 3_Skothane/Skothane/skhothane-1.jpg";
 import img2 from "../assets/Chapter 3_Skothane/Skothane/skhothane-2.jpg";
@@ -25,40 +25,14 @@ const GROUP_SIZE = 3;
 const SWIPE_THRESHOLD = 45;
 
 function Skhothane() {
-  const navigate = useNavigate();
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(1);
-  const [introSeen, setIntroSeen] = useState(false);
-  const [showGallery, setShowGallery] = useState(true);
   const [soundOn, setSoundOn] = useState(true);
   const pointerStartX = useRef(null);
   const audioRef = useRef(null);
-  const ready = current === images.length - 1;
-  useSetChapterReady(ready);
-
-  useEffect(() => {
-    if (!ready) return undefined;
-    const timer = setTimeout(() => navigate("/reflection"), 1400);
-    return () => clearTimeout(timer);
-  }, [ready, navigate]);
-
-  useEffect(() => {
-    if (!introSeen) return undefined;
-    const audio = audioRef.current;
-    if (!audio) return undefined;
-    audio.muted = !soundOn;
-    audio.play().catch(() => {});
-
-    const resumeOnFirstInteraction = () => {
-      if (!audio.muted) audio.play().catch(() => {});
-    };
-    window.addEventListener("pointerdown", resumeOnFirstInteraction, { once: true });
-    window.addEventListener("keydown", resumeOnFirstInteraction, { once: true });
-    return () => {
-      window.removeEventListener("pointerdown", resumeOnFirstInteraction);
-      window.removeEventListener("keydown", resumeOnFirstInteraction);
-    };
-  }, [introSeen, soundOn]);
+  const sectionRef = useRef(null);
+  useRegisterSection("skhothane", sectionRef);
+  useSectionAudio({ id: "skhothane", audioRef, soundOn });
 
   const goTo = (target) => {
     const next = Math.min(images.length - 1, Math.max(0, target));
@@ -87,29 +61,29 @@ function Skhothane() {
   const groupCount = Math.ceil(images.length / GROUP_SIZE);
   const activeGroup = Math.floor(current / GROUP_SIZE);
 
-  if (!introSeen) {
-    return <VideoIntro src={entryVideo} label="03 / SKHOTHANE" onFinish={() => setIntroSeen(true)} />;
-  }
-
   return (
-    <main className="skhothane-page content-fade-in">
-      <audio ref={audioRef} src={backgroundTrack} loop muted={!soundOn} autoPlay />
+    <section id="skhothane" ref={sectionRef} className="skhothane-page content-fade-in">
+      <div className="chapter-opener">
+        <ChapterVideo src={entryVideo} className="chapter-opener-video" />
+        <div className="chapter-opener-copy">
+          <span className="chapter-opener-label">03 / SKHOTHANE</span>
+        </div>
+      </div>
+      <audio ref={audioRef} src={backgroundTrack} loop />
       <header className="skhothane-header"><span>03 / SKHOTHANE</span><span>LUXURY AS LANGUAGE</span></header>
-      {showGallery ? (
-        <section className="skhothane-editorial">
-          <div className="skhothane-editorial-collage" aria-hidden="true">
-            {EDITORIAL_GALLERY.map((src, index) => (
-              <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.4}s` }} />
-            ))}
-          </div>
-          <div className="skhothane-editorial-overlay">
-            <p className="skhothane-editorial-kicker">A visual reference</p>
-            <h2>EDITORIAL ARCHIVE</h2>
-            <button className="skhothane-editorial-continue" onClick={() => setShowGallery(false)}>BEGIN <span>→</span></button>
-          </div>
-        </section>
-      ) : (
-        <section className="skhothane-stage">
+      <section className="skhothane-editorial">
+        <div className="skhothane-editorial-collage" aria-hidden="true">
+          {EDITORIAL_GALLERY.map((src, index) => (
+            <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.4}s` }} />
+          ))}
+        </div>
+        <div className="skhothane-editorial-overlay">
+          <p className="skhothane-editorial-kicker">A visual reference</p>
+          <h2>EDITORIAL ARCHIVE</h2>
+          <a className="skhothane-editorial-continue" href="#skhothane-stage">BEGIN <span>→</span></a>
+        </div>
+      </section>
+      <section className="skhothane-stage" id="skhothane-stage">
           <div className="skhothane-copy">
             <p className="chapter-tag">03 / SKHOTHANE</p>
             <h1>STATUS IS A<br />PERFORMANCE<span>...</span></h1>
@@ -171,8 +145,7 @@ function Skhothane() {
             )}
           </div>
         </section>
-      )}
-    </main>
+    </section>
   );
 }
 

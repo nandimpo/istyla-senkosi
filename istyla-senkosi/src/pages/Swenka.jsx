@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useSetChapterReady } from "../context/ChapterReadyContext";
-import VideoIntro from "../components/VideoIntro";
+import { useRef, useState } from "react";
+import { useRegisterSection } from "../context/ActiveSectionContext";
+import { useSectionAudio } from "../hooks/useSectionAudio";
+import ChapterVideo from "../components/ChapterVideo";
 import entryVideo from "../assets/Chapter 1_Swenka/Video/BLACK GOSLING  EDGARS  REBRAND  SWENKAS (Intro video).mp4";
 import portraitImage from "../assets/Chapter 1_Swenka/Images/Editorial/Man with yellow and blue suit.jpg";
 import backgroundTrack from "../assets/audio/Music/Miriam Makeba - Welela (Official Video).mp3";
@@ -32,67 +32,41 @@ const EDITORIAL_GALLERY = [
 ];
 
 function Swenka() {
-  const navigate = useNavigate();
   const [placed, setPlaced] = useState([]);
   const [dragged, setDragged] = useState(null);
-  const [introSeen, setIntroSeen] = useState(false);
-  const [showGallery, setShowGallery] = useState(true);
   const [soundOn, setSoundOn] = useState(true);
   const audioRef = useRef(null);
-  const ready = placed.length === elements.length;
-  useSetChapterReady(ready);
+  const sectionRef = useRef(null);
+  useRegisterSection("swenka", sectionRef);
+  useSectionAudio({ id: "swenka", audioRef, soundOn });
   const placeElement = (id) => {
     if (!id || placed.includes(id)) return;
     setPlaced((current) => [...current, id]);
     setDragged(null);
   };
 
-  useEffect(() => {
-    if (!ready) return undefined;
-    const timer = setTimeout(() => navigate("/pantsula"), 1400);
-    return () => clearTimeout(timer);
-  }, [ready, navigate]);
-
-  useEffect(() => {
-    if (!introSeen) return undefined;
-    const audio = audioRef.current;
-    if (!audio) return undefined;
-    audio.muted = !soundOn;
-    audio.play().catch(() => {});
-
-    const resumeOnFirstInteraction = () => {
-      if (!audio.muted) audio.play().catch(() => {});
-    };
-    window.addEventListener("pointerdown", resumeOnFirstInteraction, { once: true });
-    window.addEventListener("keydown", resumeOnFirstInteraction, { once: true });
-    return () => {
-      window.removeEventListener("pointerdown", resumeOnFirstInteraction);
-      window.removeEventListener("keydown", resumeOnFirstInteraction);
-    };
-  }, [introSeen, soundOn]);
-
-  if (!introSeen) {
-    return <VideoIntro src={entryVideo} label="01 / SWENKA" onFinish={() => setIntroSeen(true)} />;
-  }
-
-  return <main className="swenka-page content-fade-in">
-    <audio ref={audioRef} src={backgroundTrack} loop muted={!soundOn} autoPlay />
+  return <section id="swenka" ref={sectionRef} className="swenka-page content-fade-in">
+    <div className="chapter-opener">
+      <ChapterVideo src={entryVideo} className="chapter-opener-video" />
+      <div className="chapter-opener-copy">
+        <span className="chapter-opener-label">01 / SWENKA</span>
+      </div>
+    </div>
+    <audio ref={audioRef} src={backgroundTrack} loop />
     <header className="swenka-header"><span>01 / SWENKA</span><span>THE ART OF PRESENTATION</span></header>
-    {showGallery ? (
-      <section className="swenka-editorial">
-        <div className="swenka-editorial-collage" aria-hidden="true">
-          {EDITORIAL_GALLERY.map((src, index) => (
-            <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.4}s` }} />
-          ))}
-        </div>
-        <div className="swenka-editorial-overlay">
-          <p className="swenka-editorial-kicker">A visual reference</p>
-          <h2>EDITORIAL ARCHIVE</h2>
-          <button className="swenka-editorial-continue" onClick={() => setShowGallery(false)}>BEGIN <span>→</span></button>
-        </div>
-      </section>
-    ) : (
-      <section className="swenka-stage">
+    <section className="swenka-editorial">
+      <div className="swenka-editorial-collage" aria-hidden="true">
+        {EDITORIAL_GALLERY.map((src, index) => (
+          <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.4}s` }} />
+        ))}
+      </div>
+      <div className="swenka-editorial-overlay">
+        <p className="swenka-editorial-kicker">A visual reference</p>
+        <h2>EDITORIAL ARCHIVE</h2>
+        <a className="swenka-editorial-continue" href="#swenka-stage">BEGIN <span>→</span></a>
+      </div>
+    </section>
+    <section className="swenka-stage" id="swenka-stage">
         <div className="swenka-copy">
           <p className="chapter-tag">01 / SWENKA</p>
           <h1>PRECISION.<br />DISCIPLINE.<br />RESPECT.</h1>
@@ -145,7 +119,6 @@ function Swenka() {
           })}
         </aside>
       </section>
-    )}
-  </main>;
+  </section>;
 }
 export default Swenka;

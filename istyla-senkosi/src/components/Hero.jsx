@@ -1,5 +1,7 @@
 ﻿import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { useRegisterSection } from "../context/ActiveSectionContext";
+import { useSectionAudio } from "../hooks/useSectionAudio";
 import backgroundTrack from "../assets/audio/Music/Moonchild Sanelly - Yebo Teacher (Intro Song).mp3";
 import collage1 from "../assets/Introduction/Images/Black label.jpg";
 import collage2 from "../assets/Introduction/Images/Converse.jpg";
@@ -17,29 +19,15 @@ function Hero() {
   const [panel, setPanel] = useState(null);
   const [muted, setMuted] = useState(false);
   const audioRef = useRef(null);
+  const sectionRef = useRef(null);
   const closePanel = () => setPanel(null);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return undefined;
-    audio.muted = muted;
-    audio.play().catch(() => {});
-
-    const resumeOnFirstInteraction = () => {
-      if (!audio.muted) audio.play().catch(() => {});
-    };
-    window.addEventListener("pointerdown", resumeOnFirstInteraction, { once: true });
-    window.addEventListener("keydown", resumeOnFirstInteraction, { once: true });
-    return () => {
-      window.removeEventListener("pointerdown", resumeOnFirstInteraction);
-      window.removeEventListener("keydown", resumeOnFirstInteraction);
-    };
-  }, [muted]);
+  useRegisterSection("about", sectionRef);
+  useSectionAudio({ id: "about", audioRef, soundOn: !muted });
 
   const toggleSound = () => setMuted((current) => !current);
 
-  return <main className="documentary" id="about">
-    <audio ref={audioRef} src={backgroundTrack} loop muted={muted} autoPlay />
+  return <main className="documentary" id="about" ref={sectionRef}>
+    <audio ref={audioRef} src={backgroundTrack} loop />
     <div className="hero-collage" aria-hidden="true">
       {collageImages.map((src, index) => (
         <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.5}s` }} />
@@ -47,12 +35,11 @@ function Hero() {
     </div>
     <header className="topbar">
       <div className="topbar-left">
-        <button className="home-link" onClick={closePanel}>HOME</button>
         <button className={`sound-control ${muted ? "" : "on"}`} onClick={toggleSound} aria-label={muted ? "Turn background music on" : "Turn background music off"}>{muted ? "SOUND OFF" : "SOUND ON"}<span aria-hidden="true" /></button>
       </div>
       <span>ISTYLA SENKOSI / 01</span>
     </header>
-    <section className="hero-content" id="story"><p className="hero-subtitle">Interactive Documentary</p><h1 className="hero-title">I&apos;STYLA<br />SENKOSI</h1><p className="hero-description">Past, Present and Future of Township Fashion</p><Link className="hero-button" to="/introduction">Begin Journey <span>→</span></Link></section>
+    <section className="hero-content" id="story"><p className="hero-subtitle">Interactive Documentary</p><h1 className="hero-title">I&apos;STYLA<br />SENKOSI</h1><p className="hero-description">Past, Present and Future of Township Fashion</p><a className="hero-button" href="#introduction">Begin Journey <span>→</span></a></section>
     {panel && <div className="panel-backdrop" onClick={closePanel} />}
     <aside className={`side-panel ${panel ? "is-open" : ""}`} aria-hidden={!panel}><button className="close-panel" onClick={closePanel} aria-label="Close panel">×</button>
       {panel === "chapters" && <><p className="panel-kicker">Explore the story</p><h2>CHAPTERS</h2><div className="chapter-list" id="chapters">{chapters.map(([title, subtitle, place, date], index) => <Link className="chapter-row" to={`/${title.toLowerCase()}`} onClick={closePanel} key={title}><span className="chapter-number">0{index + 1}</span><span><strong>{title}</strong><small>{subtitle}</small></span><span className="chapter-place">{place}</span><span className="chapter-date">{date}</span></Link>)}</div></>}

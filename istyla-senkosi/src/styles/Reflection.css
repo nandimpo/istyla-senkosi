@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Montserrat:wght@400;500;600;700&display=swap');
-.reflection-page { --gold:#d38912; --sand:#c8b39b; height:100svh; min-height:100svh; overflow:hidden; background:#0d0d0d; color:#f5f1e9; font-family:Montserrat,Arial,sans-serif; }
+.reflection-page { --gold:#d38912; --sand:#c8b39b; min-height:100svh; position:relative; background:#0d0d0d; color:#f5f1e9; font-family:Montserrat,Arial,sans-serif; }
 .reflection-header { height:70px; padding:0 7vw; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid rgba(200,179,155,.22); font-size:10px; font-weight:700; letter-spacing:1.2px; }
 .reflection-header span:last-child { color:var(--sand); font-size:9px; }
 .reflection-stage { height:calc(100svh - 70px); min-height:0; display:grid; grid-template-columns:minmax(290px,.82fr) minmax(420px,1.18fr); }
 .reflection-copy { padding:clamp(84px,13vh,155px) 7vw 92px; background:#111; position:relative; z-index:1; }
 .reflection-copy .chapter-tag { display:none; }
-.reflection-copy h1 { margin:0; font:800 clamp(46px,5.2vw,82px)/.9 'Barlow Condensed',Impact,sans-serif; letter-spacing:-.035em; }
+.reflection-copy h1 { margin:0; color:#f8f5ef; font:800 clamp(46px,5.2vw,82px)/.9 'Barlow Condensed',Impact,sans-serif; letter-spacing:-.035em; }
 .reflection-copy>i { display:block; width:116px; height:1px; margin:35px 0 22px; background:#e7dfd4; }
 .reflection-copy>p { color:var(--sand); font-size:13px; line-height:1.7; letter-spacing:.4px; }
 .reflection-sound-toggle { display:flex; align-items:center; gap:9px; margin-top:26px; border:0; padding:0; background:none; color:#f5f1e9; cursor:pointer; font:700 9px Montserrat,Arial,sans-serif; letter-spacing:1px; }.reflection-sound-toggle span { width:9px; height:9px; border-radius:50%; background:#555; }.reflection-sound-toggle.on span { background:var(--gold); box-shadow:0 0 0 4px rgba(211,137,18,.15); }
