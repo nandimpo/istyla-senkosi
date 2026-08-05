@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useRegisterSection } from "../context/ActiveSectionContext";
+import { useActiveSection, useRegisterSection } from "../context/ActiveSectionContext";
 import { useChapterReady } from "../context/ChapterGateContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
 import ChapterVideo from "../components/ChapterVideo";
@@ -34,9 +34,14 @@ function Skhothane() {
   const audioRef = useRef(null);
   const sectionRef = useRef(null);
   const ready = current === images.length - 1;
+  const activeId = useActiveSection();
   useRegisterSection("skhothane", sectionRef);
   useSectionAudio({ id: "skhothane", audioRef, soundOn });
   useChapterReady("skhothane", ready);
+
+  useEffect(() => {
+    if (activeId === "skhothane") setShowGallery(true);
+  }, [activeId]);
 
   useEffect(() => {
     if (!ready) return undefined;

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useRegisterSection } from "../context/ActiveSectionContext";
+import { useActiveSection, useRegisterSection } from "../context/ActiveSectionContext";
 import { useChapterReady } from "../context/ChapterGateContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
 import ChapterVideo from "../components/ChapterVideo";
@@ -40,6 +40,7 @@ function Swenka() {
   const audioRef = useRef(null);
   const sectionRef = useRef(null);
   const ready = placed.length === elements.length;
+  const activeId = useActiveSection();
   useRegisterSection("swenka", sectionRef);
   useSectionAudio({ id: "swenka", audioRef, soundOn });
   useChapterReady("swenka", ready);
@@ -48,6 +49,10 @@ function Swenka() {
     setPlaced((current) => [...current, id]);
     setDragged(null);
   };
+
+  useEffect(() => {
+    if (activeId === "swenka") setShowGallery(true);
+  }, [activeId]);
 
   useEffect(() => {
     if (!ready) return undefined;

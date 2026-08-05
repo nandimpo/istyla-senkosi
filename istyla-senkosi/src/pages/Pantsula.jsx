@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useRegisterSection } from "../context/ActiveSectionContext";
+import { useActiveSection, useRegisterSection } from "../context/ActiveSectionContext";
 import { useChapterReady } from "../context/ChapterGateContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
 import ChapterVideo from "../components/ChapterVideo";
@@ -30,9 +30,14 @@ function Pantsula() {
   const audioRef = useRef(null);
   const sectionRef = useRef(null);
   const ready = activeBeat === beats.length;
+  const activeId = useActiveSection();
   useRegisterSection("pantsula", sectionRef);
   useSectionAudio({ id: "pantsula", audioRef, soundOn });
   useChapterReady("pantsula", ready);
+
+  useEffect(() => {
+    if (activeId === "pantsula") setShowGallery(true);
+  }, [activeId]);
 
   useEffect(() => {
     if (!ready) return undefined;
