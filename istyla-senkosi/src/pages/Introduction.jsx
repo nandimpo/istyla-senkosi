@@ -113,7 +113,7 @@ function Introduction() {
           <span className="chapter-opener-label">THE JOURNEY BEGINS</span>
         </div>
       </div>
-      <audio ref={audioRef} src={backgroundTrack} loop />
+      <audio ref={audioRef} src={backgroundTrack} loop preload="none" />
       <header className="intro-header">
         <div className="intro-header-left">
           <button
@@ -137,6 +137,8 @@ function Introduction() {
               key={src}
               src={src}
               alt=""
+              loading="lazy"
+              decoding="async"
               style={{ animationDelay: `${index * -1.4}s` }}
             />
           ))}
@@ -165,6 +167,8 @@ function Introduction() {
             <img
               src={johannesburgMap}
               alt=""
+              loading="lazy"
+              decoding="async"
               style={{ objectPosition: `${mapX}% ${mapY}%` }}
             />
           </div>
@@ -216,6 +220,13 @@ function Introduction() {
               cx={handlePoint.x}
               cy={handlePoint.y}
               r="9"
+              aria-hidden="true"
+            />
+            <circle
+              className="journey-handle-hit"
+              cx={handlePoint.x}
+              cy={handlePoint.y}
+              r="22"
               tabIndex={0}
               role="slider"
               aria-label="Drag down to travel from Johannesburg North to Soweto"

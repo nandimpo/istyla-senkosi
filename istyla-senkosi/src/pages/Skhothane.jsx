@@ -79,12 +79,12 @@ function Skhothane() {
           <span className="chapter-opener-label">03 / SKHOTHANE</span>
         </div>
       </div>
-      <audio ref={audioRef} src={backgroundTrack} loop />
+      <audio ref={audioRef} src={backgroundTrack} loop preload="none" />
       <header className="skhothane-header"><span>03 / SKHOTHANE</span><span>LUXURY AS LANGUAGE</span></header>
       <section className="skhothane-editorial">
         <div className="skhothane-editorial-collage" aria-hidden="true">
           {EDITORIAL_GALLERY.map((src, index) => (
-            <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.4}s` }} />
+            <img key={src} src={src} alt="" loading="lazy" decoding="async" style={{ animationDelay: `${index * -1.4}s` }} />
           ))}
         </div>
         <div className="skhothane-editorial-overlay">
@@ -123,6 +123,8 @@ function Skhothane() {
                 aria-hidden="true"
                 className={`layer-photo pos-0 ${direction === 1 ? "enter-right" : "enter-left"}`}
                 draggable={false}
+                loading="lazy"
+                decoding="async"
                 onPointerDown={handlePointerDown}
                 onPointerUp={releaseSwipe}
                 onPointerCancel={handlePointerCancel}
@@ -135,6 +137,8 @@ function Skhothane() {
               className={`layer-photo pos-1 ${direction === 1 ? "enter-right" : "enter-left"}`}
               style={{ animationDelay: "70ms" }}
               draggable={false}
+              loading="lazy"
+              decoding="async"
               onPointerDown={handlePointerDown}
               onPointerUp={releaseSwipe}
               onPointerCancel={handlePointerCancel}
@@ -148,6 +152,8 @@ function Skhothane() {
                 className={`layer-photo pos-2 ${direction === 1 ? "enter-right" : "enter-left"}`}
                 style={{ animationDelay: "140ms" }}
                 draggable={false}
+                loading="lazy"
+                decoding="async"
                 onPointerDown={handlePointerDown}
                 onPointerUp={releaseSwipe}
                 onPointerCancel={handlePointerCancel}

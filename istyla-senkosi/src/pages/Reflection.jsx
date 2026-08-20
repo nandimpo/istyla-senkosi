@@ -44,7 +44,7 @@ function Reflection() {
           <span className="chapter-opener-label">04 / REFLECTION</span>
         </div>
       </div>
-      <audio ref={audioRef} src={backgroundTrack} loop />
+      <audio ref={audioRef} src={backgroundTrack} loop preload="none" />
       <header className="reflection-header"><span>04 / REFLECTION</span><span>WHERE TOWNSHIP FASHION GOES NEXT</span></header>
       <section className="reflection-stage">
         <div className="reflection-copy">
@@ -55,7 +55,7 @@ function Reflection() {
           <button className={`reflection-sound-toggle ${soundOn ? "on" : ""}`} onClick={() => setSoundOn(!soundOn)}>{soundOn ? "SOUND ON" : "SOUND OFF"}<span aria-hidden="true" /></button>
         </div>
         <div className="reflection-image">
-          <img src={houseImage} alt="A township home in Wattville, where the story began" />
+          <img src={houseImage} alt="A township home in Wattville, where the story began" loading="lazy" decoding="async" />
         </div>
       </section>
     </section>

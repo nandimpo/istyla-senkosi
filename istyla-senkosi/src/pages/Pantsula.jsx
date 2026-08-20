@@ -73,12 +73,12 @@ function Pantsula() {
         <span className="chapter-opener-label">02 / PANTSULA</span>
       </div>
     </div>
-    <audio ref={audioRef} src={backgroundTrack} loop />
+    <audio ref={audioRef} src={backgroundTrack} loop preload="none" />
     <header className="pantsula-header"><span>02 / PANTSULA</span><span>MOVE TO THE RHYTHM</span></header>
     <section className="pantsula-editorial">
       <div className="pantsula-editorial-collage" aria-hidden="true">
         {EDITORIAL_GALLERY.map((src, index) => (
-          <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.4}s` }} />
+          <img key={src} src={src} alt="" loading="lazy" decoding="async" style={{ animationDelay: `${index * -1.4}s` }} />
         ))}
       </div>
       <div className="pantsula-editorial-overlay">
@@ -97,7 +97,7 @@ function Pantsula() {
           <button className={`sound-toggle ${soundOn ? "on" : ""}`} onClick={() => setSoundOn(!soundOn)}>{soundOn ? "SOUND ON" : "SOUND OFF"}<span aria-hidden="true" /></button>
         </div>
         <div className={`pantsula-image scene-${activeBeat}`}>
-          <img src={sceneImages[activeBeat]} alt={`Pantsula dance scene: ${activeBeat ? beats[activeBeat - 1] : "ready"}`} />
+          <img src={sceneImages[activeBeat]} alt={`Pantsula dance scene: ${activeBeat ? beats[activeBeat - 1] : "ready"}`} loading="lazy" decoding="async" />
           <div className="image-overlay"><span>BEAT {activeBeat} / {beats.length}</span><b>{activeBeat ? beats[activeBeat - 1] : "READY"}</b></div>
           <div className="beat-map" aria-label="Pantsula beat map">{beats.map((beat, index) => <button key={beat} className={`beat beat-${index + 1} ${index < activeBeat ? "complete" : ""} ${index === activeBeat ? "ready" : ""}`} disabled={index !== activeBeat} onClick={() => activateBeat(index)} aria-label={`${beat}: ${index < activeBeat ? "complete" : index === activeBeat ? "tap now" : "locked"}`}><span>{index + 1}</span></button>)}</div>
         </div>

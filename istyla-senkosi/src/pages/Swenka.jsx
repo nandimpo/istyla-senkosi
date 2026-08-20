@@ -62,12 +62,12 @@ function Swenka() {
         <span className="chapter-opener-label">01 / SWENKA</span>
       </div>
     </div>
-    <audio ref={audioRef} src={backgroundTrack} loop />
+    <audio ref={audioRef} src={backgroundTrack} loop preload="none" />
     <header className="swenka-header"><span>01 / SWENKA</span><span>THE ART OF PRESENTATION</span></header>
     <section className="swenka-editorial">
       <div className="swenka-editorial-collage" aria-hidden="true">
         {EDITORIAL_GALLERY.map((src, index) => (
-          <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.4}s` }} />
+          <img key={src} src={src} alt="" loading="lazy" decoding="async" style={{ animationDelay: `${index * -1.4}s` }} />
         ))}
       </div>
       <div className="swenka-editorial-overlay">
@@ -87,7 +87,7 @@ function Swenka() {
         </div>
         <div className="fashion-portrait">
           <div className="portrait-frame">
-            <img src={portraitImage} alt="A man in a yellow hat and dark suit, mid dance move" />
+            <img src={portraitImage} alt="A man in a yellow hat and dark suit, mid dance move" loading="lazy" decoding="async" />
             {elements.map(({ id, zone }) => {
               const isPlaced = placed.includes(id);
               return (

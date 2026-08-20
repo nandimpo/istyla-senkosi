@@ -27,7 +27,7 @@ function Hero() {
   const toggleSound = () => setMuted((current) => !current);
 
   return <main className="documentary" id="about" ref={sectionRef}>
-    <audio ref={audioRef} src={backgroundTrack} loop />
+    <audio ref={audioRef} src={backgroundTrack} loop preload="none" />
     <div className="hero-collage" aria-hidden="true">
       {collageImages.map((src, index) => (
         <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.5}s` }} />
