@@ -1,5 +1,4 @@
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigation } from "../context/NavigationContext";
 import Hero from "../components/Hero";
 import Introduction from "./Introduction";
 import Swenka from "./Swenka";
@@ -7,25 +6,20 @@ import Pantsula from "./Pantsula";
 import Skhothane from "./Skhothane";
 import Reflection from "./Reflection";
 
+const CHAPTERS = {
+  introduction: Introduction,
+  swenka: Swenka,
+  pantsula: Pantsula,
+  skhothane: Skhothane,
+  reflection: Reflection,
+};
+
 function Experience() {
-  const { hash } = useLocation();
+  const { currentSection } = useNavigation();
 
-  useEffect(() => {
-    if (!hash) return;
-    const node = document.getElementById(hash.slice(1));
-    if (node) node.scrollIntoView();
-  }, [hash]);
-
-  return (
-    <main className="experience">
-      <Hero />
-      <Introduction />
-      <Swenka />
-      <Pantsula />
-      <Skhothane />
-      <Reflection />
-    </main>
-  );
+  if (currentSection === "about") return <Hero />;
+  const Chapter = CHAPTERS[currentSection];
+  return Chapter ? <Chapter /> : <Hero />;
 }
 
 export default Experience;

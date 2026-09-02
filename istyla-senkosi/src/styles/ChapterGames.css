@@ -1,0 +1,116 @@
+/* Shared copy column used by every game page */
+.game-stage { height: 100svh; display: grid; }
+.game-copy { padding: 12vh 4vw 6vh 7vw; position: relative; z-index: 2; }
+.game-copy p.tag { margin: 0 0 30px; font-size: 12px; font-weight: 700; color: var(--accent, #d38912); }
+.game-copy h1 { margin: 0; font: 800 clamp(34px, 4vw, 58px)/.9 "Barlow Condensed", Impact, sans-serif; letter-spacing: -.02em; color: #f5f1e9; }
+.game-copy > p.body { margin: 26px 0 0; max-width: 340px; font-size: 13px; line-height: 1.6; color: #c8b39b; }
+.game-copy strong { display: block; min-height: 16px; margin-top: 24px; color: #f5f1e9; font: 700 9px Montserrat, Arial, sans-serif; letter-spacing: 1px; }
+.game-copy i { display: block; width: 38px; height: 2px; margin-top: 18px; background: var(--accent, #d38912); }
+
+/* Swenka: wardrobe drag-and-drop */
+.game-stage--swenka { grid-template-columns: minmax(220px, .8fr) minmax(320px, 1.6fr) 210px; }
+.fashion-portrait { height: 100svh; display: flex; justify-content: center; align-items: center; overflow: hidden; border-inline: 1px solid rgba(245, 241, 233, .12); background: linear-gradient(135deg, #171717, #24211c); }
+.portrait-frame { position: relative; height: 92%; width: fit-content; }
+.portrait-frame img { height: 100%; width: auto; max-width: 100%; display: block; object-fit: cover; }
+.puzzle-zone { position: absolute; display: grid; place-items: center; border: 2px dashed rgba(245, 241, 233, .85); background: rgba(20, 19, 17, .94); backdrop-filter: blur(2px); color: #c8b39b; font: 700 9px Montserrat, Arial, sans-serif; letter-spacing: 1.2px; cursor: pointer; transition: opacity .5s ease, transform .5s ease; }
+.puzzle-zone.revealed { opacity: 0; pointer-events: none; transform: scale(1.06); }
+.wardrobe { padding: 13px 13px 70px; background: #e5ded0; border-left: 1px solid rgba(13, 13, 13, .14); display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+.wardrobe > p { margin: 0 0 1px; font-size: 8px; font-weight: 700; letter-spacing: 1px; color: #171717; }
+.wardrobe button { min-height: 120px; border: 1px solid #c8bfb0; background: #f8f4eb; padding: 7px; position: relative; cursor: grab; text-align: left; transition: .2s; }
+.wardrobe button:hover, .wardrobe button.selected { transform: translateX(-5px); border-color: #d38912; }
+.wardrobe button.used { opacity: .35; cursor: default; transform: none; }
+.wardrobe button:disabled { cursor: default; }
+.item-preview { display: block; width: 100%; height: 79px; background-color: #e6dfd2; background-size: 340% auto; background-repeat: no-repeat; }
+.wardrobe b { display: block; margin-top: 7px; font-size: 10px; letter-spacing: .7px; color: #171717; }
+.wardrobe span:not(.item-preview) { float: left; margin: 6px 6px 0 0; color: #777; font-size: 12px; }
+
+/* Pantsula: beat-tap rhythm game */
+.game-stage--pantsula { grid-template-columns: minmax(290px, .82fr) minmax(420px, 1.18fr); }
+.pantsula-image { position: relative; overflow: hidden; background: #27231d; height: 100svh; }
+.pantsula-image img { width: 100%; height: 100%; object-fit: contain; object-position: center; background: #171717; display: block; transition: filter .65s ease; }
+.beat-scene-0 img { filter: grayscale(.85) contrast(.85) brightness(.8); }
+.beat-scene-1 img { filter: sepia(.45) contrast(1.05) saturate(.75); }
+.beat-scene-2 img { filter: sepia(.18) contrast(1.16) saturate(1.08); }
+.beat-scene-3 img { filter: contrast(1.2) saturate(1.32) hue-rotate(-5deg); }
+.beat-scene-4 img { filter: contrast(1.26) saturate(1.48) brightness(1.08); }
+.beat-scene-5 img { filter: contrast(1.3) saturate(1.7) brightness(1.12); }
+.beat-overlay { position: absolute; inset: 28px 28px auto; display: flex; justify-content: space-between; align-items: start; color: #fff; text-shadow: 0 1px 10px #000; font-size: 9px; letter-spacing: 1px; }
+.beat-overlay b { color: #f7d498; font-size: 13px; }
+.beat-map { position: absolute; inset: 0; }
+.beat { position: absolute; display: grid; place-items: center; width: 44px; height: 44px; border: 2px solid #fff; border-radius: 50%; background: rgba(255, 255, 255, .08); color: #fff; cursor: pointer; transition: .25s; box-shadow: 0 0 0 5px rgba(255, 255, 255, .13); }
+.beat span { width: 15px; height: 15px; border-radius: 50%; background: #f5f1e9; color: #111; font: 700 8px/15px Montserrat, Arial, sans-serif; }
+.beat:disabled { cursor: not-allowed; }
+.beat.ready { animation: beat-pulse 1s ease-in-out infinite; border-color: #f7d498; }
+.beat.ready span { background: #d38912; color: #fff; }
+.beat.complete { border-color: #d38912; background: rgba(211, 137, 18, .3); }
+.beat.complete span { background: #d38912; color: #fff; }
+.beat-1 { top: 18%; left: 18%; } .beat-2 { top: 39%; right: 20%; } .beat-3 { bottom: 30%; left: 13%; } .beat-4 { top: 12%; right: 7%; } .beat-5 { bottom: 14%; right: 34%; }
+@keyframes beat-pulse { 50% { transform: scale(1.15); box-shadow: 0 0 0 12px rgba(211, 137, 18, 0); } }
+
+/* Skhothane: swipe carousel */
+.game-stage--skhothane { grid-template-columns: minmax(290px, .82fr) minmax(420px, 1.18fr); }
+.layer-stepper { display: flex; align-items: center; gap: 8px; margin-top: 22px; }
+.layer-stepper span { width: 22px; height: 2px; background: rgba(200, 179, 155, .35); transition: background .3s ease; }
+.layer-stepper span.done { background: #d38912; }
+.skhothane-images { position: relative; overflow: hidden; background: #27231d; display: flex; align-items: center; justify-content: center; user-select: none; height: 100svh; outline: none; }
+.skhothane-images:focus-visible { box-shadow: inset 0 0 0 2px #d38912; }
+.swipe-hint { position: absolute; z-index: 3; bottom: 9%; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; color: rgba(245, 241, 233, .55); font: 700 9px Montserrat, Arial, sans-serif; letter-spacing: 2.5px; pointer-events: none; animation: swipe-hint-pulse 1.8s ease-in-out infinite; }
+.swipe-hint::before, .swipe-hint::after { content: ""; width: 26px; height: 1px; background: rgba(245, 241, 233, .4); }
+@keyframes swipe-hint-pulse { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+.layer-photo { position: absolute; width: 32%; height: 62%; object-fit: cover; box-shadow: 0 20px 50px rgba(0, 0, 0, .55); animation: layer-reveal .6s cubic-bezier(.34, 1.56, .64, 1) both; touch-action: pan-y; cursor: grab; }
+.layer-photo:active { cursor: grabbing; }
+.pos-0 { --end-transform: translateX(-58%) scale(.86) rotate(-2deg); z-index: 1; filter: brightness(.88) saturate(.92); }
+.pos-1 { --end-transform: translateX(0) scale(1.08); z-index: 2; }
+.pos-2 { --end-transform: translateX(58%) scale(.86) rotate(2deg); z-index: 1; filter: brightness(.88) saturate(.92); }
+.enter-right { --start-transform: translateX(130%) scale(.55) rotate(14deg); }
+.enter-left { --start-transform: translateX(-130%) scale(.55) rotate(-14deg); }
+@keyframes layer-reveal { 0% { opacity: 0; transform: var(--start-transform); } 65% { opacity: 1; } 100% { opacity: 1; transform: var(--end-transform); } }
+
+/* Introduction: drag-the-map journey */
+.journey-stage { position: relative; height: 100svh; overflow: hidden; background: #0d0d0d; }
+.journey-mapbg { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.journey-mapbg img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.05); filter: brightness(.9) saturate(.9) sepia(.08); transition: object-position .1s linear; }
+.journey-label { position: absolute; z-index: 1; top: 4%; right: 7%; color: #c8b39b; font-size: 10px; letter-spacing: 1px; }
+.journey-place { position: absolute; z-index: 1; display: grid; font-family: "Barlow Condensed", Impact, sans-serif; font-size: clamp(17px, 2vw, 28px); line-height: .8; color: #f5f1e9; }
+.journey-place b { font-weight: 700; } .journey-place span { font-weight: 600; }
+.journey-place i { width: 12px; height: 12px; border-radius: 50%; background: #f5f1e9; position: absolute; right: -24px; top: 13px; }
+.journey-north { left: 52%; top: 13%; }
+.journey-soweto { left: 60%; top: 56%; font-size: clamp(24px, 2.6vw, 38px); }
+.journey-soweto i { right: -32px; top: 4px; width: 22px; height: 22px; border: 4px solid #f5f1e9; background: transparent; outline: 1px solid #c8b39b; outline-offset: 4px; }
+.journey-line { position: absolute; z-index: 1; width: 300px; height: 430px; top: 11%; left: 50%; overflow: visible; }
+.journey-line path { fill: none; stroke: #f5f1e9; stroke-width: 3; stroke-dasharray: 9 8; }
+.journey-end { fill: #0d0d0d; stroke: #f5f1e9; stroke-width: 4; }
+.journey-handle { fill: #d38912; stroke: #f5f1e9; stroke-width: 2; pointer-events: none; }
+.journey-handle-hit { fill: transparent; cursor: grab; touch-action: none; }
+.journey-handle-hit:active { cursor: grabbing; }
+.journey-handle-hit:focus-visible { outline: 1px solid #d38912; outline-offset: 3px; }
+.journey-handle.idle { animation: journey-handle-blink 1.1s ease-in-out infinite; }
+@keyframes journey-handle-blink { 0%, 100% { opacity: 1; filter: drop-shadow(0 0 8px rgba(211, 137, 18, .9)); } 50% { opacity: .4; filter: drop-shadow(0 0 0 rgba(211, 137, 18, 0)); } }
+.journey-ping { fill: none; stroke: #d38912; stroke-width: 2; transform-box: fill-box; transform-origin: center; pointer-events: none; animation: journey-ping 1.6s ease-out infinite; }
+.journey-ping-delay { animation-delay: .8s; }
+@keyframes journey-ping { 0% { transform: scale(1); opacity: .9; } 100% { transform: scale(3.2); opacity: 0; } }
+.journey-drag-hint { fill: #c8b39b; font: 700 9px Montserrat, Arial, sans-serif; letter-spacing: 1.4px; animation: journey-drag-hint-pulse 1.4s ease-in-out infinite; }
+@keyframes journey-drag-hint-pulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+.journey-copy { position: absolute; z-index: 1; left: 8%; bottom: 12%; }
+.journey-copy h1 { margin: 0; color: #f8f5ef; font: 800 clamp(38px, 4.4vw, 68px)/.85 "Barlow Condensed", Impact, sans-serif; letter-spacing: -.03em; }
+.journey-copy h1 span { color: #d38912; }
+.journey-copy p { margin-top: 16px; color: #c8b39b; font-size: clamp(12px, 1.2vw, 16px); font-weight: 500; }
+
+@media (max-width: 850px) {
+  .game-stage--swenka { grid-template-columns: 38% 1fr 115px; }
+  .game-stage--swenka .fashion-portrait { grid-column: 2; }
+  .game-stage--swenka .wardrobe { grid-column: 3; }
+  .game-stage--swenka .game-copy { padding-left: 5vw; grid-column: 1; }
+}
+@media (max-width: 700px) {
+  .game-stage--pantsula, .game-stage--skhothane { grid-template-columns: 1fr; grid-template-rows: auto auto; }
+  .pantsula-image, .skhothane-images { min-height: 56svh; height: auto; }
+  .layer-photo { width: 58%; height: 70%; }
+}
+@media (max-width: 650px) {
+  .journey-north { left: 38%; top: 17%; }
+  .journey-soweto { left: 46%; top: 52%; }
+  .journey-line { left: 34%; top: 14%; transform: scale(.83); transform-origin: top left; }
+  .journey-copy { left: 24px; right: 20px; bottom: 14%; }
+  .journey-label { right: 24px; }
+}

@@ -1,64 +1,53 @@
-import { useEffect, useRef, useState } from "react";
-import { useActiveSection, useRegisterSection } from "../context/ActiveSectionContext";
-import ChapterVideo from "../components/ChapterVideo";
+import { useNavigation } from "../context/NavigationContext";
+import ChapterPlayer from "../components/ChapterPlayer";
+import cousin1 from "../assets/images/Cousin/Cousin 1.jpeg";
+import cousin2 from "../assets/images/Cousin/Cousin 2.jpeg";
+import chapterImage from "../assets/images/Chapter images/reflection chapter intro.jpg";
 import houseImage from "../assets/Additional Images/Street Visuals/Wattville/House.jpg";
-import entryVideo from "../assets/Chapter 4_Reflection/Intro Video - Reflection.mp4";
-import backgroundTrack from "../assets/audio/Music/Dudu Manhenga Turn music video by Ziblab (outro song).mp3";
+import streetImage from "../assets/Additional Images/Street Visuals/Wattville/Street sign.jpg";
+import buildingImage from "../assets/Additional Images/Street Visuals/Wattville/Building.jpg";
+import backgroundTrack from "../assets/audio/New Music/Kwesta - Spirit (Official Music Video) ft Wale ft. Wale _Conclusion.mp3";
 import "../styles/Reflection.css";
 
-const VOLUME_FADE_MS = 2500;
-const VOLUME_FADE_STEP_MS = 50;
+const cousinPhotos = [cousin1, cousin2];
 
 function Reflection() {
-  const [soundOn, setSoundOn] = useState(true);
-  const audioRef = useRef(null);
-  const sectionRef = useRef(null);
-  useRegisterSection("reflection", sectionRef);
-  const activeId = useActiveSection();
+  const { completeChapter, goTo } = useNavigation();
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return undefined;
-    audio.muted = !soundOn;
-    if (activeId !== "reflection") {
-      audio.pause();
-      return undefined;
-    }
-    audio.volume = 0;
-    audio.play().catch(() => {});
-
-    const start = Date.now();
-    const interval = setInterval(() => {
-      const progress = Math.min(1, (Date.now() - start) / VOLUME_FADE_MS);
-      audio.volume = progress;
-      if (progress >= 1) clearInterval(interval);
-    }, VOLUME_FADE_STEP_MS);
-    return () => clearInterval(interval);
-  }, [activeId, soundOn]);
+  const finalPage = (
+    <section className="final-frame" aria-label="End of story">
+      <p>It’s more than fashion.</p>
+      <div className="final-frame__actions">
+        <button onClick={() => goTo("about")}>REPLAY JOURNEY <span>↑</span></button>
+        <button onClick={() => goTo("swenka")}>EXPLORE CHAPTERS <span>→</span></button>
+        <button onClick={() => goTo("about")}>CREDITS <span>+</span></button>
+      </div>
+    </section>
+  );
 
   return (
-    <section id="reflection" ref={sectionRef} className="reflection-page content-fade-in">
-      <div className="chapter-opener">
-        <ChapterVideo src={entryVideo} className="chapter-opener-video" />
-        <div className="chapter-opener-copy">
-          <span className="chapter-opener-label">04 / REFLECTION</span>
-        </div>
-      </div>
-      <audio ref={audioRef} src={backgroundTrack} loop preload="none" />
-      <header className="reflection-header"><span>04 / REFLECTION</span><span>WHERE TOWNSHIP FASHION GOES NEXT</span></header>
-      <section className="reflection-stage">
-        <div className="reflection-copy">
-          <p className="chapter-tag">04 / REFLECTION</p>
-          <h1>BACK TO WHERE<br />IT ALL BEGAN</h1>
-          <i />
-          <p>Same streets.<br />Different eyes.<br />Deeper understanding.</p>
-          <button className={`reflection-sound-toggle ${soundOn ? "on" : ""}`} onClick={() => setSoundOn(!soundOn)}>{soundOn ? "SOUND ON" : "SOUND OFF"}<span aria-hidden="true" /></button>
-        </div>
-        <div className="reflection-image">
-          <img src={houseImage} alt="A township home in Wattville, where the story began" loading="lazy" decoding="async" />
-        </div>
-      </section>
-    </section>
+    <ChapterPlayer
+      id="reflection"
+      chapter="04 / REFLECTION"
+      title="Memory. Identity. Future."
+      subtitle="Where do I belong in all of this?"
+      context="I started this thinking I’d be documenting other people’s style. I didn’t expect to end up asking what all of it says about where I come from, and where that leaves me now."
+      accent="beige"
+      interaction="scroll"
+      exitTransition="fade"
+      titleImage={chapterImage}
+      titleTransition="dissolve"
+      track={backgroundTrack}
+      outro="Back to where it all began…"
+      finalPage={finalPage}
+      frames={[
+        { label: "Empty streets", image: streetImage, text: "I came into this thinking I was far from it.", kind: "quiet" },
+        { label: "Time + realisation", image: buildingImage, text: "But the more time I spent here… the more I realised I wasn’t as disconnected as I thought.", kind: "quiet" },
+        { label: "History + identity", collage: cousinPhotos, text: "There’s history in it. There’s identity in it." },
+        { label: "Understanding", image: houseImage, text: "And now… I understand it a little more than I did before.", kind: "quiet" },
+      ]}
+      onComplete={() => completeChapter("reflection")}
+    />
   );
 }
 

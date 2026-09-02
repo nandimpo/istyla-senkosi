@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import { useRegisterSection } from "../context/ActiveSectionContext";
-import { useChapterReady } from "../context/ChapterGateContext";
-import { useSectionAudio } from "../hooks/useSectionAudio";
-import { scrollToChapter } from "../utils/scrollToChapter";
-import ChapterVideo from "../components/ChapterVideo";
+import { useNavigation } from "../context/NavigationContext";
+import ChapterPlayer from "../components/ChapterPlayer";
+import BeatGame from "../components/games/BeatGame";
+import interviewVideo from "../assets/Chapter 2_Pantsula/Video/South African Ama Pantsula Dance culture (showYourLegs Ep.1).mp4";
 import entryVideo from "../assets/Chapter 2_Pantsula/Video/Intro Video- Pantsula.mp4";
 import readyImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-0-ready.jpg";
 import stanceImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-1-stance.jpg";
@@ -14,95 +12,38 @@ import finaleImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-5-finale
 import editorial1 from "../assets/Chapter 2_Pantsula/Images/Editorial/Light Summer Knits Dropping Friday Online - Link on bio.CPT- @brokeklubhouse (53 Wale street, Ca (1).jpg";
 import editorial2 from "../assets/Chapter 2_Pantsula/Images/Editorial/Light Summer Knits Dropping Friday Online - Link on bio.CPT- @brokeklubhouse (53 Wale street, Ca.jpg";
 import editorial3 from "../assets/Chapter 2_Pantsula/Images/Editorial/Light Summer Knits Dropping Friday Online - Link on bio.CPT- @brokeklubhouse.jpg";
-import editorial4 from "../assets/Chapter 2_Pantsula/Images/Editorial/Mafioso Season 4 exclusively dropping today at the BROKE BOOTSALECatch the drop @brokeklubhouse .jpg";
-import backgroundTrack from "../assets/audio/Music/TKZee - Dlala Mapantsula (archive and chapter intro song).mp3";
-import "../styles/Pantsula.css";
+import chapterImage from "../assets/images/Chapter images/pantsula chapter intro.jpg";
+import backgroundTrack from "../assets/audio/New Music/TKZee - Dlala Mapantsula (archive and chapter intro song) _Pantsula.mp3";
 
-const beats = ["STANCE", "STEP", "RHYTHM", "SWING", "FINALE"];
-const beatNotes = [110, 147, 165, 196, 220];
 const sceneImages = [readyImage, stanceImage, stepImage, rhythmImage, swingImage, finaleImage];
-const EDITORIAL_GALLERY = [editorial1, editorial2, editorial3, editorial4];
 
 function Pantsula() {
-  const [activeBeat, setActiveBeat] = useState(0);
-  const [soundOn, setSoundOn] = useState(true);
-  const audioContext = useRef(null);
-  const audioRef = useRef(null);
-  const sectionRef = useRef(null);
-  const ready = activeBeat === beats.length;
-  useRegisterSection("pantsula", sectionRef);
-  useSectionAudio({ id: "pantsula", audioRef, soundOn });
-  useChapterReady("pantsula", ready);
+  const { completeChapter } = useNavigation();
 
-  useEffect(() => {
-    if (!ready) return undefined;
-    const timer = setTimeout(() => scrollToChapter("skhothane"), 1400);
-    return () => clearTimeout(timer);
-  }, [ready]);
-
-  const playBeat = (index) => {
-    if (!soundOn) return;
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    audioContext.current ??= new AudioContext();
-    const context = audioContext.current;
-    if (context.state === "suspended") context.resume();
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-    oscillator.type = index % 2 ? "square" : "triangle";
-    oscillator.frequency.setValueAtTime(beatNotes[index], context.currentTime);
-    gain.gain.setValueAtTime(0.0001, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.32, context.currentTime + 0.015);
-    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.26);
-    oscillator.connect(gain).connect(context.destination);
-    oscillator.start();
-    oscillator.stop(context.currentTime + 0.28);
-  };
-
-  const activateBeat = (index) => {
-    if (index !== activeBeat) return;
-    playBeat(index);
-    setActiveBeat(index + 1);
-  };
-
-  const currentScene = activeBeat === 0 ? "TAP THE FIRST BEAT" : activeBeat === beats.length ? "THE DANCE IS ALIVE" : `${beats[activeBeat - 1]} UNLOCKED`;
-
-  return <section id="pantsula" ref={sectionRef} className="pantsula-page content-fade-in">
-    <div className="chapter-opener">
-      <ChapterVideo src={entryVideo} className="chapter-opener-video" />
-      <div className="chapter-opener-copy">
-        <span className="chapter-opener-label">02 / PANTSULA</span>
-      </div>
-    </div>
-    <audio ref={audioRef} src={backgroundTrack} loop preload="none" />
-    <header className="pantsula-header"><span>02 / PANTSULA</span><span>MOVE TO THE RHYTHM</span></header>
-    <section className="pantsula-editorial">
-      <div className="pantsula-editorial-collage" aria-hidden="true">
-        {EDITORIAL_GALLERY.map((src, index) => (
-          <img key={src} src={src} alt="" loading="lazy" decoding="async" style={{ animationDelay: `${index * -1.4}s` }} />
-        ))}
-      </div>
-      <div className="pantsula-editorial-overlay">
-        <p className="pantsula-editorial-kicker">A visual reference</p>
-        <h2>EDITORIAL ARCHIVE</h2>
-        <a className="pantsula-editorial-continue" href="#pantsula-stage">BEGIN <span>→</span></a>
-      </div>
-    </section>
-    <section className="pantsula-stage" id="pantsula-stage">
-        <div className="pantsula-copy">
-          <p className="chapter-tag">02 / PANTSULA</p>
-          <h1>EVERY STEP<br />TELLS A<br />STORY<span>...</span></h1>
-          <i />
-          <p>TAP EACH BEAT IN ORDER<br />TO BRING MOVEMENT TO LIFE.</p>
-          <strong>{currentScene}</strong>
-          <button className={`sound-toggle ${soundOn ? "on" : ""}`} onClick={() => setSoundOn(!soundOn)}>{soundOn ? "SOUND ON" : "SOUND OFF"}<span aria-hidden="true" /></button>
-        </div>
-        <div className={`pantsula-image scene-${activeBeat}`}>
-          <img src={sceneImages[activeBeat]} alt={`Pantsula dance scene: ${activeBeat ? beats[activeBeat - 1] : "ready"}`} loading="lazy" decoding="async" />
-          <div className="image-overlay"><span>BEAT {activeBeat} / {beats.length}</span><b>{activeBeat ? beats[activeBeat - 1] : "READY"}</b></div>
-          <div className="beat-map" aria-label="Pantsula beat map">{beats.map((beat, index) => <button key={beat} className={`beat beat-${index + 1} ${index < activeBeat ? "complete" : ""} ${index === activeBeat ? "ready" : ""}`} disabled={index !== activeBeat} onClick={() => activateBeat(index)} aria-label={`${beat}: ${index < activeBeat ? "complete" : index === activeBeat ? "tap now" : "locked"}`}><span>{index + 1}</span></button>)}</div>
-        </div>
-      </section>
-  </section>;
+  return (
+    <ChapterPlayer
+      id="pantsula"
+      chapter="02 / PANTSULA"
+      title="Movement. Rhythm. Community."
+      subtitle="This is how the streets speak."
+      context="Nobody taught the steps in a class. You learned them standing at the edge of a circle, watching, until your body understood before your mind did. That’s how the streets pass things down."
+      accent="olive"
+      interaction="click"
+      exitTransition="fade"
+      titleImage={chapterImage}
+      titleTransition="wipe"
+      titleWipeDirection="left"
+      track={backgroundTrack}
+      frames={[
+        { label: "Memory collage / Jama’s view", collage: [editorial1, editorial2, editorial3], text: "Then everything started moving. Step. Step. Step." },
+        { label: "Street energy / Fast cuts", video: entryVideo, caption: "MOVEMENT BUILDS" },
+        { label: "Interview / Let them speak", video: interviewVideo, lockSeconds: 12, badge: "● REC", caption: "10–15 SEC CLIP" },
+        { label: "Details + environment", collage: [stanceImage, stepImage, rhythmImage, swingImage], text: "I couldn’t just look anymore." },
+      ]}
+      gamePage={(onComplete) => <BeatGame sceneImages={sceneImages} onComplete={onComplete} />}
+      onComplete={() => completeChapter("pantsula")}
+    />
+  );
 }
 
 export default Pantsula;

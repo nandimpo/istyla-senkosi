@@ -2,20 +2,13 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Experience from "./pages/Experience";
 import ChapterNav from "./components/ChapterNav";
 import MenuNav from "./components/MenuNav";
-import ChapterPager from "./components/ChapterPager";
 import HomeLink from "./components/HomeLink";
-import ScrollGate from "./components/ScrollGate";
-import { ActiveSectionProvider } from "./context/ActiveSectionContext";
-import { ChapterGateProvider } from "./context/ChapterGateContext";
+import { NavigationProvider } from "./context/NavigationContext";
 
 function App() {
-  return <ActiveSectionProvider><ChapterGateProvider><Routes>
+  return <NavigationProvider><Routes>
     <Route path="/" element={<Experience />} />
-    <Route path="/introduction" element={<Navigate to="/#introduction" replace />} />
-    <Route path="/swenka" element={<Navigate to="/#swenka" replace />} />
-    <Route path="/pantsula" element={<Navigate to="/#pantsula" replace />} />
-    <Route path="/skhothane" element={<Navigate to="/#skhothane" replace />} />
-    <Route path="/reflection" element={<Navigate to="/#reflection" replace />} />
-  </Routes><HomeLink /><ChapterNav /><ChapterPager /><MenuNav /><ScrollGate /></ChapterGateProvider></ActiveSectionProvider>;
+    <Route path="*" element={<Navigate to="/" replace />} />
+  </Routes><HomeLink /><ChapterNav /><MenuNav /></NavigationProvider>;
 }
 export default App;
