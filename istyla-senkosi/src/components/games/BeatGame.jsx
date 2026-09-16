@@ -45,7 +45,7 @@ function BeatGame({ sceneImages, onComplete }) {
       <div className="game-copy">
         <p className="tag">02 / PANTSULA</p>
         <h1>I tried to feel it,<br />not just watch it.</h1>
-        <p className="body">Nobody could explain the rhythm to me in words. So I stopped asking and started trying to catch it myself — one beat at a time.</p>
+        <p className="body">Nobody could explain the rhythm to me in words. So I stopped asking and started trying to catch it myself, one beat at a time.</p>
         <strong>{currentScene}</strong>
         <i />
       </div>

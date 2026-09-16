@@ -33,7 +33,7 @@ function Skhothane() {
       chapter="03 / SKHOTHANE"
       title="Expression. Pride. Spectacle."
       subtitle="It’s more than what you wear."
-      context="I used to think it was about the brands — showing off what you could afford. It took me longer to understand it was about being seen at all, in a place that doesn’t always look twice at you."
+      context="I used to think it was about the brands, showing off what you could afford. It took me longer to understand it was about being seen at all, in a place that doesn’t always look twice at you."
       accent="red"
       interaction="swipe"
       exitTransition="fade"
@@ -43,7 +43,7 @@ function Skhothane() {
       track={backgroundTrack}
       frames={[
         { label: "High energy / Smash cuts", collage: [img1, img9, tkzee1, tkzee2, pantsulaStyle], caption: "COLOUR. BRANDS. PERFORMANCE." },
-        { label: "Build-up collage", collage: [img2, img3, img5, img7, blackLabel, manBending], text: "This part felt familiar… but I didn’t realise why at first." },
+        { label: "Build up collage", collage: [img2, img3, img5, img7, blackLabel, manBending], text: "This part felt familiar… but I didn’t realise why at first." },
         { label: "Cousin moment / Slow down", collage: [img6, img4, img8, vilaCoster, brotherhood1, brotherhood2, brotherhood3], text: "I knew someone who dressed like this. My cousin. I never asked him why.", kind: "hold" },
         { label: "After interviews / Realisation", collage: [img8, img1, img2, img3, img4, img5, img7, img9], text: "It’s not just about brands. It’s about expression. About being seen. About taking up space." },
       ]}

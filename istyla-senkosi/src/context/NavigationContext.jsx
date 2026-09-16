@@ -3,6 +3,14 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 
 const ORDER = ["about", "introduction", "swenka", "pantsula", "skhothane", "reflection"];
 
+function readPreferences() {
+  try {
+    return JSON.parse(localStorage.getItem("istyla-preferences")) || {};
+  } catch {
+    return {};
+  }
+}
+
 const NavigationContext = createContext({
   currentSection: "about",
   unlockedIndex: 0,
@@ -12,10 +20,22 @@ const NavigationContext = createContext({
 });
 
 export function NavigationProvider({ children }) {
+  const [navigationLocked, setNavigationLocked] = useState(false);
+  const [preferences, setPreferences] = useState(readPreferences);
+  const soundOn = preferences.soundOn !== false;
+  const volume = Number.isFinite(preferences.volume) ? Math.max(0, Math.min(1, preferences.volume)) : 0.7;
+  const profileName = typeof preferences.profileName === "string" ? preferences.profileName : "";
+  const reducedMotion = preferences.reducedMotion === true;
+  const setSoundOn = (value) => setPreferences((p) => ({ ...p, soundOn: typeof value === "function" ? value(p.soundOn !== false) : value }));
+  const setVolume = (value) => setPreferences((p) => ({ ...p, volume: value }));
+  const setProfileName = (value) => setPreferences((p) => ({ ...p, profileName: value }));
+  const setReducedMotion = (value) => setPreferences((p) => ({ ...p, reducedMotion: value }));
+  useEffect(() => {
+    try { localStorage.setItem("istyla-preferences", JSON.stringify(preferences)); } catch { /* Preferences still work when storage is unavailable. */ }
+    document.documentElement.dataset.reducedMotion = reducedMotion ? "true" : "false";
+  }, [preferences, reducedMotion]);
   const [currentSection, setCurrentSection] = useState("about");
-  // "introduction" (index 1) starts unlocked - Hero's "Begin Journey" is the
-  // only door in, and there's no free-scroll path that could bypass it now
-  // that Experience only ever mounts one section at a time.
+  // Track journey progress separately from free chapter access.
   const [unlockedIndex, setUnlockedIndex] = useState(1);
 
   useEffect(() => {
@@ -23,26 +43,26 @@ export function NavigationProvider({ children }) {
   }, [currentSection]);
 
   const isUnlocked = useCallback((id) => {
-    const index = ORDER.indexOf(id);
-    return index !== -1 && index <= unlockedIndex;
-  }, [unlockedIndex]);
+    return ORDER.includes(id);
+  }, []);
 
   const goTo = useCallback((id) => {
-    if (!ORDER.includes(id) || !isUnlocked(id)) return;
+    if (!isUnlocked(id)) return;
     setCurrentSection(id);
   }, [isUnlocked]);
 
   const completeChapter = useCallback((id) => {
+    if (navigationLocked) return;
     const index = ORDER.indexOf(id);
     if (index === -1) return;
     const nextIndex = index + 1;
     setUnlockedIndex((current) => Math.max(current, nextIndex));
     const nextId = ORDER[nextIndex];
     if (nextId) setCurrentSection(nextId);
-  }, []);
+  }, [navigationLocked]);
 
   return (
-    <NavigationContext.Provider value={{ currentSection, unlockedIndex, goTo, completeChapter, isUnlocked }}>
+    <NavigationContext.Provider value={{ currentSection, unlockedIndex, goTo, completeChapter, isUnlocked, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion, navigationLocked, setNavigationLocked }}>
       {children}
     </NavigationContext.Provider>
   );

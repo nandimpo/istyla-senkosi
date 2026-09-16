@@ -37,7 +37,7 @@ function Pantsula() {
       frames={[
         { label: "Memory collage / Jama’s view", collage: [editorial1, editorial2, editorial3], text: "Then everything started moving. Step. Step. Step." },
         { label: "Street energy / Fast cuts", video: entryVideo, caption: "MOVEMENT BUILDS" },
-        { label: "Interview / Let them speak", video: interviewVideo, lockSeconds: 12, badge: "● REC", caption: "10–15 SEC CLIP" },
+        { label: "Interview / Let them speak", video: interviewVideo, lockSeconds: 12, caption: "10 TO 15 SEC CLIP" },
         { label: "Details + environment", collage: [stanceImage, stepImage, rhythmImage, swingImage], text: "I couldn’t just look anymore." },
       ]}
       gamePage={(onComplete) => <BeatGame sceneImages={sceneImages} onComplete={onComplete} />}

@@ -49,7 +49,7 @@ function SwipeCarouselGame({ images, onComplete }) {
         <p className="tag">03 / SKHOTHANE</p>
         <h1>Every photo<br />I took that day.</h1>
         <p className="body">I went back through everything I shot, one image after another, trying to see what I&apos;d missed the first time.</p>
-        <strong>SWIPE THROUGH — THE WAY I DID, LOOKING BACK</strong>
+        <strong>SWIPE THROUGH, THE WAY I DID, LOOKING BACK</strong>
         <div className="layer-stepper" aria-hidden="true">
           {Array.from({ length: groupCount }).map((_, index) => (
             <span key={index} className={index <= activeGroup ? "done" : ""} />

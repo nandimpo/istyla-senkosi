@@ -46,12 +46,12 @@ function fadeTo(audio, target, { thenPause = false } = {}) {
 }
 
 export function useSectionAudio({ id, audioRef, soundOn }) {
-  const { currentSection } = useNavigation();
+  const { currentSection, volume, navigationLocked } = useNavigation();
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return undefined;
-    audio.muted = !soundOn;
+    audio.muted = !soundOn || navigationLocked;
 
     if (currentSection !== id) {
       fadeTo(audio, 0, { thenPause: true });
@@ -60,16 +60,19 @@ export function useSectionAudio({ id, audioRef, soundOn }) {
 
     if (audio.paused) audio.volume = 0;
     audio.play().catch(() => {});
-    fadeTo(audio, 1);
+    fadeTo(audio, volume);
 
     const retry = () => {
       if (!audio.muted) {
         audio.play().catch(() => {});
-        fadeTo(audio, 1);
+        fadeTo(audio, volume);
       }
     };
     resumeListeners.add(retry);
     if (hasInteracted) retry();
-    return () => resumeListeners.delete(retry);
-  }, [currentSection, id, soundOn, audioRef]);
+    return () => {
+      resumeListeners.delete(retry);
+      cancelFade(audio);
+    };
+  }, [currentSection, id, soundOn, audioRef, volume, navigationLocked]);
 }

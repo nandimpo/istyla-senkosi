@@ -1,0 +1,21 @@
+/* The rubber toe is the click point. Native cursors remain as a fallback. */
+@media (any-pointer: fine) {
+  html,
+  body,
+  body * {
+    cursor: url("../assets/images/sneaker-cursor.svg") 3 27, auto !important;
+  }
+
+  body a,
+  body button,
+  body [role="button"],
+  body [role="slider"] {
+    cursor: url("../assets/images/sneaker-cursor.svg") 3 27, pointer !important;
+  }
+
+  body input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
+  body textarea,
+  body [contenteditable="true"] {
+    cursor: text !important;
+  }
+}

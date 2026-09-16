@@ -16,8 +16,17 @@ function Hero() {
 
   return <main className="documentary" id="about">
     <div className="hero-collage" aria-hidden="true">
-      {collageImages.map((src, index) => (
-        <img key={src} src={src} alt="" style={{ animationDelay: `${index * -1.5}s` }} />
+      {collageImages.slice(0, 4).map((src, index) => (
+        <div className="hero-gallery-column" key={src}>
+          <div className="hero-gallery-track">
+            {[0, 1].map((copy) => (
+              <div className="hero-gallery-group" key={copy}>
+                <img src={src} alt="" decoding="async" />
+                <img src={collageImages[index + 4]} alt="" decoding="async" />
+              </div>
+            ))}
+          </div>
+        </div>
       ))}
     </div>
     <header className="topbar">

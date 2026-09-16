@@ -1,0 +1,10 @@
+{
+  "name": "istyla-senkosi-root",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix istyla-senkosi run dev",
+    "build": "npm --prefix istyla-senkosi run build",
+    "lint": "npm --prefix istyla-senkosi run lint",
+    "preview": "npm --prefix istyla-senkosi run preview"
+  }
+}

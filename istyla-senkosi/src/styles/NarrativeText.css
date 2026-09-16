@@ -1,0 +1,66 @@
+.narrative-stitch { text-shadow: .5px .6px 0 rgba(255,245,216,.3), -.4px -.4px 0 rgba(49,29,12,.3); }
+.narrative-stitch__letter { animation: thread-tighten .45s ease-out both; }
+.narrative-stitch__cursor { position:relative; display:inline-block; width:0; height:0; vertical-align:baseline; pointer-events:none; }
+.narrative-stitch__needle { position:absolute; z-index:3; left:0; bottom:.08em; width:3px; height:26px; background:linear-gradient(90deg,#645c50,#fff9e9 45%,#8d8270); border-radius:2px 2px 70% 70%; transform-origin:bottom center; animation:needle-sew .6s ease-in-out infinite; filter:drop-shadow(1px 2px 1px #0006); }
+.narrative-stitch__needle::before { content:""; position:absolute; top:3px; left:1px; width:1px; height:5px; border-radius:50%; background:#574534; }
+.narrative-stitch__needle::after { content:""; position:absolute; right:1px; top:4px; width:22px; height:13px; border:1px solid #f4deaf; border-left-color:transparent; border-bottom-color:transparent; border-radius:50%; transform:rotate(-15deg); }
+@keyframes needle-sew { 0%,100% { transform:translateY(-6px) rotate(28deg); } 50% { transform:translateY(4px) rotate(8deg); } }
+@keyframes thread-tighten { from { opacity:.3; text-shadow:1px 2px 2px #5b391766; } to { opacity:1; text-shadow:.5px .6px 0 #f4deaf44; } }
+html[data-reduced-motion="true"] .narrative-stitch__needle { display:none; }
+html[data-reduced-motion="true"] .narrative-stitch__letter { animation:none; }
+@media(prefers-reduced-motion:reduce) { .narrative-stitch__needle { display:none; } .narrative-stitch__letter { animation:none; } }
+
+/* Diagonal strands are clipped inside the letterforms, like satin embroidery. */
+.narrative-stitch__thread { --thread-main:#fff0cb; --thread-shade:#bb9257; color:var(--thread-main); }
+.chapter-player__note .narrative-stitch__thread { --thread-main:#173d3b; --thread-shade:#091d1c; }
+@supports (background-clip:text) or (-webkit-background-clip:text) {
+  .narrative-stitch__thread { background-image:repeating-linear-gradient(125deg,var(--thread-main) 0 1.8px,var(--thread-shade) 1.8px 2.6px,var(--thread-main) 2.6px 3.6px); background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent; text-shadow:none; filter:drop-shadow(.6px 1px .3px #25140980); }
+  .narrative-stitch__thread .narrative-stitch__letter { text-shadow:none; }
+}
+
+/* Raised satin thread: fine highlights, dark grooves and a contact shadow. */
+.narrative-stitch--embroidered { text-shadow: none; }
+@supports (background-clip:text) or (-webkit-background-clip:text) {
+  .narrative-stitch--embroidered .narrative-stitch__thread {
+    background-image: repeating-linear-gradient(115deg, #0b2423 0 .7px, #39716a .7px 1.2px, #173d3b 1.2px 2px, #102d2b 2px 2.8px);
+    filter: drop-shadow(0 1px .25px #f5c581) drop-shadow(.7px 1.4px .6px #321303b3);
+    -webkit-text-stroke: .2px #163633;
+  }
+}
+.narrative-stitch--embroidered .narrative-stitch__letter {
+  animation: embroidery-fill .15s steps(4, end) both;
+}
+.narrative-stitch--embroidered .narrative-stitch__needle {
+  width: 4px;
+  height: 38px;
+  left: 2px;
+  background: linear-gradient(90deg, #535e65, #fff 42%, #b9c9d1 65%, #4d5960);
+  animation: embroidery-needle .15s ease-in-out infinite;
+  filter: drop-shadow(2px 3px 1px #26140999);
+}
+.narrative-stitch--embroidered .narrative-stitch__needle::before {
+  width: 2px;
+  height: 7px;
+  background: #243b3b;
+}
+.narrative-stitch--embroidered .narrative-stitch__needle::after {
+  width: 34px;
+  height: 22px;
+  border-width: 2px;
+  border-top-color: #39716a;
+  border-right-color: #173d3b;
+  filter: drop-shadow(0 1px .4px #f5c581);
+}
+@keyframes embroidery-fill {
+  from { opacity: .25; }
+  to { opacity: 1; }
+}
+@keyframes embroidery-needle {
+  0%, 100% { transform: translate(-4px, -12px) rotate(30deg); }
+  55% { transform: translate(0, 5px) rotate(12deg); }
+  70% { transform: translate(0, 6px) rotate(12deg); }
+}
+html[data-reduced-motion="true"] .narrative-stitch--embroidered .narrative-stitch__letter { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .narrative-stitch--embroidered .narrative-stitch__letter { animation: none; }
+}

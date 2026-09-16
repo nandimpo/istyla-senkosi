@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 
-const DRAG_THRESHOLD = 90;
+const DRAG_THRESHOLD = 35;
 const SWIPE_THRESHOLD = 45;
 const SCROLL_COOLDOWN_MS = 800;
 const SCROLL_DELTA_THRESHOLD = 12;
@@ -54,6 +54,7 @@ export function useDragGesture({ onAdvance, onRetreat }) {
   const startY = useRef(null);
 
   const onPointerDown = (event) => {
+    if (event.button !== 0 || event.target.closest("button, a, input, select, textarea")) return;
     startY.current = event.clientY;
     setDragging(true);
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -86,6 +87,7 @@ export function useDragGesture({ onAdvance, onRetreat }) {
       onPointerMove,
       onPointerUp: settle,
       onPointerCancel: cancel,
+      onLostPointerCapture: cancel,
     },
   };
 }
