@@ -1,4 +1,5 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useSessionState } from "../hooks/useSessionState";
+import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import NarrativeText from "./NarrativeText";
 import "../styles/UnzipIntro.css";
@@ -6,7 +7,7 @@ import "../styles/UnzipIntro.css";
 export default function UnzipIntro({ image, children }) {
   const [progress, setProgress] = useState(0);
   const [opening, setOpening] = useState(false);
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = useSessionState("swenka:opened", false);
   const { reducedMotion } = useNavigation();
   const drag = useRef(null);
   const openingFrom = useRef(0);
@@ -29,7 +30,7 @@ export default function UnzipIntro({ image, children }) {
     };
     animation = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animation);
-  }, [opening, reducedMotion]);
+  }, [opening, reducedMotion, setOpened]);
   if (opened) return children;
 
   const edge = (side) => Array.from({ length: 41 }, (_, index) => {

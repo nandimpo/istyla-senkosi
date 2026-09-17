@@ -14,7 +14,7 @@ export function useContinuousZoom(ref, enabled, resetKey) {
       if (reducedMotion || preference.matches) return;
       const start = performance.now();
       const zoom = (now) => {
-        media.style.transform = `scale(${1 + (now - start) / 10000})`;
+        media.style.transform = `scale(${1 + (now - start) / 60000})`;
         animation = requestAnimationFrame(zoom);
       };
       animation = requestAnimationFrame(zoom);

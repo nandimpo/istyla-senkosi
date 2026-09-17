@@ -1,18 +1,19 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useSessionState } from "../../hooks/useSessionState";
+import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "../../context/NavigationContext";
 import { MAP_VIEW, STOPS, advanceProgress, clampProgress, routePath, routePoint, travelledPath } from "./journeyMapData";
 import "../../styles/JourneyMapGame.css";
 import SowetoArrivalClip from "./SowetoArrivalClip";
 
 function JourneyMapGame({ mapImage, onComplete }) {
-  const [progress, setProgress] = useState(0);
+  const [progress, setProgress] = useSessionState("map:progress", 0, (value) => Number.isFinite(value) && value >= 0 && value <= 1);
   const [closedStop, setClosedStop] = useState(null);
   const [entering, setEntering] = useState(false);
   const [systemReduced, setSystemReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const { reducedMotion, setNavigationLocked } = useNavigation();
   const calm = reducedMotion || systemReduced;
   const drag = useRef(null);
-  const progressRef = useRef(0);
+  const progressRef = useRef(progress);
   const sliderRef = useRef(null);
   const viewportRef = useRef(null);
   const hoverFrame = useRef(null);
@@ -40,9 +41,9 @@ function JourneyMapGame({ mapImage, onComplete }) {
     const y = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1));
     cancelAnimationFrame(hoverFrame.current);
     hoverFrame.current = requestAnimationFrame(() => {
-      viewport.style.setProperty("--hover-x", `${-y * 8}deg`);
-      viewport.style.setProperty("--hover-y", `${x * 10}deg`);
-      viewport.style.setProperty("--hover-lift", "12px");
+      viewport.style.setProperty("--hover-x", "0deg");
+      viewport.style.setProperty("--hover-y", "0deg");
+      viewport.style.setProperty("--hover-lift", "0px");
       viewport.style.setProperty("--light-x", `${50 + x * 35}%`);
       viewport.style.setProperty("--light-y", `${50 + y * 35}%`);
       viewport.style.setProperty("--light-opacity", "0.2");
@@ -67,6 +68,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
   const pointerDown = (event) => {
     if (entering || (event.pointerType === "mouse" && event.button !== 0)) return;
     event.preventDefault();
+    event.stopPropagation();
     cancelAnimationFrame(hoverFrame.current);
     event.currentTarget.focus();
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -76,8 +78,9 @@ function JourneyMapGame({ mapImage, onComplete }) {
   const pointerMove = (event) => {
     if (!drag.current) return;
     const requested = drag.current.progress + (event.clientY - drag.current.y) / drag.current.range;
-    const next = move(requested);
-    if ((next === 0.5 || next === 1) && requested > next) drag.current = null;
+    event.preventDefault();
+    event.stopPropagation();
+    move(requested, false);
   };
   const keyDown = (event) => {
     const keys = ["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "Home", "End"];
@@ -135,11 +138,11 @@ function JourneyMapGame({ mapImage, onComplete }) {
                 })}
                 <circle className="journey-traveller-shadow" cx={point.x} cy={point.y + 2} r="4" />
                 <circle className="journey-traveller" cx={point.x} cy={point.y} r="3" />
-                <circle ref={sliderRef} className="journey-drag-target" cx={point.x} cy={point.y} r="12" tabIndex={entering ? -1 : 0} role="slider"
+                <circle ref={sliderRef} className="journey-drag-target" cx={point.x} cy={point.y} r="16" tabIndex={entering ? -1 : 0} role="slider"
                   aria-label="Journey marker" aria-describedby="journey-instruction" aria-orientation="vertical"
                   aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}
                   aria-valuetext={`${Math.round(progress * 100)} percent. ${activeStop.title}`} aria-disabled={entering}
-                  onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={() => { drag.current = null; }}
+                  onClick={(event) => event.stopPropagation()} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={(event) => { event.stopPropagation(); drag.current = null; if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }}
                   onPointerCancel={() => { drag.current = null; }} onLostPointerCapture={() => { drag.current = null; }} onKeyDown={keyDown} />
               </svg>
             </div>

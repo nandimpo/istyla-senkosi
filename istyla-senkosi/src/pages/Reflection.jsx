@@ -31,7 +31,7 @@ function Reflection() {
       chapter="04 / REFLECTION"
       title="Memory. Identity. Future."
       subtitle="Where do I belong in all of this?"
-      context="I started this thinking I’d be documenting other people’s style. I didn’t expect to end up asking what all of it says about where I come from, and where that leaves me now."
+      context="I set out from Johannesburg North with questions about my cousin’s style. Following this story through Soweto has changed the way I look. Now I want to take that curiosity home and finally listen to him."
       accent="beige"
       interaction="scroll"
       exitTransition="fade"
@@ -41,10 +41,10 @@ function Reflection() {
       outro="Back to where it all began…"
       finalPage={finalPage}
       frames={[
-        { label: "Empty streets", image: streetImage, text: "I came into this thinking I was far from it.", kind: "quiet" },
-        { label: "Time + realisation", image: buildingImage, text: "But the more time I spent here… the more I realised I wasn’t as disconnected as I thought.", kind: "quiet" },
-        { label: "History + identity", collage: cousinPhotos, text: "There’s history in it. There’s identity in it." },
-        { label: "Understanding", image: houseImage, text: "And now… I understand it a little more than I did before.", kind: "quiet" },
+        { label: "Empty streets", image: streetImage, text: "I thought this story was far from my life. My cousin was a connection I had been overlooking.", kind: "quiet" },
+        { label: "Time + realisation", image: buildingImage, text: "The more I paid attention, the more I questioned my own assumptions about him, about Soweto, and about belonging.", kind: "quiet" },
+        { label: "History + identity", collage: cousinPhotos, text: "These are photographs of my cousin. I recognise the clothes. Now I want to know the memories and choices behind them." },
+        { label: "Understanding", image: houseImage, text: "I’m still Jama, still learning. When I see my cousin, I know where I’ll begin: tell me what your style means to you.", kind: "quiet" },
       ]}
       onComplete={() => completeChapter("reflection")}
     />

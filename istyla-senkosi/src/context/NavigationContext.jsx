@@ -1,3 +1,4 @@
+import { useSessionState } from "../hooks/useSessionState";
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 
@@ -34,7 +35,7 @@ export function NavigationProvider({ children }) {
     try { localStorage.setItem("istyla-preferences", JSON.stringify(preferences)); } catch { /* Preferences still work when storage is unavailable. */ }
     document.documentElement.dataset.reducedMotion = reducedMotion ? "true" : "false";
   }, [preferences, reducedMotion]);
-  const [currentSection, setCurrentSection] = useState("about");
+  const [currentSection, setCurrentSection] = useSessionState("section", "about", (value) => ORDER.includes(value));
   // Track journey progress separately from free chapter access.
   const [unlockedIndex, setUnlockedIndex] = useState(1);
 
@@ -49,7 +50,7 @@ export function NavigationProvider({ children }) {
   const goTo = useCallback((id) => {
     if (!isUnlocked(id)) return;
     setCurrentSection(id);
-  }, [isUnlocked]);
+  }, [isUnlocked, setCurrentSection]);
 
   const completeChapter = useCallback((id) => {
     if (navigationLocked) return;
@@ -59,7 +60,7 @@ export function NavigationProvider({ children }) {
     setUnlockedIndex((current) => Math.max(current, nextIndex));
     const nextId = ORDER[nextIndex];
     if (nextId) setCurrentSection(nextId);
-  }, [navigationLocked]);
+  }, [navigationLocked, setCurrentSection]);
 
   return (
     <NavigationContext.Provider value={{ currentSection, unlockedIndex, goTo, completeChapter, isUnlocked, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion, navigationLocked, setNavigationLocked }}>

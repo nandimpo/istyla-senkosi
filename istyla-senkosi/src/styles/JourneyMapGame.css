@@ -91,3 +91,9 @@
 .journey-map-light { position:absolute; inset:0; transform:translateZ(2px); background:radial-gradient(ellipse at var(--light-x) var(--light-y),#ffe2ab 0%,transparent 65%); opacity:var(--light-opacity); transition:opacity .4s ease; pointer-events:none; }
 .journey-calm .journey-map-light { display:none; }
 @media(prefers-reduced-motion:reduce) { .journey-map-light { display:none; } }
+
+/* Keep the route steady and give its marker a reliable touch/mouse target. */
+.journey-route-layer { touch-action:none; }
+.journey-drag-target { pointer-events:all; }
+.journey-map-image,.journey-paper,.journey-map-caption { pointer-events:none; }
+.journey-stage { padding-top:125px; }

@@ -1,21 +1,9 @@
-/* The rubber toe is the click point. Native cursors remain as a fallback. */
-@media (any-pointer: fine) {
-  html,
-  body,
-  body * {
-    cursor: url("../assets/images/sneaker-cursor.svg") 3 27, auto !important;
-  }
-
-  body a,
-  body button,
-  body [role="button"],
-  body [role="slider"] {
-    cursor: url("../assets/images/sneaker-cursor.svg") 3 27, pointer !important;
-  }
-
-  body input:not([type="range"]):not([type="checkbox"]):not([type="radio"]),
-  body textarea,
-  body [contenteditable="true"] {
-    cursor: text !important;
-  }
+/* The tape tip marks the click point; controls retain familiar feedback. */
+@media (pointer: fine) {
+  html, body { cursor: url("../assets/images/measuring-tape-cursor.svg") 3 3, auto; }
+  a, button, [role="button"] { cursor: pointer; }
+  [role="slider"] { cursor: grab; }
+  [role="slider"]:active { cursor: grabbing; }
+  input, textarea, [contenteditable="true"] { cursor: text; }
+  input[type="range"] { cursor: ew-resize; }
 }
