@@ -1,117 +1,63 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import "../../styles/ChapterGames.css";
-
-const GROUP_SIZE = 3;
-const SWIPE_THRESHOLD = 45;
+import "../../styles/CurvedCarousel.css";
 
 function SwipeCarouselGame({ images, onComplete }) {
   const [current, setCurrent] = useState(0);
-  const [direction, setDirection] = useState(1);
-  const pointerStartX = useRef(null);
-  const ready = current === images.length - 1;
-
-  useEffect(() => {
-    if (!ready) return undefined;
-    const timer = setTimeout(onComplete, 1000);
-    return () => clearTimeout(timer);
-  }, [ready, onComplete]);
-
+  const [offset, setOffset] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const [cursor, setCursor] = useState(null);
+  const [furthest, setFurthest] = useState(0);
+  const start = useRef(null);
+  const slideRef = useRef(null);
+  const ready = furthest === images.length - 1;
   const goTo = (target) => {
-    const next = Math.min(images.length - 1, Math.max(0, target));
-    if (next === current) return;
-    setDirection(next > current ? 1 : -1);
-    setCurrent(next);
+    const next = Math.max(0, Math.min(images.length - 1, target));
+    setCurrent(next); setFurthest((value) => Math.max(value, next)); setOffset(0);
   };
-
-  const handlePointerDown = (event) => {
-    pointerStartX.current = event.clientX;
+  const down = (event) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    event.currentTarget.focus();
     event.currentTarget.setPointerCapture(event.pointerId);
+    start.current = { x:event.clientX, width:slideRef.current.offsetWidth * 1.04 };
+    setDragging(true);
   };
-  const releaseSwipe = (event) => {
-    if (pointerStartX.current === null) return;
-    const delta = pointerStartX.current - event.clientX;
-    pointerStartX.current = null;
-    if (delta > SWIPE_THRESHOLD) goTo(current + 1);
-    else if (delta < -SWIPE_THRESHOLD) goTo(current - 1);
+  const move = (event) => {
+    const bounds = event.currentTarget.getBoundingClientRect();
+    if (event.pointerType === "mouse") setCursor({ x:event.clientX - bounds.left, y:event.clientY - bounds.top });
+    if (!start.current) return;
+    let amount = (event.clientX - start.current.x) / start.current.width;
+    if ((current === 0 && amount > 0) || (current === images.length - 1 && amount < 0)) amount *= .2;
+    setOffset(Math.max(-1.2, Math.min(1.2, amount)));
   };
-  const handlePointerCancel = () => { pointerStartX.current = null; };
-  const handleKeyDown = (event) => {
-    if (event.key === "ArrowRight") goTo(current + 1);
-    if (event.key === "ArrowLeft") goTo(current - 1);
+  const cancel = () => { start.current = null; setDragging(false); setOffset(0); };
+  const release = (event) => {
+    if (!start.current) return;
+    const distance = event.clientX - start.current.x;
+    if (Math.abs(distance) > 40) goTo(current + (distance < 0 ? 1 : -1));
+    cancel();
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
   };
-
-  const groupCount = Math.ceil(images.length / GROUP_SIZE);
-  const activeGroup = Math.floor(current / GROUP_SIZE);
-
-  return (
-    <div className="game-stage game-stage--skhothane">
-      <div className="game-copy">
-        <p className="tag">03 / SKHOTHANE</p>
-        <h1>Every photo<br />I took that day.</h1>
-        <p className="body">I went back through everything I shot, one image after another, trying to see what I&apos;d missed the first time.</p>
-        <strong>SWIPE THROUGH, THE WAY I DID, LOOKING BACK</strong>
-        <div className="layer-stepper" aria-hidden="true">
-          {Array.from({ length: groupCount }).map((_, index) => (
-            <span key={index} className={index <= activeGroup ? "done" : ""} />
-          ))}
-        </div>
-        <i />
-      </div>
-      <div
-        className="skhothane-images"
-        onKeyDown={handleKeyDown}
-        tabIndex={0}
-        role="group"
-        aria-label={`Skhothane style, look ${current + 1} of ${images.length}. Swipe an image left or right to reveal.`}
-      >
-        {current < images.length - 1 && <div className="swipe-hint" aria-hidden="true"><span>SWIPE</span></div>}
-        {current > 0 && (
-          <img
-            key={`left-${current - 1}`}
-            src={images[current - 1]}
-            alt=""
-            aria-hidden="true"
-            className={`layer-photo pos-0 ${direction === 1 ? "enter-right" : "enter-left"}`}
-            draggable={false}
-            loading="lazy"
-            decoding="async"
-            onPointerDown={handlePointerDown}
-            onPointerUp={releaseSwipe}
-            onPointerCancel={handlePointerCancel}
-          />
-        )}
-        <img
-          key={`center-${current}`}
-          src={images[current]}
-          alt={`Skhothane style, look ${current + 1} of ${images.length}`}
-          className={`layer-photo pos-1 ${direction === 1 ? "enter-right" : "enter-left"}`}
-          style={{ animationDelay: "70ms" }}
-          draggable={false}
-          loading="lazy"
-          decoding="async"
-          onPointerDown={handlePointerDown}
-          onPointerUp={releaseSwipe}
-          onPointerCancel={handlePointerCancel}
-        />
-        {current < images.length - 1 && (
-          <img
-            key={`right-${current + 1}`}
-            src={images[current + 1]}
-            alt=""
-            aria-hidden="true"
-            className={`layer-photo pos-2 ${direction === 1 ? "enter-right" : "enter-left"}`}
-            style={{ animationDelay: "140ms" }}
-            draggable={false}
-            loading="lazy"
-            decoding="async"
-            onPointerDown={handlePointerDown}
-            onPointerUp={releaseSwipe}
-            onPointerCancel={handlePointerCancel}
-          />
-        )}
-      </div>
+  return <section className="game-stage game-stage--skhothane curved-gallery">
+    <header className="game-copy curved-gallery__copy">
+      <div><p className="tag">03 / SKHOTHANE</p><h1>Every photo I took that day.</h1></div>
+      <p className="body">I went back through everything I shot, one image after another, trying to see what I&apos;d missed the first time.</p>
+    </header>
+    <div className={`curved-gallery__stage ${dragging ? "is-dragging" : ""}`} tabIndex={0} role="group" aria-roledescription="carousel" aria-label="Skhothane fashion photographs. Drag or use the arrow keys to explore." onPointerDown={down} onPointerMove={move} onPointerUp={release} onPointerCancel={cancel} onLostPointerCapture={cancel} onPointerLeave={() => setCursor(null)} onKeyDown={(event) => { if (["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) { event.preventDefault(); event.stopPropagation(); goTo(event.key === "Home" ? 0 : event.key === "End" ? images.length - 1 : current + (event.key === "ArrowRight" ? 1 : -1)); } }}>
+      {images.map((src, index) => {
+        const distance = index - current + offset;
+        return <figure ref={index === 0 ? slideRef : undefined} key={src} className="curved-gallery__panel" aria-hidden={index !== current} style={{ "--slide-x":`${distance * 104}%`, "--slide-turn":`${Math.max(-35, Math.min(35, distance * -15))}deg`, "--slide-depth":`${Math.min(100, Math.abs(distance) * 35)}px`, opacity:Math.abs(distance) > 3 ? 0 : 1 }}><img src={src} alt={`Skhothane style, photograph ${index + 1}`} draggable={false} loading={Math.abs(index - current) <= 2 ? "eager" : "lazy"}/></figure>;
+      })}
+      {cursor && <span className="curved-gallery__cursor" aria-hidden="true" style={{ left:cursor.x, top:cursor.y }}>{dragging ? "DRAGGING" : "DRAG"}</span>}
     </div>
-  );
+    <div className="curved-gallery__controls">
+      <button type="button" disabled={current === 0} aria-label="Previous photograph" onClick={() => goTo(current - 1)}>&larr;</button>
+      <span role="status">{current + 1} / {images.length}</span>
+      <button type="button" disabled={current === images.length - 1} aria-label="Next photograph" onClick={() => goTo(current + 1)}>&rarr;</button>
+      {ready && <button type="button" className="curved-gallery__continue" onClick={onComplete}>Continue the story &rarr;</button>}
+    </div>
+    <p className="curved-gallery__hint">DRAG THROUGH, THE WAY I DID, LOOKING BACK</p>
+  </section>;
 }
-
 export default SwipeCarouselGame;

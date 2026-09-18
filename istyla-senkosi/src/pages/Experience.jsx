@@ -15,11 +15,11 @@ const CHAPTERS = {
 };
 
 function Experience() {
-  const { currentSection } = useNavigation();
+  const { currentSection, chapterVisit } = useNavigation();
 
   if (currentSection === "about") return <Hero />;
   const Chapter = CHAPTERS[currentSection];
-  return Chapter ? <Chapter /> : <Hero />;
+  return Chapter ? <Chapter key={`${currentSection}:${chapterVisit}`} /> : <Hero />;
 }
 
 export default Experience;

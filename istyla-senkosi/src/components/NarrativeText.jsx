@@ -3,7 +3,7 @@ import { useNavigation } from "../context/NavigationContext";
 import { glyphThread } from "./glyphThread";
 import "../styles/NarrativeText.css";
 
-export default function NarrativeText({ text, delay = 800, embroidered = false, onComplete }) {
+export default function NarrativeText({ text, delay = 400, embroidered = false, onComplete }) {
   const { reducedMotion } = useNavigation();
   const [systemReduced, setSystemReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const rootRef = useRef(null);
@@ -41,6 +41,9 @@ export default function NarrativeText({ text, delay = 800, embroidered = false, 
     let paths = [];
     let length = 0;
     let duration = 0;
+    let needlePosition;
+    let lastTime;
+    let travelUntil = 0;
     const prepare = () => {
       while (index < letters.length && !letters[index].textContent.trim()) {
         letters[index++].style.opacity = 1;
@@ -63,13 +66,15 @@ export default function NarrativeText({ text, delay = 800, embroidered = false, 
         return { path, size };
       });
       length = paths.reduce((sum, part) => sum + part.size, 0);
-      duration = Math.min(650, Math.max(280, length * 4));
+      duration = Math.min(320, Math.max(160, length * 2.4));
       active.dataset.glyphHeight = glyph.height;
       return true;
     };
     const tick = (now) => {
       if (disposed) return;
       if (started === undefined) started = now + delay;
+      const elapsed = lastTime === undefined ? 16 : Math.min(50, now - lastTime);
+      lastTime = now;
       if (now >= started) {
         if (!active && !prepare()) {
           needle.style.visibility = "hidden";
@@ -77,7 +82,9 @@ export default function NarrativeText({ text, delay = 800, embroidered = false, 
           completeRef.current?.();
           return;
         }
-        const progress = Math.min(1, (now - started) / duration);
+        // Give the hand time to carry the thread between letters and lines.
+        const progress = Math.max(0, Math.min(1, (now - Math.max(started, travelUntil)) / duration));
+        active.style.opacity = Math.min(1, progress * 1.25);
         const bounds = active.getBoundingClientRect();
         const container = root.getBoundingClientRect();
         const x = bounds.left - container.left;
@@ -93,14 +100,22 @@ export default function NarrativeText({ text, delay = 800, embroidered = false, 
         }
         if (tip) {
           needle.style.visibility = "visible";
-          needle.style.left = `${x + tip.x}px`;
-          needle.style.top = `${y + tip.y}px`;
+          const target = { x: x + tip.x, y: y + tip.y };
+          if (!needlePosition) needlePosition = target;
+          const blend = 1 - Math.exp(-elapsed / 28);
+          needlePosition = {
+            x: needlePosition.x + (target.x - needlePosition.x) * blend,
+            y: needlePosition.y + (target.y - needlePosition.y) * blend,
+          };
+          needle.style.left = `${needlePosition.x}px`;
+          needle.style.top = `${needlePosition.y}px`;
         }
         if (progress === 1) {
           active.style.opacity = 1;
           active = null;
           index++;
           started = now;
+          travelUntil = now + 65;
         }
       }
       frame = requestAnimationFrame(tick);

@@ -1,3 +1,6 @@
+import FashionAlbum from "./FashionAlbum";
+import CrossfadePhoto from "./CrossfadePhoto";
+import ConverseLacing from "./games/ConverseLacing";
 import { useSessionState } from "../hooks/useSessionState";
 import { useEffect, useRef, useState } from "react";
 import { useClickGesture, useDragGesture, useScrollGesture, useSwipeGesture } from "../hooks/useFrameGesture";
@@ -48,8 +51,10 @@ function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, vi
     <>
       <div className={`chapter-player__visual ${frame.motion ? `chapter-player__visual--${frame.motion}` : ""} ${frame.kind ? `chapter-player__visual--${frame.kind}` : ""}`}>
         {frame.kind === "fashion-wall" ? (
-          <div className={`fashion-wall ${frame.collage.length <= 16 ? "fashion-wall--compact" : ""}`} aria-label={frame.collageLabel || "Boys of Soweto and Broke fashion collage"}>
-            {frame.collage.map((src, index) => <figure key={src} style={{ "--tilt": `${[-4, 3, -2, 5, -3][index % 5]}deg`, "--arrival": `${index * 55}ms` }}><img src={src} alt={`${frame.collageLabel || (src.includes("Broke") ? "Broke" : "Boys of Soweto")} photograph ${index + 1}`} loading="eager" draggable={false}/></figure>)}
+          <FashionAlbum images={frame.collage} label={frame.collageLabel || "Swenka fashion collage"} crossfade={frame.galleryStyle === "crossfade"} visualOnly={visualOnly}/>
+        ) : frame.galleryStyle === "crossfade" && frame.collage ? (
+          <div className="chapter-player__gallery-track" style={{ "--gallery-columns":frame.collage.length }}>
+            {frame.collage.map((src, index) => <CrossfadePhoto key={src} images={frame.collage} index={index} alt={frame.alt || "Pantsula fashion photograph"} paused={visualOnly}/>) }
           </div>
         ) : frame.motion === "gallery" && frame.collage ? (
           <div className={`chapter-player__gallery-track ${frame.galleryStyle === "alternate" ? "chapter-player__gallery-track--alternate" : ""}`} style={{ "--gallery-progress": galleryIndex / Math.max(1, frame.collage.length - 1), "--gallery-columns": frame.collage.length }}>
@@ -89,6 +94,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const [threadLeaving, setThreadLeaving] = useState(false);
   const [videoSeconds, setVideoSeconds] = useState(0);
   const [shoeUnlocked, setShoeUnlocked] = useState(false);
+  const [lacesUnlocked, setLacesUnlocked] = useState(false);
   const titlePhotoRef = useRef(null);
   const [finishedText, setFinishedText] = useState({});
   const goToPage = (target) => {
@@ -96,6 +102,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
     setVideoSeconds(0);
     setFinishedText({});
     setShoeUnlocked(false);
+    setLacesUnlocked(false);
     setLockExpiredFor(null);
     setPageIndex(target);
   };
@@ -119,6 +126,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const totalPages = 1 + frames.length + (hasGamePage ? 1 : 0) + (finalPage ? 1 : 0);
   const lastFrameIndex = totalPages - 1;
   const currentFrame = pageIndex >= framesStart && pageIndex <= framesEnd ? frames[pageIndex - framesStart] : null;
+  const lacesLocked = Boolean(currentFrame?.laceGate && !lacesUnlocked);
   const shoeLocked = Boolean(currentFrame?.shoeShine && !shoeUnlocked);
   const sewingLocked = Boolean(
     (pageIndex === 0 && context && !finishedText.context) ||
@@ -176,7 +184,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   };
 
   const advance = () => {
-    if (lockedRef.current || exiting || threadLeaving || sewingLocked || shoeLocked) return;
+    if (lockedRef.current || exiting || threadLeaving || sewingLocked || shoeLocked || lacesLocked) return;
     if (currentFrame?.motion === "gallery" && galleryIndex < currentFrame.collage.length - 1) {
       lockedRef.current = true;
       setGalleryIndex((index) => index + 1);
@@ -341,14 +349,15 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
           gamePage(completeGame)
         ) : isFinalPage ? (
           finalPage
-        ) : (
-          <Frame frame={currentFrame} galleryIndex={galleryIndex} videoUnlocked={!shoeLocked} onTextComplete={() => finishText("frame")} onVideoProgress={updateVideoProgress} />
+        ) : lacesLocked ? null : (
+          <Frame frame={currentFrame} galleryIndex={galleryIndex} videoUnlocked={!shoeLocked && !lacesLocked} onTextComplete={() => finishText("frame")} onVideoProgress={updateVideoProgress} />
         )}
         {isLastFrame && outro && <div className="chapter-player__outro"><StitchedNarrative key={outro} text={outro} placement="inline" onComplete={() => finishText("outro")} /></div>}
       </div>
 
+      {lacesLocked && <ConverseLacing key={pageIndex} onBack={guardedRetreat} onComplete={() => setLacesUnlocked(true)} />}
       {shoeLocked && <ShoeShine onComplete={() => setShoeUnlocked(true)} />}
-      {currentFrame?.playSeconds && <div className="chapter-player__video-skip" onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
+      {currentFrame?.playSeconds && !lacesLocked && <div className="chapter-player__video-skip" onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
         <span>{Math.floor(videoSeconds)} / {currentFrame.playSeconds} seconds</span>
         <button type="button" disabled={videoSeconds < currentFrame.skipAfter} onClick={() => { if (videoSeconds >= currentFrame.skipAfter) advance(); }}>{videoSeconds < currentFrame.skipAfter ? `Skip in ${Math.ceil(currentFrame.skipAfter - videoSeconds)}s` : "Skip video →"}</button>
       </div>}
@@ -358,7 +367,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
         ))}
       </div>
 
-      {!isFinalPage && !isGamePage && !shoeLocked && (
+      {!isFinalPage && !isGamePage && !shoeLocked && !lacesLocked && (
         <p className="chapter-player__hint">{sewingLocked ? (currentFrame?.textStyle === "float" ? "THE STORY CONTINUES…" : "STITCHING…") : timerLocked ? "PLAYING…" : currentFrame?.motion === "gallery" && galleryIndex < currentFrame.collage.length - 1 ? HINTS[interaction].replace("CONTINUE", "EXPLORE PHOTOS") : HINTS[interaction]}</p>
       )}
     </section>

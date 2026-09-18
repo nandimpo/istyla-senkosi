@@ -1,0 +1,54 @@
+.converse-lacing { position:absolute; inset:0; z-index:8; display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,1fr); align-items:center; gap:4vw; padding:90px 9vw 100px; overflow:auto; background:radial-gradient(ellipse at 73% 55%,#434839,#151b16 68%); color:#f4edda; }
+.converse-lacing__copy { max-width:460px; }
+.converse-lacing__back { color:inherit; background:none; border:0; padding:0 0 22px; cursor:pointer; }
+.converse-lacing small { display:block; color:#d9bc7d; letter-spacing:2px; font-size:11px; }
+.converse-lacing h2 { font:700 clamp(38px,5vw,76px)/1 "Barlow Condensed",sans-serif; text-transform:uppercase; margin:20px 0; }
+.converse-lacing p { font-size:16px; line-height:1.6; }
+.converse-lacing__instruction { color:#ded3b7; }
+.converse-lacing .converse-lacing__help { font-size:12px; }
+.converse-lacing__status { margin-bottom:6px; }
+.converse-lacing progress { width:100%; height:4px; accent-color:#d9bc7d; }
+.converse-lacing__shoe { min-width:0; max-width:460px; width:100%; justify-self:center; }
+.converse-lacing svg { display:block; width:100%; max-height:64svh; touch-action:none; user-select:none; }
+.converse-lacing__lace { fill:none; stroke:#e8c887; stroke-width:5; stroke-linecap:round; filter:drop-shadow(1px 2px 1px #0008); }
+.converse-lacing__eyelet { fill:transparent; stroke-width:2; cursor:grab; touch-action:none; }
+.converse-lacing__eyelet.is-start { stroke:#fff2ce; }
+.converse-lacing__eyelet.is-target { stroke:#dfb966; stroke-dasharray:3 3; cursor:pointer; }
+.converse-lacing__eyelet:active { cursor:grabbing; }
+.converse-lacing__eyelet:focus-visible { outline:none; stroke:#fff; stroke-width:4; }
+.converse-lacing__watch { padding:15px 24px; background:#eee3c7; color:#1c281c; border:1px dashed #7e8666; font:700 15px inherit; cursor:pointer; }
+@media(max-width:650px) { .converse-lacing { padding:85px 24px 115px; grid-template-columns:1fr; align-content:start; gap:10px; } .converse-lacing h2 { font-size:38px; } .converse-lacing p { font-size:14px; } .converse-lacing__shoe { max-width:300px; } .converse-lacing svg { max-height:44svh; } }
+
+.converse-custom { grid-template-columns:minmax(280px,.9fr) minmax(320px,1.1fr); align-items:start; }
+.converse-custom h2 { font-size:clamp(34px,4vw,58px); margin:14px 0; }
+.converse-custom fieldset { border:0; padding:0; margin:16px 0; }
+.converse-custom legend,.converse-custom__initials { font-size:13px; font-weight:600; margin-bottom:8px; }
+.converse-custom__choices { display:flex; flex-wrap:wrap; gap:8px; }
+.converse-custom__choices button { min-height:40px; padding:9px 13px; border:1px solid #b7b79b; background:#1c281f; color:#f7f0de; cursor:pointer; }
+.converse-custom__choices button[aria-pressed="true"] { outline:2px solid #f1d597; outline-offset:2px; }
+.converse-custom__choices .converse-custom__swatch { background:var(--swatch); color:#102118; width:40px; border-radius:50%; font-size:20px; padding:0; }
+.converse-custom__initials { display:flex; gap:12px; align-items:center; }
+.converse-custom__initials input { width:95px; padding:9px; border:1px solid #aba98b; background:#19231c; color:#fff1d2; font:inherit; }
+.converse-custom .converse-lacing__watch:disabled { opacity:.45; cursor:not-allowed; }
+.converse-custom__preview { align-self:center; min-width:0; }
+.converse-custom__turntable { overflow:hidden; border-radius:50%; touch-action:none; cursor:grab; }
+.converse-custom__turntable:active { cursor:grabbing; }
+.converse-custom svg { width:100%; max-height:53svh; pointer-events:none; transform-origin:center; }
+.converse-custom__hint { text-align:center; font-size:12px!important; }
+.converse-custom__rotation { display:flex; align-items:center; gap:12px; margin:18px 0; font-size:13px; }
+.converse-custom__rotation input { flex:1; min-width:0; accent-color:#e0bd7a; }
+.converse-custom button:focus-visible,.converse-custom input:focus-visible { outline:2px solid #fff0c6; outline-offset:3px; }
+@media(max-width:750px) { .converse-custom { grid-template-columns:1fr; padding:85px 24px 115px; } .converse-custom__preview { grid-row:1; } .converse-custom svg { max-height:32svh; } .converse-custom__copy { max-width:none; } }
+
+.converse-patches .converse-patches__piece { width:88px; display:flex; flex-direction:column; align-items:center; gap:5px; padding:6px; cursor:grab; touch-action:none; }
+.converse-patches__piece svg { width:56px; height:56px; }
+.converse-patches__piece:disabled { opacity:.4; cursor:not-allowed; }
+.converse-custom .converse-custom__preview svg { pointer-events:auto; }
+.converse-patches__placed { cursor:grab; touch-action:none; }
+.converse-patches__placed:active,.converse-patches__piece:active { cursor:grabbing; }
+.converse-patches__placed:focus-visible { outline:2px solid #eac478; }
+.converse-custom__turntable { cursor:default; }
+.converse-custom__help { font-size:12px!important; color:#dfd5ba; }
+.converse-patches__adjust label { display:flex; align-items:center; gap:10px; margin:8px 0; font-size:13px; }
+.converse-patches__adjust input { flex:1; accent-color:#dfbd7c; }
+.converse-patches__adjust button { background:#202c22; color:#f4ebd2; border:1px solid #a99d80; padding:8px 12px; cursor:pointer; }

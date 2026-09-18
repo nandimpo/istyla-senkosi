@@ -44,5 +44,14 @@ export function glyphThread(character, font) {
     }
     if (points.length > 3) contours.push(points);
   }
-  return { height: ascent + descent, paths: contours.map((points) => points.map(([x, y], i) => `${i ? "L" : "M"}${x / scale - padding},${y / scale - padding}`).join(" ") + " Z") };
+  // Round the sampled contour into connected curves, avoiding pixel stair-steps.
+  const smoothPath = (contour) => {
+    const points = contour.filter((_, index) => index % 5 === 0).map(([x, y]) => [x / scale - padding, y / scale - padding]);
+    if (points.length < 3) return "";
+    const midpoint = (a, b) => [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    let path = `M${midpoint(points.at(-1), points[0]).join(",")}`;
+    points.forEach((point, index) => { path += ` Q${point.join(",")} ${midpoint(point, points[(index + 1) % points.length]).join(",")}`; });
+    return path + " Z";
+  };
+  return { height: ascent + descent, paths: contours.map(smoothPath).filter(Boolean) };
 }

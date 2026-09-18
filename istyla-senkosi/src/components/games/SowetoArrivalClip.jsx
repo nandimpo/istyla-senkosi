@@ -57,9 +57,9 @@ export default function SowetoArrivalClip({ onComplete }) {
       onEnded={() => { if (!finished.current) { lastTime.current = 0; videoRef.current.currentTime = 0; play(); } }}
       onError={() => setFailed(true)} />
     <div className="soweto-arrival-copy">
-      <p>THE JOURNEY CONTINUES</p>
-      <h1 id="soweto-arrival-title">You are now entering Soweto</h1>
-      <p>{failed ? "The clip could not load. Please retry." : "Take in the streets. Your story continues after this 20 second clip."}</p>
+      <p>JAMA / ARRIVING IN SOWETO</p>
+      <h1 id="soweto-arrival-title">A little closer to my cousin’s world</h1>
+      <p>{failed ? "The clip could not load. Please retry." : "I’m arriving in Soweto with my cousin on my mind. This time, I want to see beyond the clothes and listen to the stories behind them."}</p>
       <progress max={CLIP_SECONDS} value={seconds} aria-label="Arrival clip playback progress" />
       <span>{seconds} / {CLIP_SECONDS} seconds</span>
       <button disabled={seconds < SKIP_AFTER_SECONDS} onClick={() => { if (watched.current >= SKIP_AFTER_SECONDS) completeClip(); }}>

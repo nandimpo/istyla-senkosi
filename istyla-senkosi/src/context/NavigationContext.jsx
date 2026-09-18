@@ -16,11 +16,13 @@ const NavigationContext = createContext({
   currentSection: "about",
   unlockedIndex: 0,
   goTo: () => {},
+  restartJourney: () => {},
   completeChapter: () => {},
   isUnlocked: () => true,
 });
 
 export function NavigationProvider({ children }) {
+  const [chapterVisit, setChapterVisit] = useState(0);
   const [navigationLocked, setNavigationLocked] = useState(false);
   const [preferences, setPreferences] = useState(readPreferences);
   const soundOn = preferences.soundOn !== false;
@@ -47,10 +49,31 @@ export function NavigationProvider({ children }) {
     return ORDER.includes(id);
   }, []);
 
-  const goTo = useCallback((id) => {
+  const goTo = useCallback((id, { intro = false } = {}) => {
     if (!isUnlocked(id)) return;
+    if (intro) {
+      // Explicit menu visits start at the title; reload still restores saved progress.
+      try {
+        sessionStorage.setItem(`istyla:${id}:page`, "0");
+        sessionStorage.setItem(`istyla:${id}:gallery`, "0");
+        if (id === "swenka" || id === "pantsula") sessionStorage.setItem(`istyla:${id}:opened`, "true");
+      } catch { /* Navigation still works without storage. */ }
+      setChapterVisit((visit) => visit + 1);
+    }
     setCurrentSection(id);
   }, [isUnlocked, setCurrentSection]);
+
+  const restartJourney = useCallback(() => {
+    // Only this explicit action clears progress. Reloads continue using the saved page.
+    try {
+      const keys = Array.from({ length: sessionStorage.length }, (_, index) => sessionStorage.key(index));
+      keys.filter((key) => key?.startsWith("istyla:")).forEach((key) => sessionStorage.removeItem(key));
+    } catch { /* A fresh chapter still mounts when storage is unavailable. */ }
+    setNavigationLocked(false);
+    setUnlockedIndex(1);
+    setChapterVisit((visit) => visit + 1);
+    setCurrentSection("introduction");
+  }, [setCurrentSection]);
 
   const completeChapter = useCallback((id) => {
     if (navigationLocked) return;
@@ -63,7 +86,7 @@ export function NavigationProvider({ children }) {
   }, [navigationLocked, setCurrentSection]);
 
   return (
-    <NavigationContext.Provider value={{ currentSection, unlockedIndex, goTo, completeChapter, isUnlocked, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion, navigationLocked, setNavigationLocked }}>
+    <NavigationContext.Provider value={{ currentSection, chapterVisit, unlockedIndex, goTo, restartJourney, completeChapter, isUnlocked, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion, navigationLocked, setNavigationLocked }}>
       {children}
     </NavigationContext.Provider>
   );

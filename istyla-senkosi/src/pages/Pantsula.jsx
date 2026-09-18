@@ -42,11 +42,11 @@ function Pantsula() {
       titleWipeDirection="left"
       track={backgroundTrack}
       frames={[
-        { label: "Memory collage / Jama’s view", collage: [editorial2, editorial1, editorial3], motion: "gallery", galleryStyle: "alternate", text: "Step. Step. Step. I try to follow the rhythm, already imagining how I’ll describe this moment to my cousin." },
-        { label: "Street energy / Fast cuts", video: entryVideo, playSeconds: 20, skipAfter: 10, caption: "MOVEMENT BUILDS / 20 SECOND CLIP" },
+        { label: "Memory collage / Jama’s view", collage: [editorial2, editorial1, editorial3], motion: "crossfade", galleryStyle: "crossfade", text: "Step. Step. Step. I try to follow the rhythm, already imagining how I’ll describe this moment to my cousin." },
+        { label: "Street energy / Fast cuts", video: entryVideo, laceGate: true, playSeconds: 20, skipAfter: 10, caption: "MOVEMENT BUILDS / 20 SECOND CLIP" },
         { label: "Interview / Let them speak", video: interviewVideo, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
-        { label: "Details + environment", collage: [marketImage, seatedPortrait], motion: "gallery", galleryStyle: "alternate", text: "I can’t just look anymore. Trying the steps reminds me how little I know about the things my cousin makes look effortless." },
-        { label: "Taking the rhythm with me / Jama’s reflection", collage: finaleCollage, collageLabel: "Pantsula finale collage", kind: "fashion-wall", textStyle: "float", text: "I arrived watching from the edge. Now I’m leaving with the rhythm still in my feet. I want to tell my cousin about the hats, the clothes and the way people move together, then ask what he sees. As I turn towards Skhothane, that conversation feels closer than ever.", caption: "UP NEXT: SKHOTHANE", nextChapter: "skhothane", nextChapterLabel: "Explore Skhothane next" },
+        { label: "Details + environment", collage: [marketImage, seatedPortrait], motion: "crossfade", galleryStyle: "crossfade", text: "I can’t just look anymore. Trying the steps reminds me how little I know about the things my cousin makes look effortless." },
+        { label: "Taking the rhythm with me / Jama’s reflection", collage: finaleCollage, collageLabel: "Pantsula finale collage", kind: "fashion-wall", galleryStyle: "crossfade", textStyle: "float", text: "I arrived watching from the edge. Now I’m leaving with the rhythm still in my feet. I want to tell my cousin about the hats, the clothes and the way people move together, then ask what he sees. As I turn towards Skhothane, that conversation feels closer than ever.", caption: "UP NEXT: SKHOTHANE", nextChapter: "skhothane", nextChapterLabel: "Explore Skhothane next" },
       ]}
       gamePage={(onComplete) => <BeatGame sceneImages={sceneImages} onComplete={onComplete} />}
       onComplete={() => completeChapter("pantsula")}

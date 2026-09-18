@@ -25,7 +25,7 @@ function MenuNav() {
   }, [open]);
 
   const go = (id) => {
-    goTo(id);
+    goTo(id, { intro: true });
     setOpen(false);
   };
 

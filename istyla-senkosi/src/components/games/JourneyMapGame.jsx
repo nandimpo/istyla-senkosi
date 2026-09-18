@@ -1,5 +1,6 @@
+import JourneyMemory from "./JourneyMemory";
 import { useSessionState } from "../../hooks/useSessionState";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigation } from "../../context/NavigationContext";
 import { MAP_VIEW, STOPS, advanceProgress, clampProgress, routePath, routePoint, travelledPath } from "./journeyMapData";
 import "../../styles/JourneyMapGame.css";
@@ -8,6 +9,13 @@ import SowetoArrivalClip from "./SowetoArrivalClip";
 function JourneyMapGame({ mapImage, onComplete }) {
   const [progress, setProgress] = useSessionState("map:progress", 0, (value) => Number.isFinite(value) && value >= 0 && value <= 1);
   const [closedStop, setClosedStop] = useState(null);
+  const [memories, setMemories] = useState([]);
+  const memorySerial = useRef(0);
+  const remember = (stop) => {
+    const memory = { stop, key: ++memorySerial.current };
+    setMemories((items) => [...items, memory]);
+  };
+  const finishMemory = useCallback(() => setMemories((items) => items.slice(1)), []);
   const [entering, setEntering] = useState(false);
   const [systemReduced, setSystemReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const { reducedMotion, setNavigationLocked } = useNavigation();
@@ -61,9 +69,20 @@ function JourneyMapGame({ mapImage, onComplete }) {
   const move = (requested, pauseAtStop = true) => {
     if (entering) return;
     const next = pauseAtStop ? advanceProgress(progressRef.current, requested) : clampProgress(requested);
+    const previousIndex = progressRef.current >= 1 ? 2 : progressRef.current >= .5 ? 1 : 0;
+    const nextIndex = next >= 1 ? 2 : next >= .5 ? 1 : 0;
+    if (nextIndex !== previousIndex) {
+      const direction = nextIndex > previousIndex ? 1 : -1;
+      for (let stop = previousIndex + direction; stop !== nextIndex + direction; stop += direction) remember(stop);
+    }
     progressRef.current = next;
     setProgress(next);
     return next;
+  };
+  const selectStop = (index) => {
+    if (index === activeIndex) remember(index);
+    move(STOPS[index].progress, false);
+    setClosedStop(null);
   };
   const pointerDown = (event) => {
     if (entering || (event.pointerType === "mouse" && event.button !== 0)) return;
@@ -113,8 +132,8 @@ function JourneyMapGame({ mapImage, onComplete }) {
     <section className={`journey-stage ${calm ? "journey-calm" : ""} ${ready ? "journey-arrived" : ""} ${entering ? "journey-entering" : ""}`} aria-labelledby="journey-title" style={cameraStyle}>
       <header className="journey-heading">
         <p className="journey-eyebrow">Johannesburg North to Soweto</p>
-        <h1 id="journey-title">I&apos;VE ALWAYS<br />BEEN FROM HERE<span>...</span></h1>
-        <p>Every metre of this, I drove or walked myself. Drag the marker down to retrace the journey to Soweto.</p>
+        <h1 id="journey-title">THE ROUTE<br />THAT BRINGS ME CLOSER<span>.</span></h1>
+        <p>I’m Jama. I grew up in Johannesburg North, but my cousin’s style keeps drawing my attention towards Soweto. Follow the route with me. At each stop, familiar images return, then give way to something I had not noticed.</p>
       </header>
       <div className="journey-layout">
         <div className="journey-map-column">
@@ -130,7 +149,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
                 <path className="journey-route-lit" d={travelledPath(progress)} />
                 {STOPS.map((stop, index) => {
                   const location = routePoint(stop.progress);
-                  return <g key={stop.id} className={`journey-map-stop ${progress >= stop.progress ? "reached" : ""} ${index === activeIndex ? "active" : ""}`}>
+                  return <g key={stop.id} className={`journey-map-stop ${progress >= stop.progress ? "reached" : ""} ${index === activeIndex ? "active" : ""}`} role="button" tabIndex={0} aria-label={`Remember ${stop.title}`} onClick={() => selectStop(index)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.stopPropagation(); selectStop(index); } }}>
                     <circle className="journey-stop-halo" cx={location.x} cy={location.y} r={index === 2 && ready ? 8 : 5} />
                     <circle className="journey-stop-core" cx={location.x} cy={location.y} r={index === 2 && ready ? 3.5 : 2} />
                     <text x={location.x + stop.label.dx} y={location.y + stop.label.dy} textAnchor={stop.label.dx < 0 ? "end" : "start"}>{index === 0 ? "Johannesburg North" : index === 1 ? "The remembered route" : "Soweto"}</text>
@@ -142,7 +161,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
                   aria-label="Journey marker" aria-describedby="journey-instruction" aria-orientation="vertical"
                   aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}
                   aria-valuetext={`${Math.round(progress * 100)} percent. ${activeStop.title}`} aria-disabled={entering}
-                  onClick={(event) => event.stopPropagation()} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={(event) => { event.stopPropagation(); drag.current = null; if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }}
+                  onClick={(event) => event.stopPropagation()} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={(event) => { event.stopPropagation(); if (drag.current && Math.abs(event.clientY - drag.current.y) < 5) remember(activeIndex); drag.current = null; if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }}
                   onPointerCancel={() => { drag.current = null; }} onLostPointerCapture={() => { drag.current = null; }} onKeyDown={keyDown} />
               </svg>
             </div>
@@ -151,7 +170,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
           <div className="journey-controls">
             <p id="journey-instruction">Drag down to retrace the journey to Soweto.<small>Use arrow keys on the marker, or the stop buttons below.</small></p>
             <div className="journey-stop-buttons" aria-label="Journey stops">
-              {STOPS.map((stop, index) => <button key={stop.id} disabled={entering} aria-current={index === activeIndex ? "step" : undefined} onClick={() => { move(stop.progress, false); setClosedStop(null); }}><span>0{index + 1}</span>{stop.title}</button>)}
+              {STOPS.map((stop, index) => <button key={stop.id} disabled={entering} aria-current={index === activeIndex ? "step" : undefined} onClick={() => selectStop(index)}><span>0{index + 1}</span>{stop.title}</button>)}
             </div>
             <small className="journey-map-note">Illustrative route. Locations are approximate on this regional map.</small>
           </div>
@@ -169,9 +188,10 @@ function JourneyMapGame({ mapImage, onComplete }) {
             </div>}
             {!ready && <button className="journey-continue" onClick={continueJourney} disabled={entering}>Continue the journey <span aria-hidden="true">&rarr;</span></button>}
           </article> : <button className="journey-reopen" onClick={() => setClosedStop(null)} disabled={entering}>Read this memory</button>}
-          {ready && <button className="journey-enter" onClick={() => { setNavigationLocked(true); setEntering(true); }} disabled={entering}>{entering ? "Entering Soweto..." : "Enter Soweto"}<span aria-hidden="true">&rarr;</span></button>}
+          {ready && <button className="journey-enter" onClick={() => { setNavigationLocked(true); setEntering(true); }} disabled={entering || memories.length > 0}>{entering ? "Entering Soweto..." : "Enter Soweto"}<span aria-hidden="true">&rarr;</span></button>}
         </aside>
       </div>
+      {memories.length > 0 && <JourneyMemory key={memories[0].key} stop={memories[0].stop} calm={calm} onDone={finishMemory}/>}
     </section>
   );
 }

@@ -64,9 +64,10 @@ html[data-reduced-motion="true"] .narrative-stitch--embroidered .narrative-stitc
 
 /* The needle tip and freshly sewn outline use the same rendered glyph path. */
 .narrative-stitch__word { white-space:nowrap; }
-.narrative-stitch--tracing [data-letter] { opacity:0; transition:opacity .14s ease; }
-.narrative-stitch__glyph { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; fill:none; stroke:var(--thread-main,#fff0cb); stroke-width:.75; stroke-linecap:round; stroke-linejoin:round; }
+.narrative-stitch--tracing [data-letter] { opacity:0; transition:opacity .08s linear; }
+/* Geometry guides the needle invisibly; the soft filled thread replaces flashing outlines. */
+.narrative-stitch__glyph { opacity:0; position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; fill:none; stroke:var(--thread-main,#fff0cb); stroke-width:.75; stroke-linecap:round; stroke-linejoin:round; }
 .narrative-stitch--tracing .narrative-stitch__glide { transition:none; }
-.narrative-stitch--tracing .narrative-stitch__needle { left:0; bottom:0; animation:none; transform:rotate(26deg); }
+.narrative-stitch--tracing .narrative-stitch__needle { left:0; bottom:0; width:2px; height:27px; animation:none; transform:rotate(26deg); }
 @media(prefers-reduced-motion:reduce) { .narrative-stitch--tracing [data-letter] { opacity:1; transition:none; } }
 html[data-reduced-motion="true"] .narrative-stitch--tracing [data-letter] { opacity:1; transition:none; }

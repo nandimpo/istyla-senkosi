@@ -12,7 +12,7 @@ import "./../styles/Hero.css";
 const collageImages = [collage1, collage2, collage3, collage4, collage5, collage6, collage7, collage8];
 
 function Hero() {
-  const { goTo } = useNavigation();
+  const { restartJourney } = useNavigation();
 
   return <main className="documentary" id="about">
     <div className="hero-collage" aria-hidden="true">
@@ -37,7 +37,7 @@ function Hero() {
       <p className="hero-subtitle">Interactive Documentary</p>
       <h1 className="hero-title">I&apos;STYLA<br />SENKOSI</h1>
       <p className="hero-description">Past, Present and Future of Township Fashion</p>
-      <button className="hero-button" onClick={() => goTo("introduction")}>Begin Journey <span>→</span></button>
+      <button className="hero-button" onClick={restartJourney}>Begin Journey <span>→</span></button>
     </section>
   </main>;
 }
