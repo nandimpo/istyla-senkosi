@@ -7,6 +7,8 @@ import { useClickGesture, useDragGesture, useScrollGesture, useSwipeGesture } fr
 import { useSectionAudio } from "../hooks/useSectionAudio";
 import { useNavigation } from "../context/NavigationContext";
 import StitchedNarrative from "./StitchedNarrative";
+import MemoryFlipbook from "./MemoryFlipbook";
+import SkhothaneOutfit from "./games/SkhothaneOutfit";
 
 import ShoeShine from "./games/ShoeShine";
 import { useContinuousZoom } from "../hooks/useContinuousZoom";
@@ -21,18 +23,45 @@ const HINTS = {
   scroll: "SCROLL TO CONTINUE",
 };
 
-function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, videoUnlocked = true, onVideoProgress }) {
-  const { goTo } = useNavigation();
+function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, videoUnlocked = true, onVideoProgress, onVideoStarted, allowVideoSound = true }) {
+  const { goTo, soundOn, setSoundOn } = useNavigation();
   const videoRef = useRef(null);
+  const clipAudioRef = useRef(null);
+  const [videoNeedsStart, setVideoNeedsStart] = useState(false);
+  const [clipStarted, setClipStarted] = useState(false);
   const watched = useRef(0);
   const lastVideoTime = useRef(frame.videoStart || 0);
   const photoRef = useRef(null);
   useContinuousZoom(photoRef, frame.motion === "zoom" && !visualOnly, frame.image);
   useEffect(() => {
-    if (!videoRef.current) return;
-    if (videoUnlocked && !visualOnly) videoRef.current.play().catch(() => {});
-    else videoRef.current.pause();
-  }, [videoUnlocked, visualOnly]);
+    const video = videoRef.current;
+    if (!video) return;
+    video.defaultMuted = true;
+    video.muted = true;
+    video.volume = 1;
+    const clipAudio = clipAudioRef.current;
+    if (clipAudio) { clipAudio.muted = visualOnly || !soundOn; clipAudio.volume = 1; }
+    if (!videoUnlocked || visualOnly || (allowVideoSound && !clipStarted)) { video.pause(); clipAudio?.pause(); return; }
+    Promise.all([video.play(), ...(clipAudio && allowVideoSound ? [clipAudio.play()] : [])])
+      .then(() => setVideoNeedsStart(false))
+      .catch(() => { video.pause(); clipAudio?.pause(); setVideoNeedsStart(true); });
+  }, [videoUnlocked, visualOnly, soundOn, allowVideoSound, clipStarted]);
+  const startClipWithSound = (event) => {
+    event.stopPropagation();
+    const video = videoRef.current;
+    if (!video) return;
+    const clipAudio = clipAudioRef.current;
+    if (allowVideoSound) {
+      setSoundOn(true);
+      if (clipAudio) { clipAudio.muted = false; clipAudio.volume = 1; clipAudio.currentTime = 0; }
+    }
+    video.muted = true;
+    video.volume = 1;
+    setClipStarted(true);
+    Promise.all([video.play(), ...(clipAudio && allowVideoSound ? [clipAudio.play()] : [])])
+      .then(() => { setVideoNeedsStart(false); onVideoStarted?.(); })
+      .catch(() => { video.pause(); clipAudio?.pause(); setClipStarted(false); setVideoNeedsStart(true); });
+  };
   const seekToStart = () => {
     if (frame.videoStart && videoRef.current) videoRef.current.currentTime = frame.videoStart;
   };
@@ -41,6 +70,11 @@ function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, vi
       videoRef.current.currentTime = frame.videoStart;
     }
     const video = videoRef.current;
+    const clipAudio = clipAudioRef.current;
+    if (clipAudio && clipStarted && !video.seeking) {
+      const expected = video.currentTime - (frame.videoStart || 0);
+      if (expected >= 0 && expected < clipAudio.duration && Math.abs(clipAudio.currentTime - expected) > 0.35) clipAudio.currentTime = expected;
+    }
     if (!frame.playSeconds || !video || !videoUnlocked || visualOnly || video.seeking) return;
     const delta = video.currentTime - lastVideoTime.current;
     lastVideoTime.current = video.currentTime;
@@ -66,6 +100,8 @@ function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, vi
               </div>
             ))}
           </div>
+        ) : frame.kind === "memory-album" && frame.collage ? (
+          <MemoryFlipbook images={frame.collage} paused={visualOnly} />
         ) : frame.collage ? (
           <div className={`chapter-player__collage chapter-player__collage--${frame.collage.length}`}>
             {frame.collage.map((src, index) => (
@@ -73,7 +109,11 @@ function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, vi
             ))}
           </div>
         ) : frame.video ? (
-          <video ref={videoRef} src={frame.video} muted playsInline loop autoPlay={videoUnlocked && !visualOnly} preload="metadata" onLoadedMetadata={seekToStart} onTimeUpdate={holdStart} onSeeked={() => { lastVideoTime.current = videoRef.current.currentTime; }} />
+          <>
+            <video ref={videoRef} src={frame.video} muted playsInline loop preload="metadata" onLoadedMetadata={seekToStart} onTimeUpdate={holdStart} onSeeked={() => { lastVideoTime.current = videoRef.current.currentTime; }} />
+            {frame.audio && !visualOnly && <audio ref={clipAudioRef} src={frame.audio} preload="auto" />}
+            {((allowVideoSound && !clipStarted) || videoNeedsStart) && <button className="chapter-player__video-start" type="button" onPointerDown={(event) => event.stopPropagation()} onClick={startClipWithSound}>{allowVideoSound ? "Play video with sound" : "Play video"}</button>}
+          </>
         ) : (
           <img ref={photoRef} src={frame.image} alt={frame.alt || ""} loading="lazy" decoding="async" />
         )}
@@ -93,13 +133,16 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const [pageIndex, setPageIndex] = useSessionState(`${id}:page`, 0, (value) => Number.isInteger(value) && value >= 0 && value < 1 + frames.length + Number(Boolean(gamePage)) + Number(Boolean(finalPage)));
   const [threadLeaving, setThreadLeaving] = useState(false);
   const [videoSeconds, setVideoSeconds] = useState(0);
+  const [videoStarted, setVideoStarted] = useState(false);
   const [shoeUnlocked, setShoeUnlocked] = useState(false);
   const [lacesUnlocked, setLacesUnlocked] = useState(false);
+  const [outfitUnlocked, setOutfitUnlocked] = useState(false);
   const titlePhotoRef = useRef(null);
   const [finishedText, setFinishedText] = useState({});
   const goToPage = (target) => {
     setThreadLeaving(false);
     setVideoSeconds(0);
+    setVideoStarted(false);
     setFinishedText({});
     setShoeUnlocked(false);
     setLacesUnlocked(false);
@@ -128,6 +171,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const currentFrame = pageIndex >= framesStart && pageIndex <= framesEnd ? frames[pageIndex - framesStart] : null;
   const lacesLocked = Boolean(currentFrame?.laceGate && !lacesUnlocked);
   const shoeLocked = Boolean(currentFrame?.shoeShine && !shoeUnlocked);
+  const outfitLocked = Boolean(currentFrame?.outfitGate && !outfitUnlocked);
   const sewingLocked = Boolean(
     (pageIndex === 0 && context && !finishedText.context) ||
     (currentFrame?.text && !finishedText.frame) ||
@@ -135,7 +179,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   );
   const calm = () => reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   useEffect(() => () => clearTimeout(transitionTimer.current), []);
-  useSectionAudio({ id, audioRef, soundOn });
+  useSectionAudio({ id, audioRef, soundOn, duckMusic: Boolean(currentFrame?.video && !outfitLocked && id !== "introduction") });
 
   useEffect(() => {
     if (!exiting || !(reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches) || completedRef.current) return;
@@ -184,7 +228,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   };
 
   const advance = () => {
-    if (lockedRef.current || exiting || threadLeaving || sewingLocked || shoeLocked || lacesLocked) return;
+    if (lockedRef.current || exiting || threadLeaving || sewingLocked || shoeLocked || lacesLocked || outfitLocked) return;
     if (currentFrame?.motion === "gallery" && galleryIndex < currentFrame.collage.length - 1) {
       lockedRef.current = true;
       setGalleryIndex((index) => index + 1);
@@ -249,7 +293,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   };
 
   useEffect(() => {
-    if (!currentFrame?.lockSeconds || shoeLocked) return undefined;
+    if (!currentFrame?.lockSeconds || shoeLocked || (currentFrame.video && !videoStarted)) return undefined;
     const lockedPage = pageIndex;
     const timer = setTimeout(() => {
       setLockExpiredFor(lockedPage);
@@ -257,7 +301,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
     }, currentFrame.lockSeconds * 1000);
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pageIndex, shoeLocked]);
+  }, [pageIndex, shoeLocked, videoStarted]);
 
   const clickGesture = useClickGesture({ onAdvance: guardedAdvance });
   const swipeGesture = useSwipeGesture({ onAdvance: guardedAdvance, onRetreat: guardedRetreat });
@@ -322,7 +366,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
             event.stopPropagation();
             setSoundOn((current) => !current);
           }}
-          aria-label={soundOn ? "Turn background music off" : "Turn background music on"}
+          aria-label={soundOn ? "Turn sound off" : "Turn sound on"}
           aria-pressed={soundOn}
         >
           {soundOn ? "SOUND ON" : "SOUND OFF"}
@@ -349,15 +393,16 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
           gamePage(completeGame)
         ) : isFinalPage ? (
           finalPage
-        ) : lacesLocked ? null : (
-          <Frame frame={currentFrame} galleryIndex={galleryIndex} videoUnlocked={!shoeLocked && !lacesLocked} onTextComplete={() => finishText("frame")} onVideoProgress={updateVideoProgress} />
+        ) : lacesLocked || outfitLocked ? null : (
+          <Frame frame={currentFrame} galleryIndex={galleryIndex} videoUnlocked={!shoeLocked && !lacesLocked && !outfitLocked} allowVideoSound={id !== "introduction"} onVideoStarted={() => setVideoStarted(true)} onTextComplete={() => finishText("frame")} onVideoProgress={updateVideoProgress} />
         )}
         {isLastFrame && outro && <div className="chapter-player__outro"><StitchedNarrative key={outro} text={outro} placement="inline" onComplete={() => finishText("outro")} /></div>}
       </div>
 
       {lacesLocked && <ConverseLacing key={pageIndex} onBack={guardedRetreat} onComplete={() => setLacesUnlocked(true)} />}
+      {outfitLocked && <SkhothaneOutfit onBack={guardedRetreat} onComplete={() => setOutfitUnlocked(true)} />}
       {shoeLocked && <ShoeShine onComplete={() => setShoeUnlocked(true)} />}
-      {currentFrame?.playSeconds && !lacesLocked && <div className="chapter-player__video-skip" onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
+      {currentFrame?.playSeconds && !lacesLocked && !outfitLocked && <div className="chapter-player__video-skip" onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
         <span>{Math.floor(videoSeconds)} / {currentFrame.playSeconds} seconds</span>
         <button type="button" disabled={videoSeconds < currentFrame.skipAfter} onClick={() => { if (videoSeconds >= currentFrame.skipAfter) advance(); }}>{videoSeconds < currentFrame.skipAfter ? `Skip in ${Math.ceil(currentFrame.skipAfter - videoSeconds)}s` : "Skip video →"}</button>
       </div>}
@@ -367,8 +412,8 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
         ))}
       </div>
 
-      {!isFinalPage && !isGamePage && !shoeLocked && !lacesLocked && (
-        <p className="chapter-player__hint">{sewingLocked ? (currentFrame?.textStyle === "float" ? "THE STORY CONTINUES…" : "STITCHING…") : timerLocked ? "PLAYING…" : currentFrame?.motion === "gallery" && galleryIndex < currentFrame.collage.length - 1 ? HINTS[interaction].replace("CONTINUE", "EXPLORE PHOTOS") : HINTS[interaction]}</p>
+      {!isFinalPage && !isGamePage && !shoeLocked && !lacesLocked && !outfitLocked && (
+        <p className="chapter-player__hint">{currentFrame?.video && id !== "introduction" && !videoStarted ? "TAP PLAY TO HEAR THE VIDEO" : sewingLocked ? (currentFrame?.textStyle === "float" ? "THE STORY CONTINUES…" : "STITCHING…") : timerLocked ? "PLAYING…" : currentFrame?.motion === "gallery" && galleryIndex < currentFrame.collage.length - 1 ? HINTS[interaction].replace("CONTINUE", "EXPLORE PHOTOS") : HINTS[interaction]}</p>
       )}
     </section>
   );

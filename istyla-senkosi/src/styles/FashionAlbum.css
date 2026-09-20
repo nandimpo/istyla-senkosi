@@ -12,3 +12,10 @@
 .fashion-album nav { display:flex; align-items:center; justify-content:center; gap:25px; font:500 14px Montserrat,Arial,sans-serif; }
 @media(max-width:600px) { .fashion-album { padding:14px; gap:12px; } .fashion-album header p { font-size:11px; max-width:45%; } .fashion-album button { font-size:12px; padding:10px; } }
 .chapter-player__visual--fashion-wall::after { pointer-events:none; }
+/* Nine Skhothane photographs fill three rows; keep each complete during a dissolve. */
+#skhothane .fashion-wall--compact { grid-template-columns:repeat(4,minmax(0,1fr)); grid-template-rows:repeat(3,minmax(0,1fr)); }
+#skhothane .fashion-wall--compact .collage-crossfade img { object-fit:contain; object-position:center; }
+@media(max-width:700px) {
+  #skhothane .fashion-wall--compact { grid-template-columns:repeat(3,minmax(0,1fr)); grid-template-rows:repeat(3,minmax(0,1fr)); }
+  #skhothane .fashion-wall--compact figure:last-child { grid-column:auto; }
+}

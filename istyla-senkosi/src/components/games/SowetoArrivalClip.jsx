@@ -59,7 +59,7 @@ export default function SowetoArrivalClip({ onComplete }) {
     <div className="soweto-arrival-copy">
       <p>JAMA / ARRIVING IN SOWETO</p>
       <h1 id="soweto-arrival-title">A little closer to my cousin’s world</h1>
-      <p>{failed ? "The clip could not load. Please retry." : "I’m arriving in Soweto with my cousin on my mind. This time, I want to see beyond the clothes and listen to the stories behind them."}</p>
+      <p>{failed ? "The clip could not load. Please retry." : "I’m arriving in Soweto with my cousin on my mind. He is gone, but I can still listen to the stories behind the clothes he loved."}</p>
       <progress max={CLIP_SECONDS} value={seconds} aria-label="Arrival clip playback progress" />
       <span>{seconds} / {CLIP_SECONDS} seconds</span>
       <button disabled={seconds < SKIP_AFTER_SECONDS} onClick={() => { if (watched.current >= SKIP_AFTER_SECONDS) completeClip(); }}>

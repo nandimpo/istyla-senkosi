@@ -45,8 +45,9 @@ function fadeTo(audio, target, { thenPause = false } = {}) {
   audio._fadeRaf = requestAnimationFrame(step);
 }
 
-export function useSectionAudio({ id, audioRef, soundOn }) {
+export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false }) {
   const { currentSection, volume, navigationLocked } = useNavigation();
+  const targetVolume = volume * (duckMusic ? 0.01 : 1);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -60,12 +61,12 @@ export function useSectionAudio({ id, audioRef, soundOn }) {
 
     if (audio.paused) audio.volume = 0;
     audio.play().catch(() => {});
-    fadeTo(audio, volume);
+    fadeTo(audio, targetVolume);
 
     const retry = () => {
       if (!audio.muted) {
         audio.play().catch(() => {});
-        fadeTo(audio, volume);
+        fadeTo(audio, targetVolume);
       }
     };
     resumeListeners.add(retry);
@@ -74,5 +75,5 @@ export function useSectionAudio({ id, audioRef, soundOn }) {
       resumeListeners.delete(retry);
       cancelFade(audio);
     };
-  }, [currentSection, id, soundOn, audioRef, volume, navigationLocked]);
+  }, [currentSection, id, soundOn, audioRef, targetVolume, navigationLocked]);
 }

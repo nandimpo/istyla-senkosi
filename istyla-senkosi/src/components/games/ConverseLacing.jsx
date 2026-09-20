@@ -75,7 +75,7 @@ export default function ConverseLacing({ onComplete, onBack }) {
     <div className="converse-lacing__copy">
       <button className="converse-lacing__back" onClick={onBack}>Back to the story</button>
       <small>02 / PANTSULA / MAKE IT YOURS</small><h2 id="custom-title">Your shoes.<br/>Your signature.</h2>
-      <p>My cousin makes every outfit his own. Before I follow the dancers, I want to put something of myself into these shoes.</p>
+      <p>My cousin made every outfit his own. Before I follow the dancers, I want to put something of myself into these shoes.</p>
       <fieldset><legend>Drag individual patches onto the shoe</legend><div className="converse-custom__choices converse-patches">{types.map((type) => patchButton(type))}</div></fieldset>
       <label className="converse-custom__initials">Your initials<input value={initials} maxLength={4} placeholder="JAMA" onChange={(event) => setInitials(event.target.value.toUpperCase())}/></label>
       <div className="converse-custom__choices converse-patches">{patchButton("Initials", initials)}</div>

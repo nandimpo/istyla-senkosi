@@ -21,8 +21,15 @@ import brotherhood2 from "../assets/Chapter 3_Skothane/Images/tkzee/BROTHERHOOD 
 import brotherhood3 from "../assets/Chapter 3_Skothane/Images/tkzee/BROTHERHOOD SOCIAL CLUB/BROTHERHOOD SOCIAL CLUB  HUMANS by Isabel Corthier Photographer 3.jpg";
 import chapterImage from "../assets/images/Chapter images/skothane chapter.jpg";
 import backgroundTrack from "../assets/audio/New Music/Moonchild Sanelly - Yebo Teacher _Skhothane.mp3";
+import materialCultureVideo from "../assets/Chapter 3_Skothane/Video/Material Culture- Touch Down Tembisa (Dec 2016) Izikhothane.mp4";
+import materialBoysVideo from "../assets/Chapter 3_Skothane/Video/South Africa's Material Boys 2.mp4";
+import materialCultureAudio from "../assets/audio/Chapter Clips/skhothane-one.m4a";
+import materialBoysAudio from "../assets/audio/Chapter Clips/skhothane-two.m4a";
 
 const carouselImages = [img1, img2, img3, img4, img5, img6, img7, img8, img9];
+const finaleCollage = Object.entries(import.meta.glob("../assets/Chapter 3_Skothane/Images/Photo Gallery/*.{jpg,jpeg,png,webp}", { eager: true, query: "?url", import: "default" }))
+  .sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
+  .map(([, src]) => src);
 
 function Skhothane() {
   const { completeChapter } = useNavigation();
@@ -33,7 +40,7 @@ function Skhothane() {
       chapter="03 / SKHOTHANE"
       title="Expression. Pride. Spectacle."
       subtitle="It’s more than what you wear."
-      context="This is where the journey feels closest to home. I think of my cousin’s outfits and how quickly I called them showing off. Before deciding what his clothes mean, I need to hear his side of the story."
+      context="The colour and confidence bring back memories of my cousin. I once called his outfits showing off. Since he died, I have wondered what I failed to see in the way he dressed."
       accent="red"
       interaction="swipe"
       exitTransition="fade"
@@ -42,10 +49,12 @@ function Skhothane() {
       titleWipeDirection="right"
       track={backgroundTrack}
       frames={[
-        { label: "High energy / Smash cuts", collage: [img1, img9, tkzee1, tkzee2, pantsulaStyle], caption: "COLOUR. BRANDS. PERFORMANCE." },
-        { label: "Build up collage", collage: [img2, img3, img5, img7, blackLabel, manBending], text: "The colours and confidence bring my cousin to mind. This time, I’m trying to look without deciding who someone is from an outfit." },
-        { label: "Cousin moment / Slow down", collage: [img6, img4, img8, vilaCoster, brotherhood1, brotherhood2, brotherhood3], text: "I knew someone who dressed like this. My cousin. I never asked him why.", kind: "hold" },
-        { label: "After interviews / Realisation", collage: [img8, img1, img2, img3, img4, img5, img7, img9], text: "I’m beginning to see expression where I once saw only brands. But my cousin’s reasons are his to tell. I want our next conversation to start with a question." },
+        { label: "High energy / Smash cuts", collage: [img1, img9, tkzee1, tkzee2, pantsulaStyle], kind: "memory-album", caption: "COLOUR. BRANDS. PERFORMANCE." },
+        { label: "Build up collage", collage: [img2, img3, img5, img7, blackLabel, manBending], kind: "memory-album", text: "The colours and confidence bring my cousin to mind. This time, I’m trying to look without deciding who someone is from an outfit." },
+        { label: "A memory / Slow down", collage: [img6, img4, img8, vilaCoster, brotherhood1, brotherhood2, brotherhood3], text: "I remember him turning at the door to show me his outfit. I laughed at the bright colours. I wish I had looked longer.", kind: "memory-album" },
+        { label: "Material Culture / Touch Down Tembisa", video: materialCultureVideo, audio: materialCultureAudio, outfitGate: true, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
+        { label: "South Africa's Material Boys 2", video: materialBoysVideo, audio: materialBoysAudio, outfitGate: true, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
+        { label: "What I carry forward", collage: finaleCollage, collageLabel: "Skhothane finale collage", kind: "fashion-wall", galleryStyle: "crossfade", textStyle: "float", text: "I’m beginning to see expression where I once saw only brands. I cannot speak for my cousin, but I can hold his memory with more care. One last look at him is waiting at the end of this journey.", caption: "UP NEXT: REFLECTION", nextChapter: "reflection", nextChapterLabel: "Continue to the reflection" },
       ]}
       gamePage={(onComplete) => <SwipeCarouselGame images={carouselImages} onComplete={onComplete} />}
       onComplete={() => completeChapter("skhothane")}

@@ -16,7 +16,15 @@ function Reflection() {
 
   const finalPage = (
     <section className="final-frame" aria-label="End of story">
-      <p>It’s more than fashion.</p>
+      <div className="final-frame__meeting">
+        <img src={cousin1} alt="Jama’s cousin, remembered in his Skhothane style" />
+        <div>
+          <small>JAMA / A MEMORY</small>
+          <h1>There he is.</h1>
+          <p>You meet my cousin here, in the photographs I kept. He died before this journey began. I remember him stepping out in colour, asking me to really look.</p>
+          <p>Now I understand what I missed: my cousin was a Skhothane. I cannot ask him what it meant to him, but I can remember him without reducing his style to showing off.</p>
+        </div>
+      </div>
       <div className="final-frame__actions">
         <button onClick={() => goTo("about")}>REPLAY JOURNEY <span>↑</span></button>
         <button onClick={() => goTo("swenka")}>EXPLORE CHAPTERS <span>→</span></button>
@@ -31,7 +39,7 @@ function Reflection() {
       chapter="04 / REFLECTION"
       title="Memory. Identity. Future."
       subtitle="Where do I belong in all of this?"
-      context="I set out from Johannesburg North with questions about my cousin’s style. Following this story through Soweto has changed the way I look. Now I want to take that curiosity home and finally listen to him."
+      context="I set out from Johannesburg North with memories of my cousin and questions I can no longer ask him. In Soweto, every style has made me look again. One last memory is waiting for me."
       accent="beige"
       interaction="scroll"
       exitTransition="fade"
@@ -41,10 +49,10 @@ function Reflection() {
       outro="Back to where it all began…"
       finalPage={finalPage}
       frames={[
-        { label: "Empty streets", image: streetImage, text: "I thought this story was far from my life. My cousin was a connection I had been overlooking.", kind: "quiet" },
+        { label: "Empty streets", image: streetImage, text: "I thought this story was far from my life. My cousin was a connection I had overlooked while he was here.", kind: "quiet" },
         { label: "Time + realisation", image: buildingImage, text: "The more I paid attention, the more I questioned my own assumptions about him, about Soweto, and about belonging.", kind: "quiet" },
-        { label: "History + identity", collage: cousinPhotos, text: "These are photographs of my cousin. I recognise the clothes. Now I want to know the memories and choices behind them." },
-        { label: "Understanding", image: houseImage, text: "I’m still Jama, still learning. When I see my cousin, I know where I’ll begin: tell me what your style means to you.", kind: "quiet" },
+        { label: "Understanding", image: houseImage, text: "I’m still Jama, still learning. I cannot tell his story for him. I can honour what I remember and keep asking others what their style means to them.", kind: "quiet" },
+        { label: "The photographs I kept", collage: cousinPhotos, text: "These are the photographs I kept of him. Come closer. I want you to meet the cousin I have been remembering." },
       ]}
       onComplete={() => completeChapter("reflection")}
     />

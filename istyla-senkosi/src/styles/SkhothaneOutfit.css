@@ -1,0 +1,31 @@
+.skhothane-outfit { position:absolute; inset:0; z-index:2; overflow:auto; padding:clamp(28px,4vw,64px) clamp(24px,5vw,80px) 80px; box-sizing:border-box; background:radial-gradient(circle at 68% 38%,#3e271f,#171816 68%); color:#f6f0e4; font-family:Montserrat,Arial,sans-serif; touch-action:pan-y; }
+.skhothane-outfit__heading { max-width:760px; }
+.skhothane-outfit__back { display:block; margin:0 0 28px; padding:0; border:0; background:none; color:#e4c187; cursor:pointer; font:700 11px Montserrat,Arial,sans-serif; letter-spacing:1px; }
+.skhothane-outfit__heading small,.skhothane-outfit__result small { color:#e0b46a; font:800 10px Montserrat,Arial,sans-serif; letter-spacing:2px; }
+.skhothane-outfit__heading h2 { margin:12px 0; font:800 clamp(38px,5vw,72px)/.95 'Barlow Condensed',Impact,sans-serif; text-transform:uppercase; }
+.skhothane-outfit__heading p { max-width:620px; margin:0; color:#e4d9c5; font-size:13px; line-height:1.55; }
+.skhothane-outfit__workspace { display:grid; grid-template-columns:minmax(140px,.55fr) minmax(400px,1.6fr) minmax(230px,.8fr); gap:clamp(18px,2vw,34px); align-items:start; margin-top:28px; }
+.skhothane-outfit__workspace:not(.is-open) { grid-template-columns:minmax(220px,420px); justify-content:center; }
+.skhothane-outfit__bag { display:flex; flex-direction:column; align-items:center; gap:14px; width:100%; border:1px solid #ad7b42; background:#241c18; color:#f6e3be; padding:20px 12px; cursor:pointer; font:800 10px Montserrat,Arial,sans-serif; letter-spacing:1.2px; }
+.skhothane-outfit__bag img { width:100%; max-height:255px; object-fit:contain; transition:transform .45s ease; }
+.skhothane-outfit__bag:hover img,.skhothane-outfit__bag:focus-visible img { transform:scale(1.06) rotate(-3deg); }
+.skhothane-outfit__workspace.is-open .skhothane-outfit__bag { cursor:default; }
+.skhothane-outfit__workspace.is-open .skhothane-outfit__bag img { max-height:160px; }
+.skhothane-outfit__choices { display:grid; gap:12px; }
+.skhothane-outfit__choices fieldset { min-width:0; margin:0; padding:8px 0 0; border:0; border-top:1px solid #ba945d88; }
+.skhothane-outfit__choices legend { padding:0 10px 0 0; color:#e0b46a; font:800 10px Montserrat,Arial,sans-serif; letter-spacing:1.2px; }
+.skhothane-outfit__options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; }
+.skhothane-outfit__options button { min-width:0; min-height:122px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; padding:6px; border:1px solid #ffffff24; background:#f5ebd8; color:#31271d; cursor:pointer; font:700 9px/1.25 Montserrat,Arial,sans-serif; }
+.skhothane-outfit__options button.is-selected { border:3px solid #e8b851; box-shadow:0 0 0 2px #30220f; }
+.skhothane-outfit__options img { width:100%; height:86px; object-fit:contain; }
+.skhothane-outfit__result { padding:14px; border:1px solid #bd955c; background:#22201bd9; text-align:center; }
+.skhothane-outfit__look { display:grid; grid-template-rows:115px 115px 75px; gap:5px; margin:12px 0; padding:10px; background:linear-gradient(#d9c9a8,#aa916d); }
+.skhothane-outfit__slot { display:flex; align-items:center; justify-content:center; min-height:0; border:1px dashed #6c553f; background:#fff6e4a8; }
+.skhothane-outfit__slot img { width:100%; height:100%; object-fit:contain; }
+.skhothane-outfit__slot span { color:#655039; font:800 9px Montserrat,Arial,sans-serif; letter-spacing:1px; }
+.skhothane-outfit__result p { min-height:32px; margin:8px 0; color:#e9d8b9; font-size:11px; line-height:1.4; }
+.skhothane-outfit__watch { width:100%; min-height:44px; border:0; background:#d9aa5f; color:#191610; cursor:pointer; font:800 11px Montserrat,Arial,sans-serif; }
+.skhothane-outfit__watch:disabled { background:#6e675a; color:#c6bfaf; cursor:not-allowed; }
+.skhothane-outfit button:focus-visible { outline:3px solid #fff3c9; outline-offset:2px; }
+@media(max-width:1000px) { .skhothane-outfit__workspace { grid-template-columns:130px minmax(300px,1fr); } .skhothane-outfit__result { grid-column:2; } }
+@media(max-width:650px) { .skhothane-outfit { padding:22px 18px 90px; } .skhothane-outfit__heading h2 { font-size:42px; } .skhothane-outfit__workspace,.skhothane-outfit__workspace:not(.is-open) { display:block; } .skhothane-outfit__bag { max-width:300px; margin:0 auto 22px; } .skhothane-outfit__workspace.is-open .skhothane-outfit__bag img { max-height:110px; } .skhothane-outfit__choices { margin-bottom:20px; } .skhothane-outfit__options button { min-height:104px; } .skhothane-outfit__options img { height:70px; } .skhothane-outfit__result { max-width:390px; margin:auto; } }

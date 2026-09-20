@@ -298,6 +298,8 @@ html[data-reduced-motion="true"] .floating-word { animation:none; }
 html[data-reduced-motion="true"] .fashion-wall figure { animation:none; }
 @media(prefers-reduced-motion:reduce) { .fashion-wall figure { animation:none; } }
 .chapter-player__video-skip { position:absolute; z-index:4; right:7vw; bottom:100px; display:flex; align-items:center; gap:16px; font-size:12px; color:#fff7e9; } .chapter-player__video-skip button { padding:12px 18px; background:#d3ad6d; color:#191711; border:1px solid #d3ad6d; font:700 12px Montserrat,sans-serif; cursor:pointer; } .chapter-player__video-skip button:disabled { opacity:.5; cursor:not-allowed; } @media(max-width:650px) { .chapter-player__video-skip { bottom:145px; } }
+.chapter-player__visual:has(video)::after { pointer-events:none; }
+.chapter-player__video-start { position:absolute; z-index:2; top:50%; left:50%; transform:translate(-50%,-50%); padding:16px 22px; border:1px solid #d3ad6d; background:#171512e8; color:#fff7e9; font:700 13px Montserrat,Arial,sans-serif; cursor:pointer; }
 
 /* Each portrait takes a turn: up, down, up, with the other two held still. */
 .chapter-player__gallery-track--alternate .chapter-player__gallery-scroll,
@@ -373,3 +375,33 @@ html[data-reduced-motion="true"] .stitched-narrative__thread { animation:none !i
 @keyframes collage-page-dissolve { from { opacity:1; } to { opacity:0; } }
 html[data-reduced-motion="true"] .collage-crossfade img.collage-crossfade__incoming { animation:none; }
 @media(prefers-reduced-motion:reduce) { .collage-crossfade img.collage-crossfade__incoming { animation:none; } }
+
+/* Each Skhothane memory page holds a small book whose photographs turn one at a time. */
+#skhothane .chapter-player__visual--memory-album { background:radial-gradient(circle at 64% 40%,#48443d,#171714 72%); }
+#skhothane .chapter-player__visual--memory-album::after { background:linear-gradient(90deg,#171714 0%,#171714dd 26%,transparent 65%); pointer-events:none; }
+.memory-flipbook { position:absolute; top:9%; right:9%; width:min(47vw,620px); height:65%; perspective:2400px; touch-action:none; cursor:grab; }
+.memory-flipbook:active { cursor:grabbing; }
+.memory-flipbook__settled-page { position:absolute; top:0; bottom:0; left:-100%; width:100%; box-sizing:border-box; background:linear-gradient(100deg,#cfc4ae,#f6f0e3 30%,#e5dccb 78%,#b9ab91); border:1px solid #c8beaa; box-shadow:inset -15px 0 20px #6f614733,-10px 14px 22px #0005; pointer-events:none; animation:memory-left-settle 1050ms ease-out both; }
+@keyframes memory-left-settle { from { opacity:0; } to { opacity:1; } }
+.memory-flipbook__stack,.memory-flipbook__page,.memory-flipbook__turning { position:absolute; inset:0; background:#eee9dc; border:1px solid #c8beaa; box-sizing:border-box; backface-visibility:hidden; }
+.memory-flipbook__stack { transform:translate(12px,11px); box-shadow:6px 7px 0 #d4cbb9,12px 13px 0 #b9af9d,16px 25px 28px #0009; }
+.memory-flipbook__page,.memory-flipbook__turning { padding:clamp(10px,1.5vw,22px); box-shadow:inset 8px 0 14px #7d746044; }
+.memory-flipbook__page img,.memory-flipbook__turning img { width:100%; height:100%; display:block; object-fit:cover; object-position:center; filter:none !important; }
+.memory-flipbook__turning { z-index:2; background:transparent; border:0; padding:0; box-shadow:none; backface-visibility:visible; transform-style:preserve-3d; transform-origin:left center; will-change:transform; }
+.memory-flipbook__turning--forward { animation:memory-sheet-turn 1050ms cubic-bezier(.4,0,.2,1) forwards; }
+.memory-flipbook__turning--back { transform-origin:right center; animation:memory-sheet-turn-back 1050ms cubic-bezier(.4,0,.2,1) forwards; }
+.memory-flipbook__turning img { box-sizing:border-box; padding:clamp(10px,1.5vw,22px); background:#eee9dc; border:1px solid #c8beaa; backface-visibility:hidden; -webkit-backface-visibility:hidden; image-rendering:auto; }
+.memory-flipbook__paper-back { position:absolute; inset:0; display:block; background:linear-gradient(100deg,#cfc4ae,#f6f0e3 30%,#e5dccb 78%,#b9ab91); border:1px solid #c8beaa; transform:rotateY(180deg); backface-visibility:hidden; box-shadow:inset -15px 0 20px #6f614733; }
+.memory-flipbook__turning::after { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg,transparent 35%,#221d1844); backface-visibility:hidden; animation:memory-sheet-shadow 1050ms ease forwards; }
+.memory-flipbook__controls { position:absolute; z-index:3; left:50%; bottom:-58px; transform:translateX(-50%); display:flex; align-items:center; gap:14px; padding:5px; background:#eee9dc; color:#352d22; box-shadow:0 5px 14px #0008; white-space:nowrap; }
+.memory-flipbook__controls button { width:40px; height:34px; border:0; background:#d1b77b; color:#201b13; font-size:20px; cursor:pointer; }
+.memory-flipbook__controls button:hover,.memory-flipbook__controls button:focus-visible { background:#f1d795; outline:2px solid #fff1cf; }
+.memory-flipbook__controls span { min-width:42px; text-align:center; font:700 10px Montserrat,Arial,sans-serif; letter-spacing:1px; }
+.memory-flipbook__hint { position:absolute; left:0; right:0; bottom:-91px; margin:0; text-align:center; color:#d5c39c; font:700 9px Montserrat,Arial,sans-serif; letter-spacing:1.4px; }
+@keyframes memory-sheet-turn { from { transform:rotateY(0); } to { transform:rotateY(-179.5deg); } }
+@keyframes memory-sheet-turn-back { from { transform:rotateY(0); } to { transform:rotateY(179.5deg); } }
+@keyframes memory-sheet-shadow { 0% { opacity:0; } 50% { opacity:.75; } 100% { opacity:0; } }
+#skhothane .chapter-player__page:has(.memory-flipbook) .chapter-player__story { left:6vw; width:29%; bottom:19%; }
+#skhothane .chapter-player__page:has(.memory-flipbook) .chapter-player__label,#skhothane .chapter-player__page:has(.memory-flipbook) .chapter-player__caption { margin-left:0; }
+@media(max-width:700px) { .memory-flipbook { top:6%; right:12%; width:73vw; height:37%; } .memory-flipbook__controls { bottom:-52px; } .memory-flipbook__hint { bottom:-75px; } #skhothane .chapter-player__visual--memory-album::after { background:linear-gradient(0deg,#171714 15%,transparent 65%); } #skhothane .chapter-player__page:has(.memory-flipbook) .chapter-player__story { left:24px; width:calc(100% - 48px); bottom:100px; } }
+@media(prefers-reduced-motion:reduce) { .memory-flipbook__turning,.memory-flipbook__turning::after,.memory-flipbook__settled-page { animation:none; } }

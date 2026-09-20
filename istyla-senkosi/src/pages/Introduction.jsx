@@ -20,7 +20,7 @@ function Introduction() {
       chapter="00 / INTRO"
       title="Why am I here?"
       subtitle="A slow journey from Johannesburg North to Soweto"
-      context="I’m Jama. I grew up in Johannesburg North, thinking I knew this city. My cousin’s style always caught my eye, but I never asked what it meant to him. This journey towards Soweto begins with that question."
+      context="I’m Jama. I grew up in Johannesburg North, thinking I knew this city. My cousin’s style always caught my eye, but I never asked what it meant to him. Since he died, that question has stayed with me. This journey towards Soweto begins there."
       accent="beige"
       interaction="scroll"
       exitTransition="fade"
@@ -32,7 +32,7 @@ function Introduction() {
         { textStyle: "needle", label: "1. Map of Johannesburg", image: johannesburgImage, motion: "zoom", kind: "mono", text: "I’ve always been from Johannesburg…" },
         { textStyle: "needle", label: "2. Johannesburg North / Where I began", image: northImageOne, motion: "zoom", text: "I grew up in Johannesburg North. These were the streets I knew, the part of the city I called home." },
         { textStyle: "needle", label: "3. Leaving the north / Towards Soweto", collage: [northImageTwo, northImageThree], motion: "gallery", text: "As we slowly leave the north behind, I begin to look beyond the Johannesburg I know. Soweto is still ahead of us." },
-        { textStyle: "needle", label: "4. First street", collage: [streetImage, johannesburgFashionFour], motion: "gallery", text: "Soweto always felt… separate. But my cousin is part of the reason I’m looking closer. What have I missed by only noticing the clothes?" },
+        { textStyle: "needle", label: "4. First street", collage: [streetImage, johannesburgFashionFour], motion: "gallery", text: "Soweto always felt… separate. My cousin was part of this place, and I wish I had asked him more. What did I miss when I noticed only his clothes?" },
       ]}
       gamePosition="afterFrames"
       gamePage={(onComplete) => <JourneyMapGame mapImage={johannesburgMap} onComplete={onComplete} />}

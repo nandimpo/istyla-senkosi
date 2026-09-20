@@ -133,7 +133,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
       <header className="journey-heading">
         <p className="journey-eyebrow">Johannesburg North to Soweto</p>
         <h1 id="journey-title">THE ROUTE<br />THAT BRINGS ME CLOSER<span>.</span></h1>
-        <p>I’m Jama. I grew up in Johannesburg North, but my cousin’s style keeps drawing my attention towards Soweto. Follow the route with me. At each stop, familiar images return, then give way to something I had not noticed.</p>
+        <p>I’m Jama. I grew up in Johannesburg North. Since my cousin died, memories of his style have drawn me towards Soweto. Follow the route with me. At each stop, familiar images return, then give way to something I had not noticed.</p>
       </header>
       <div className="journey-layout">
         <div className="journey-map-column">

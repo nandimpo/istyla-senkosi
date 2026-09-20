@@ -26,7 +26,7 @@ export default function IspotiIntro({ children }) {
   const end = () => { pointer.current = null; };
   if (opened) return children;
   return <section className="ispoti-intro" aria-label="Break in your ispoti to enter Pantsula" style={{ "--wear": wear / 100, "--bend": bend / 100 }}>
-    <div className="ispoti-copy"><small>02 / PANTSULA · JAMA’S JOURNEY</small><h1>Make it<br/><em>your own.</em></h1><p>I think of my cousin and the care he takes with every detail. Now it’s my turn to try.</p><p>Help Jama rub the crown and pull the brim upward to shape her ispoti.</p></div>
+    <div className="ispoti-copy"><small>02 / PANTSULA · JAMA’S JOURNEY</small><h1>Make it<br/><em>your own.</em></h1><p>I remember the care my cousin took with every detail. Now it’s my turn to try.</p><p>Help Jama rub the crown and pull the brim upward to shape her ispoti.</p></div>
     <div className="ispoti-workbench">
       <svg className="ispoti-hat" viewBox="0 130 570 400" role="img" aria-label="Olive bucket hat, becoming worn with a bent brim">
         <defs>
