@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import StitchedNarrative from "../StitchedNarrative";
 import "../../styles/ChapterGames.css";
 
 const beats = ["STANCE", "STEP", "RHYTHM", "SWING", "FINALE"];
@@ -45,7 +46,7 @@ function BeatGame({ sceneImages, onComplete }) {
       <div className="game-copy">
         <p className="tag">02 / PANTSULA</p>
         <h1>I tried to feel it,<br />not just watch it.</h1>
-        <p className="body">Nobody could explain the rhythm to me in words. So I stopped asking and started trying to catch it myself, one beat at a time.</p>
+        <StitchedNarrative className="game-copy__narrative" text="Nobody could explain the rhythm to me in words. So I stopped asking and started trying to catch it myself, one beat at a time." placement="inline" />
         <strong>{currentScene}</strong>
         <i />
       </div>

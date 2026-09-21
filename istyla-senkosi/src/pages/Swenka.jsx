@@ -4,8 +4,6 @@ import UnzipIntro from "../components/UnzipIntro";
 import WardrobeGame from "../components/games/WardrobeGame";
 import interviewVideo from "../assets/Chapter 1_Swenka/Video/BLACK GOSLING  EDGARS  REBRAND  SWENKAS (Intro video).mp4";
 import interviewVideoTwo from "../assets/Chapter 1_Swenka/Video/The Swenkas (2004).mp4";
-import interviewAudio from "../assets/audio/Chapter Clips/swenka-one.m4a";
-import interviewAudioTwo from "../assets/audio/Chapter Clips/swenka-two.m4a";
 import editorial1 from "../assets/Chapter 1_Swenka/Images/Editorial/Portraits from apartheid-era South Africa - in pictures , Art and design , The Guardian.jpg";
 import editorial4 from "../assets/Chapter 1_Swenka/Images/Editorial/Man with pinstripe jacket.jpg";
 import editorial5 from "../assets/Chapter 1_Swenka/Images/Editorial/Inkabi nation.jpg";
@@ -34,11 +32,11 @@ function Swenka() {
       titleTransition="cut"
       track={backgroundTrack}
       frames={[
-        { label: "Memory collage / Jama’s view", collage: [editorial1, editorial6], motion: "gallery", text: "That attention to an outfit feels familiar. I remember my cousin checking every detail before he stepped outside." },
-        { label: "Interview 1 / Let them speak", video: interviewVideo, audio: interviewAudio, lockSeconds: 12, caption: "10 TO 15 SEC CLIP" },
-        { label: "Detail shots", collage: [editorial5, editorial4, xhosaMen], motion: "gallery", text: "The suits, the detail… nothing feels accidental. I never asked my cousin which details mattered most to him." },
-        { label: "Interview 2 / Let them speak", video: interviewVideoTwo, audio: interviewAudioTwo, videoStart: 300, shoeShine: true, lockSeconds: 12, caption: "10 TO 15 SEC CLIP" },
-        { label: "From pride in dress to pride in movement / Towards Pantsula", collage: fashionImages, kind: "fashion-wall", textStyle: "float", text: "Looking at these outfits, I keep thinking about my cousin. I cannot ask him now, so I listen to the people who carry these styles forward. As my journey turns towards Pantsula, I wonder what movement can tell me that clothes alone cannot.", caption: "NEXT CHAPTER / PANTSULA" },
+        { label: "Interview 1 / Let them speak", storyRole: "voices", video: interviewVideo, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
+        { label: "Detail shots", storyRole: "observe", collage: [editorial5, editorial4, xhosaMen], motion: "gallery", text: "The suits, the detail… nothing feels accidental. I begin to notice the care behind each choice." },
+        { label: "Interview 2 / Let them speak", storyRole: "voices", video: interviewVideoTwo, videoStart: 300, shoeShine: true, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
+        { label: "Memory collage / Jama’s view", storyRole: "memory", collage: [editorial1, editorial6], motion: "gallery", text: "That attention to an outfit feels familiar. I remember my cousin checking every detail before he stepped outside. I never asked him which details mattered most." },
+        { label: "From pride in dress to pride in movement / Towards Pantsula", storyRole: "reflection", collage: fashionImages, kind: "fashion-wall", textStyle: "float", text: "Looking at these outfits, I keep thinking about my cousin. I cannot ask him now, so I listen to the people who carry these styles forward. As my journey turns towards Pantsula, I wonder what movement can tell me that clothes alone cannot.", caption: "UP NEXT: PANTSULA", nextChapter: "pantsula", nextChapterLabel: "Explore Pantsula next" },
       ]}
       gamePage={(onComplete) => <WardrobeGame portraitImage={portraitImage} onComplete={onComplete} />}
       onComplete={() => completeChapter("swenka")}

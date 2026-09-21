@@ -56,7 +56,6 @@ export function NavigationProvider({ children }) {
       try {
         sessionStorage.setItem(`istyla:${id}:page`, "0");
         sessionStorage.setItem(`istyla:${id}:gallery`, "0");
-        if (id === "swenka" || id === "pantsula") sessionStorage.setItem(`istyla:${id}:opened`, "true");
       } catch { /* Navigation still works without storage. */ }
       setChapterVisit((visit) => visit + 1);
     }

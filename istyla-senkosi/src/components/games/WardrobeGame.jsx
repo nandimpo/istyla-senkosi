@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import StitchedNarrative from "../StitchedNarrative";
 import "../../styles/ChapterGames.css";
 
 const elements = [
@@ -29,7 +30,7 @@ function WardrobeGame({ portraitImage, onComplete }) {
       <div className="game-copy">
         <p className="tag">01 / SWENKA</p>
         <h1>Piece by piece,<br />it came together.</h1>
-        <p className="body">I couldn&apos;t take in the whole outfit at once, not at first. So I broke it down the way I actually noticed it: the hat, the sleeve, the shoes, one detail at a time.</p>
+        <StitchedNarrative className="game-copy__narrative" text="I couldn't take in the whole outfit at once, not at first. So I broke it down the way I actually noticed it: the hat, the sleeve, the shoes, one detail at a time." placement="inline" />
         <strong>DRAG EACH DETAIL INTO PLACE, THE WAY I HAD TO</strong>
         <i />
       </div>

@@ -1,4 +1,3 @@
-import { useSessionState } from "../hooks/useSessionState";
 import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import NarrativeText from "./NarrativeText";
@@ -7,7 +6,12 @@ import "../styles/UnzipIntro.css";
 export default function UnzipIntro({ image, children }) {
   const [progress, setProgress] = useState(0);
   const [opening, setOpening] = useState(false);
-  const [opened, setOpened] = useSessionState("swenka:opened", false);
+  const [opened, setOpened] = useState(() => {
+    try {
+      const savedPage = JSON.parse(sessionStorage.getItem("istyla:swenka:page"));
+      return Number.isInteger(savedPage) && savedPage > 0;
+    } catch { return false; }
+  });
   const { reducedMotion } = useNavigation();
   const drag = useRef(null);
   const openingFrom = useRef(0);

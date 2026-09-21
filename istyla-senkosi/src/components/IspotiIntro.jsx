@@ -1,4 +1,3 @@
-import { useSessionState } from "../hooks/useSessionState";
 import { useRef, useState } from "react";
 import hatImage from "../assets/images/Chapter images/Bucket-Hat.jpg";
 import "../styles/IspotiIntro.css";
@@ -6,7 +5,12 @@ import "../styles/IspotiIntro.css";
 export default function IspotiIntro({ children }) {
   const [wear, setWear] = useState(0);
   const [bend, setBend] = useState(0);
-  const [opened, setOpened] = useSessionState("pantsula:opened", false);
+  const [opened, setOpened] = useState(() => {
+    try {
+      const savedPage = JSON.parse(sessionStorage.getItem("istyla:pantsula:page"));
+      return Number.isInteger(savedPage) && savedPage > 0;
+    } catch { return false; }
+  });
   const pointer = useRef(null);
   const ready = wear >= 100 && bend >= 100;
   const begin = (event, part) => {

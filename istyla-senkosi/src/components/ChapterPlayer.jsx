@@ -23,10 +23,16 @@ const HINTS = {
   scroll: "SCROLL TO CONTINUE",
 };
 
+const STORY_BEATS = {
+  observe: "LOOK CLOSER",
+  voices: "LET THEM SPEAK",
+  memory: "JAMA'S MEMORY",
+  reflection: "WHAT JAMA CARRIES FORWARD",
+};
+
 function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, videoUnlocked = true, onVideoProgress, onVideoStarted, allowVideoSound = true }) {
   const { goTo, soundOn, setSoundOn } = useNavigation();
   const videoRef = useRef(null);
-  const clipAudioRef = useRef(null);
   const [videoNeedsStart, setVideoNeedsStart] = useState(false);
   const [clipStarted, setClipStarted] = useState(false);
   const watched = useRef(0);
@@ -36,31 +42,23 @@ function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, vi
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    video.defaultMuted = true;
-    video.muted = true;
+    video.muted = visualOnly || !allowVideoSound || !clipStarted || !soundOn;
     video.volume = 1;
-    const clipAudio = clipAudioRef.current;
-    if (clipAudio) { clipAudio.muted = visualOnly || !soundOn; clipAudio.volume = 1; }
-    if (!videoUnlocked || visualOnly || (allowVideoSound && !clipStarted)) { video.pause(); clipAudio?.pause(); return; }
-    Promise.all([video.play(), ...(clipAudio && allowVideoSound ? [clipAudio.play()] : [])])
-      .then(() => setVideoNeedsStart(false))
-      .catch(() => { video.pause(); clipAudio?.pause(); setVideoNeedsStart(true); });
+    if (!videoUnlocked || visualOnly || (allowVideoSound && !clipStarted)) { video.pause(); return; }
+    if (video.paused) video.play().then(() => setVideoNeedsStart(false)).catch(() => setVideoNeedsStart(true));
   }, [videoUnlocked, visualOnly, soundOn, allowVideoSound, clipStarted]);
   const startClipWithSound = (event) => {
     event.stopPropagation();
     const video = videoRef.current;
     if (!video) return;
-    const clipAudio = clipAudioRef.current;
-    if (allowVideoSound) {
-      setSoundOn(true);
-      if (clipAudio) { clipAudio.muted = false; clipAudio.volume = 1; clipAudio.currentTime = 0; }
-    }
-    video.muted = true;
+    if (allowVideoSound) setSoundOn(true);
+    video.defaultMuted = false;
+    video.muted = !allowVideoSound;
     video.volume = 1;
     setClipStarted(true);
-    Promise.all([video.play(), ...(clipAudio && allowVideoSound ? [clipAudio.play()] : [])])
+    video.play()
       .then(() => { setVideoNeedsStart(false); onVideoStarted?.(); })
-      .catch(() => { video.pause(); clipAudio?.pause(); setClipStarted(false); setVideoNeedsStart(true); });
+      .catch(() => { setClipStarted(false); setVideoNeedsStart(true); });
   };
   const seekToStart = () => {
     if (frame.videoStart && videoRef.current) videoRef.current.currentTime = frame.videoStart;
@@ -70,11 +68,6 @@ function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, vi
       videoRef.current.currentTime = frame.videoStart;
     }
     const video = videoRef.current;
-    const clipAudio = clipAudioRef.current;
-    if (clipAudio && clipStarted && !video.seeking) {
-      const expected = video.currentTime - (frame.videoStart || 0);
-      if (expected >= 0 && expected < clipAudio.duration && Math.abs(clipAudio.currentTime - expected) > 0.35) clipAudio.currentTime = expected;
-    }
     if (!frame.playSeconds || !video || !videoUnlocked || visualOnly || video.seeking) return;
     const delta = video.currentTime - lastVideoTime.current;
     lastVideoTime.current = video.currentTime;
@@ -110,15 +103,15 @@ function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, vi
           </div>
         ) : frame.video ? (
           <>
-            <video ref={videoRef} src={frame.video} muted playsInline loop preload="metadata" onLoadedMetadata={seekToStart} onTimeUpdate={holdStart} onSeeked={() => { lastVideoTime.current = videoRef.current.currentTime; }} />
-            {frame.audio && !visualOnly && <audio ref={clipAudioRef} src={frame.audio} preload="auto" />}
+            <video ref={videoRef} src={frame.video} playsInline loop preload="metadata" onLoadedMetadata={seekToStart} onTimeUpdate={holdStart} onSeeked={() => { lastVideoTime.current = videoRef.current.currentTime; }} />
             {((allowVideoSound && !clipStarted) || videoNeedsStart) && <button className="chapter-player__video-start" type="button" onPointerDown={(event) => event.stopPropagation()} onClick={startClipWithSound}>{allowVideoSound ? "Play video with sound" : "Play video"}</button>}
           </>
         ) : (
           <img ref={photoRef} src={frame.image} alt={frame.alt || ""} loading="lazy" decoding="async" />
         )}
       </div>
-      {!visualOnly && <div className="chapter-player__story">
+      {!visualOnly && <div className={`chapter-player__story ${frame.storyRole ? `chapter-player__story--${frame.storyRole}` : ""}`}>
+      {frame.storyRole && <p className="chapter-player__story-beat">{STORY_BEATS[frame.storyRole]}</p>}
       {frame.label && <p className="chapter-player__label">{frame.label}</p>}
       {frame.text && <StitchedNarrative key={frame.text} text={frame.text} animation={frame.textStyle === "float" ? "float" : "needle"} highlightedPhrases={frame.highlightedPhrases || ["my cousin", "Jama", "Soweto", "rhythm", "style", "Johannesburg"]} chapterColour={frame.chapterColour} timing={frame.narrativeTiming} placement={frame.textPlacement || "lower-left"} onComplete={onTextComplete} />}
       {frame.caption && <p className="chapter-player__caption">{frame.caption}</p>}
@@ -402,7 +395,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
       {lacesLocked && <ConverseLacing key={pageIndex} onBack={guardedRetreat} onComplete={() => setLacesUnlocked(true)} />}
       {outfitLocked && <SkhothaneOutfit onBack={guardedRetreat} onComplete={() => setOutfitUnlocked(true)} />}
       {shoeLocked && <ShoeShine onComplete={() => setShoeUnlocked(true)} />}
-      {currentFrame?.playSeconds && !lacesLocked && !outfitLocked && <div className="chapter-player__video-skip" onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
+      {currentFrame?.playSeconds && !shoeLocked && !lacesLocked && !outfitLocked && <div className="chapter-player__video-skip" onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
         <span>{Math.floor(videoSeconds)} / {currentFrame.playSeconds} seconds</span>
         <button type="button" disabled={videoSeconds < currentFrame.skipAfter} onClick={() => { if (videoSeconds >= currentFrame.skipAfter) advance(); }}>{videoSeconds < currentFrame.skipAfter ? `Skip in ${Math.ceil(currentFrame.skipAfter - videoSeconds)}s` : "Skip video →"}</button>
       </div>}
@@ -413,7 +406,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
       </div>
 
       {!isFinalPage && !isGamePage && !shoeLocked && !lacesLocked && !outfitLocked && (
-        <p className="chapter-player__hint">{currentFrame?.video && id !== "introduction" && !videoStarted ? "TAP PLAY TO HEAR THE VIDEO" : sewingLocked ? (currentFrame?.textStyle === "float" ? "THE STORY CONTINUES…" : "STITCHING…") : timerLocked ? "PLAYING…" : currentFrame?.motion === "gallery" && galleryIndex < currentFrame.collage.length - 1 ? HINTS[interaction].replace("CONTINUE", "EXPLORE PHOTOS") : HINTS[interaction]}</p>
+        <p className="chapter-player__hint">{currentFrame?.video && id !== "introduction" && !videoStarted ? "TAP PLAY TO HEAR THE VIDEO" : sewingLocked ? "FOLLOW THE THREAD…" : timerLocked ? "PLAYING…" : currentFrame?.motion === "gallery" && galleryIndex < currentFrame.collage.length - 1 ? HINTS[interaction].replace("CONTINUE", "EXPLORE PHOTOS") : HINTS[interaction]}</p>
       )}
     </section>
   );
