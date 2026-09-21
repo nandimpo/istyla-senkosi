@@ -1,3 +1,4 @@
+import VideoBridge from "./VideoBridge";
 import FashionAlbum from "./FashionAlbum";
 import CrossfadePhoto from "./CrossfadePhoto";
 import ConverseLacing from "./games/ConverseLacing";
@@ -30,7 +31,7 @@ const STORY_BEATS = {
   reflection: "WHAT JAMA CARRIES FORWARD",
 };
 
-function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, videoUnlocked = true, onVideoProgress, onVideoStarted, allowVideoSound = true, onNextChapter, interactionsReady = true }) {
+function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging = false, directGalleryDrag = false, visualOnly = false, showStory = true, onTextComplete, videoUnlocked = true, videoExiting = false, onVideoProgress, onVideoStarted, allowVideoSound = true, onNextChapter, interactionsReady = true }) {
   const { soundOn, setSoundOn } = useNavigation();
   const videoRef = useRef(null);
   const [videoNeedsStart, setVideoNeedsStart] = useState(false);
@@ -43,14 +44,29 @@ function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, vi
     const video = videoRef.current;
     if (!video) return;
     video.muted = visualOnly || !allowVideoSound || !clipStarted || !soundOn;
-    video.volume = 1;
-    if (!videoUnlocked || visualOnly || (allowVideoSound && !clipStarted)) { video.pause(); return; }
+    if (!videoExiting) video.volume = 1;
+    if ((!videoUnlocked && !videoExiting) || visualOnly || (allowVideoSound && !clipStarted)) { video.pause(); return; }
     if (video.paused) video.play().then(() => setVideoNeedsStart(false)).catch(() => setVideoNeedsStart(true));
-  }, [videoUnlocked, visualOnly, soundOn, allowVideoSound, clipStarted]);
+  }, [videoUnlocked, videoExiting, visualOnly, soundOn, allowVideoSound, clipStarted]);
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !videoExiting) return;
+    const initialVolume = video.volume;
+    const started = performance.now();
+    let animation;
+    const fade = (now) => {
+      const progress = Math.min(1, (now - started) / 3000);
+      video.volume = initialVolume * (1 - progress);
+      if (progress < 1) animation = requestAnimationFrame(fade);
+      else video.pause();
+    };
+    animation = requestAnimationFrame(fade);
+    return () => cancelAnimationFrame(animation);
+  }, [videoExiting]);
   const startClipWithSound = (event) => {
     event.stopPropagation();
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !videoUnlocked) return;
     if (allowVideoSound) setSoundOn(true);
     video.defaultMuted = false;
     video.muted = !allowVideoSound;
@@ -84,7 +100,7 @@ function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, vi
             {frame.collage.map((src, index) => <CrossfadePhoto key={src} images={frame.collage} index={index} alt={frame.alt || "Pantsula fashion photograph"} paused={visualOnly}/>) }
           </div>
         ) : frame.motion === "gallery" && frame.collage ? (
-          <div className={`chapter-player__gallery-track ${frame.galleryStyle === "alternate" ? "chapter-player__gallery-track--alternate" : ""}`} style={{ "--gallery-progress": galleryIndex / Math.max(1, frame.collage.length - 1), "--gallery-columns": frame.collage.length }}>
+          <div className={`chapter-player__gallery-track ${frame.galleryStyle === "alternate" ? "chapter-player__gallery-track--alternate" : ""} ${directGalleryDrag ? "chapter-player__gallery-track--direct" : ""} ${galleryDragging ? "is-dragging" : ""}`} style={{ "--gallery-progress": Math.max(0, Math.min(frame.collage.length - 1, galleryIndex + galleryDragOffset / 160)) / Math.max(1, frame.collage.length - 1), "--gallery-columns": frame.collage.length }}>
             {frame.collage.map((src) => (
               <div className="chapter-player__gallery-photo" key={src}>
                 <div className="chapter-player__gallery-scroll">
@@ -103,14 +119,14 @@ function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, vi
           </div>
         ) : frame.video ? (
           <>
-            <video ref={videoRef} src={frame.video} playsInline loop preload="metadata" onLoadedMetadata={seekToStart} onTimeUpdate={holdStart} onSeeked={() => { lastVideoTime.current = videoRef.current.currentTime; }} />
-            {((allowVideoSound && !clipStarted) || videoNeedsStart) && <button className="chapter-player__video-start" type="button" onPointerDown={(event) => event.stopPropagation()} onClick={startClipWithSound}>{allowVideoSound ? "Play video with sound" : "Play video"}</button>}
+            <video ref={videoRef} src={frame.video} playsInline loop={!frame.playSeconds} preload="auto" onEnded={() => { if (!visualOnly && videoUnlocked) onVideoProgress?.(frame.playSeconds); }} onLoadedMetadata={seekToStart} onTimeUpdate={holdStart} onSeeked={() => { lastVideoTime.current = videoRef.current.currentTime; }} />
+            {!visualOnly && videoUnlocked && ((allowVideoSound && !clipStarted) || videoNeedsStart) && <button className="chapter-player__video-start" type="button" onPointerDown={(event) => event.stopPropagation()} onClick={startClipWithSound}>{allowVideoSound ? "Click to hear them speak" : "Play video"}</button>}
           </>
         ) : (
           <img ref={photoRef} src={frame.image} alt={frame.alt || ""} loading="lazy" decoding="async" />
         )}
       </div>
-      {!visualOnly && <div className={`chapter-player__story ${frame.storyRole ? `chapter-player__story--${frame.storyRole}` : ""}`}>
+      {!visualOnly && showStory && !frame.video && <div className={`chapter-player__story ${frame.storyRole ? `chapter-player__story--${frame.storyRole}` : ""}`}>
       {frame.storyRole && <p className="chapter-player__story-beat">{STORY_BEATS[frame.storyRole]}</p>}
       {frame.label && <p className="chapter-player__label">{frame.label}</p>}
       {frame.text && <StitchedNarrative key={frame.text} text={frame.text} animation={frame.textStyle === "float" ? "float" : "needle"} highlightedPhrases={frame.highlightedPhrases || ["my cousin", "Jama", "Soweto", "rhythm", "style", "Johannesburg"]} chapterColour={frame.chapterColour} timing={frame.narrativeTiming} placement={frame.textPlacement || "lower-left"} onComplete={onTextComplete} />}
@@ -122,8 +138,13 @@ function Frame({ frame, galleryIndex = 0, visualOnly = false, onTextComplete, vi
   );
 }
 
-function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustard", interaction, frames, outro, gamePage, gamePosition = "beforeFrames", finalPage, exitTransition = "fade", titleImage, titleTransition = "dissolve", titleWipeDirection = "left", track, trackStart, sharedAudioRef, onComplete }) {
+function GamePage({ renderGame, onComplete }) {
+  return renderGame(onComplete);
+}
+
+function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustard", interaction, frames, outro, gamePage, gamePosition = "beforeFrames", finalPage, exitTransition = "fade", titleImage, titleTransition = "dissolve", titleWipeDirection = "left", track, nextTrack, trackStart, sharedAudioRef, onComplete }) {
   const [pageIndex, setPageIndex] = useSessionState(`${id}:page`, 0, (value) => Number.isInteger(value) && value >= 0 && value < 1 + frames.length + Number(Boolean(gamePage)) + Number(Boolean(finalPage)));
+  const [videoBridge, setVideoBridge] = useState(null);
   const [threadLeaving, setThreadLeaving] = useState(false);
   const [videoSeconds, setVideoSeconds] = useState(0);
   const [videoStarted, setVideoStarted] = useState(false);
@@ -139,6 +160,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
     setFinishedText({});
     setShoeUnlocked(false);
     setLacesUnlocked(false);
+    setOutfitUnlocked(false);
     setLockExpiredFor(null);
     setPageIndex(target);
   };
@@ -174,7 +196,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   );
   const calm = () => reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   useEffect(() => () => clearTimeout(transitionTimer.current), []);
-  useSectionAudio({ id, audioRef, soundOn, duckMusic: Boolean(currentFrame?.video && !outfitLocked && id !== "introduction"), continueWhileLocked: id === "introduction", fadeOut: exiting });
+  useSectionAudio({ id, audioRef, soundOn, nextTrack, duckMusic: Boolean(currentFrame?.video && !outfitLocked && id !== "introduction"), continueWhileLocked: id === "introduction", fadeOut: exiting });
 
   useEffect(() => {
     if (!exiting || !(reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches) || completedRef.current) return;
@@ -223,14 +245,36 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
     }, 700);
   };
 
+  const bridgeToVideo = (frame, reveal) => {
+    if (lockedRef.current) return;
+    lockedRef.current = true;
+    setVideoBridge({ text: frame.videoBridge || "I wanted to understand the story behind the style. So I stopped to listen.", reveal });
+  };
+  const enterVideoPage = (target) => {
+    const next = frames[target - framesStart];
+    if (!next?.video || next.laceGate || next.outfitGate || next.shoeShine) return false;
+    bridgeToVideo(next, () => { goToPage(target); setGalleryIndex(0); });
+    return true;
+  };
+
   const advance = () => {
     if (lockedRef.current || exiting || threadLeaving || sewingLocked || shoeLocked || lacesLocked || outfitLocked) return;
     if (currentFrame?.motion === "gallery" && galleryIndex < currentFrame.collage.length - 1) {
       lockedRef.current = true;
       setGalleryIndex((index) => index + 1);
-      transitionTimer.current = setTimeout(() => { lockedRef.current = false; }, calm() ? 100 : 1450);
+      transitionTimer.current = setTimeout(() => { lockedRef.current = false; }, calm() ? 100 : interaction === "drag" ? 500 : 1450);
       return;
     }
+    if (currentFrame?.video && currentFrame.videoOutro && pageIndex < lastFrameIndex) {
+      lockedRef.current = true;
+      setVideoBridge({
+        text: currentFrame.videoOutro,
+        outgoing: true,
+        reveal: () => { goToPage(pageIndex + 1); setGalleryIndex(0); },
+      });
+      return;
+    }
+    if (enterVideoPage(pageIndex + 1)) return;
     if (currentFrame?.motion && pageIndex < lastFrameIndex && !calm()) {
       transitionToPage(pageIndex + 1, 1);
       return;
@@ -253,9 +297,10 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
     if (currentFrame?.motion === "gallery" && galleryIndex > 0) {
       lockedRef.current = true;
       setGalleryIndex((index) => index - 1);
-      transitionTimer.current = setTimeout(() => { lockedRef.current = false; }, calm() ? 100 : 1450);
+      transitionTimer.current = setTimeout(() => { lockedRef.current = false; }, calm() ? 100 : interaction === "drag" ? 500 : 1450);
       return;
     }
+    if (enterVideoPage(pageIndex - 1)) return;
     if (currentFrame?.motion && pageIndex > framesStart && !calm()) {
       transitionToPage(pageIndex - 1, -1);
       return;
@@ -270,8 +315,10 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
 
   const timerLocked = Boolean(currentFrame?.playSeconds) || (Boolean(currentFrame?.lockSeconds) && lockExpiredFor !== pageIndex);
   const updateVideoProgress = (seconds) => {
-    setVideoSeconds(seconds);
-    if (seconds >= currentFrame.playSeconds) advance();
+    setVideoSeconds(Math.floor(seconds));
+    // Begin the dissolve while the last three seconds are still playing.
+    const fadeStart = currentFrame.playSeconds - (currentFrame.videoOutro ? 3 : 0);
+    if (seconds >= fadeStart) advance();
   };
 
   const guardedAdvance = () => {
@@ -283,7 +330,8 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   };
 
   const completeGame = () => {
-    if (exiting) return;
+    if (exiting || lockedRef.current) return;
+    if (enterVideoPage(pageIndex + 1)) return;
     if (pageIndex === lastFrameIndex) setExiting(true);
     else goToPage((p) => p + 1);
   };
@@ -301,7 +349,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
 
   const clickGesture = useClickGesture({ onAdvance: guardedAdvance });
   const swipeGesture = useSwipeGesture({ onAdvance: guardedAdvance, onRetreat: guardedRetreat });
-  const dragGesture = useDragGesture({ onAdvance: guardedAdvance, onRetreat: guardedRetreat });
+  const dragGesture = useDragGesture({ onAdvance: guardedAdvance, onRetreat: guardedRetreat, enabled: !sewingLocked && !timerLocked && !shoeLocked && !lacesLocked && !outfitLocked && !exiting && !threadLeaving && !frameTransition && !videoBridge, canStart: () => !lockedRef.current });
   const scrollGesture = useScrollGesture({ onAdvance: guardedAdvance, onRetreat: guardedRetreat });
   const gesture = interaction === "drag" ? dragGesture : interaction === "swipe" ? swipeGesture : interaction === "scroll" ? scrollGesture : clickGesture;
 
@@ -329,7 +377,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
     setExiting(true);
   };
 
-  const pageStyle = !sewingLocked && interaction === "drag" && dragGesture.dragging
+  const pageStyle = !sewingLocked && currentFrame?.motion !== "gallery" && interaction === "drag" && dragGesture.dragging
     ? { transform: `translateY(${-dragGesture.dragOffset}px)` }
     : undefined;
 
@@ -375,7 +423,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
         </button>
       </header>
 
-      {frameTransition?.next && <div className="chapter-player__incoming" aria-hidden="true"><Frame frame={frameTransition.next} galleryIndex={frameTransition.nextGalleryIndex} visualOnly /></div>}
+      {frameTransition?.next && !frameTransition.next.video && <div className="chapter-player__incoming" aria-hidden="true"><Frame frame={frameTransition.next} galleryIndex={frameTransition.nextGalleryIndex} visualOnly /></div>}
       {isGamePage && pageIndex > 0 && <button type="button" className="chapter-player__back-story" onClick={guardedRetreat}>← Back to the story</button>}
       <div className={`chapter-player__page ${currentFrame?.motion ? "chapter-player__page--cinematic" : ""} ${frameTransition ? `chapter-player__page--leaving-${frameTransition.motion}` : ""} ${threadLeaving ? "chapter-player__page--leaving-thread" : ""}`} key={pageIndex} style={pageStyle} data-travel={frameTransition?.direction} data-direction={interaction === "swipe" ? swipeGesture.direction : undefined}>
         {isTitleCard ? (
@@ -392,18 +440,19 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
             <i />
           </div>
         ) : isGamePage ? (
-          gamePage(completeGame)
+          <GamePage renderGame={gamePage} onComplete={completeGame} />
         ) : isFinalPage ? (
           finalPage
         ) : lacesLocked || outfitLocked ? null : (
-          <Frame frame={currentFrame} interactionsReady={!sewingLocked} galleryIndex={galleryIndex} videoUnlocked={!shoeLocked && !lacesLocked && !outfitLocked} allowVideoSound={id !== "introduction"} onNextChapter={leaveForChapter} onVideoStarted={() => setVideoStarted(true)} onTextComplete={() => finishText("frame")} onVideoProgress={updateVideoProgress} />
+          <Frame frame={currentFrame} showStory={!videoBridge?.outgoing} interactionsReady={!sewingLocked} galleryIndex={galleryIndex} directGalleryDrag={interaction === "drag"} galleryDragOffset={interaction === "drag" ? dragGesture.dragOffset : 0} galleryDragging={interaction === "drag" && dragGesture.dragging} videoExiting={Boolean(videoBridge?.outgoing)} videoUnlocked={!videoBridge && !shoeLocked && !lacesLocked && !outfitLocked} allowVideoSound={id !== "introduction"} onNextChapter={leaveForChapter} onVideoStarted={() => setVideoStarted(true)} onTextComplete={() => finishText("frame")} onVideoProgress={updateVideoProgress} />
         )}
         {isLastFrame && outro && <div className="chapter-player__outro"><StitchedNarrative key={outro} text={outro} placement="inline" onComplete={() => finishText("outro")} /></div>}
       </div>
 
-      {lacesLocked && <ConverseLacing key={pageIndex} onBack={guardedRetreat} onComplete={() => setLacesUnlocked(true)} />}
-      {outfitLocked && <SkhothaneOutfit onBack={guardedRetreat} onComplete={() => setOutfitUnlocked(true)} />}
-      {shoeLocked && <ShoeShine onComplete={() => setShoeUnlocked(true)} />}
+      {videoBridge && <VideoBridge outgoing={videoBridge.outgoing} text={videoBridge.text} onCovered={videoBridge.reveal} onComplete={() => { setVideoBridge(null); lockedRef.current = false; }} />}
+      {lacesLocked && <ConverseLacing key={pageIndex} onBack={guardedRetreat} onComplete={() => bridgeToVideo(currentFrame, () => setLacesUnlocked(true))} />}
+      {outfitLocked && <SkhothaneOutfit onBack={guardedRetreat} onComplete={() => bridgeToVideo(currentFrame, () => setOutfitUnlocked(true))} />}
+      {shoeLocked && <ShoeShine onComplete={() => bridgeToVideo(currentFrame, () => setShoeUnlocked(true))} />}
       {currentFrame?.playSeconds && !shoeLocked && !lacesLocked && !outfitLocked && <div className="chapter-player__video-skip" onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
         <span>{Math.floor(videoSeconds)} / {currentFrame.playSeconds} seconds</span>
         <button type="button" disabled={videoSeconds < currentFrame.skipAfter} onClick={() => { if (videoSeconds >= currentFrame.skipAfter) advance(); }}>{videoSeconds < currentFrame.skipAfter ? `Skip in ${Math.ceil(currentFrame.skipAfter - videoSeconds)}s` : "Skip video →"}</button>
@@ -415,7 +464,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
       </div>
 
       {!isFinalPage && !isGamePage && !shoeLocked && !lacesLocked && !outfitLocked && (
-        <p className="chapter-player__hint">{currentFrame?.video && id !== "introduction" && !videoStarted ? "TAP PLAY TO HEAR THE VIDEO" : sewingLocked ? "FOLLOW THE THREAD…" : timerLocked ? "PLAYING…" : currentFrame?.motion === "gallery" && galleryIndex < currentFrame.collage.length - 1 ? HINTS[interaction].replace("CONTINUE", "EXPLORE PHOTOS") : HINTS[interaction]}</p>
+        <p className="chapter-player__hint">{currentFrame?.video && id !== "introduction" && !videoStarted ? "CLICK TO HEAR THEM SPEAK" : sewingLocked ? "FOLLOW THE THREAD…" : timerLocked ? "PLAYING…" : currentFrame?.motion === "gallery" && galleryIndex < currentFrame.collage.length - 1 ? HINTS[interaction].replace("CONTINUE", "EXPLORE PHOTOS") : HINTS[interaction]}</p>
       )}
     </section>
   );

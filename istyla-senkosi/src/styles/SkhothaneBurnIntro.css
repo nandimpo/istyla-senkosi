@@ -34,3 +34,14 @@
 @media(max-width:700px) { .skhothane-burn-intro { display:block; } .skhothane-burn-intro__copy { padding:6vh 24px 0; } .skhothane-burn-intro__copy h1 { font-size:48px; margin:12px 0; } .skhothane-burn-intro__copy p { font-size:13px; line-height:1.5; } .skhothane-burn-intro__copy .skhothane-burn-intro__instruction { margin-top:12px; } .skhothane-burn-intro__stage { height:58%; } .skhothane-burn-intro__shirt { top:0; left:4%; width:92%; height:82%; } .skhothane-burn-intro__match { left:calc(50% - 120px); bottom:1%; } }
 @media(prefers-reduced-motion:reduce) { .skhothane-burn-intro * { animation:none !important; transition:none !important; } }
 html[data-reduced-motion="true"] .skhothane-burn-intro * { animation:none !important; transition:none !important; }
+
+/* Reserve room for the shared navigation and keep the stage in one grid row. */
+@media(min-width:701px) {
+  .skhothane-burn-intro__copy { grid-column:1; grid-row:1; }
+  .skhothane-burn-intro__stage { grid-column:2; grid-row:1; height:calc(100svh - 170px); margin:80px 0 90px; }
+}
+@media(max-width:700px) {
+  .skhothane-burn-intro { height:auto; min-height:100svh; overflow:auto; padding-bottom:100px; }
+  .skhothane-burn-intro__copy { padding-top:100px; }
+  .skhothane-burn-intro__stage { height:440px; }
+}

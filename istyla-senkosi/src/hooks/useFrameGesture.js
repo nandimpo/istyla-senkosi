@@ -48,24 +48,26 @@ export function useSwipeGesture({ onAdvance, onRetreat }) {
   };
 }
 
-export function useDragGesture({ onAdvance, onRetreat }) {
+export function useDragGesture({ onAdvance, onRetreat, enabled = true, canStart = () => true }) {
   const [dragOffset, setDragOffset] = useState(0);
   const [dragging, setDragging] = useState(false);
   const startY = useRef(null);
 
   const onPointerDown = (event) => {
-    if (event.button !== 0 || event.target.closest("button, a, input, select, textarea")) return;
+    if (!enabled || !canStart() || startY.current !== null || event.isPrimary === false || event.button !== 0 || event.target.closest("button, a, input, select, textarea")) return;
     startY.current = event.clientY;
     setDragging(true);
     event.currentTarget.setPointerCapture(event.pointerId);
   };
   const onPointerMove = (event) => {
     if (startY.current === null) return;
+    if (!enabled) { cancel(); return; }
     const raw = startY.current - event.clientY;
     setDragOffset(Math.max(-160, Math.min(160, raw)));
   };
   const settle = (event) => {
     if (startY.current === null) return;
+    if (!enabled) { cancel(); return; }
     const delta = startY.current - event.clientY;
     startY.current = null;
     setDragging(false);

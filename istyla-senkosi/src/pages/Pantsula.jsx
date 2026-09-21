@@ -3,8 +3,8 @@ import { useNavigation } from "../context/NavigationContext";
 import ChapterPlayer from "../components/ChapterPlayer";
 import BeatGame from "../components/games/BeatGame";
 import IspotiIntro from "../components/IspotiIntro";
-import interviewVideo from "../assets/Chapter 2_Pantsula/Video/South African Ama Pantsula Dance culture (showYourLegs Ep.1).mp4";
-import entryVideo from "../assets/Chapter 2_Pantsula/Video/Intro Video- Pantsula.mp4";
+import interviewVideo from "../assets/video-clips/pantsula-voices.mp4";
+import entryVideo from "../assets/video-clips/pantsula-movement.mp4";
 import readyImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-0-ready.jpg";
 import stanceImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-1-stance.jpg";
 import stepImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-2-step.jpg";
@@ -45,9 +45,9 @@ function Pantsula() {
       track={backgroundTrack}
       sharedAudioRef={audioRef}
       frames={[
-        { label: "THE STREET MOVES", storyRole: "voices", video: entryVideo, laceGate: true, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
+        { label: "THE STREET MOVES", storyRole: "voices", video: entryVideo, videoOutro: "After watching them move, I began to notice what happened between the steps.", videoBridge: "To understand Pantsula, I had to see how the streets moved.", laceGate: true, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
         { label: "BETWEEN THE STEPS", storyRole: "observe", collage: [marketImage, seatedPortrait], motion: "crossfade", galleryStyle: "crossfade", text: "I watch the steps, the clothes and the space around the dancers. Trying the rhythm helps me notice how each movement fits with the others." },
-        { label: "IN THEIR OWN WORDS", storyRole: "voices", video: interviewVideo, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
+        { label: "IN THEIR OWN WORDS", storyRole: "voices", video: interviewVideo, videoOutro: "Their words stayed with me as I tried to find the rhythm for myself.", videoBridge: "I could follow the steps. To understand their meaning, I had to listen to the people who lived them.", playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
         { label: "TRYING TO KEEP TIME", storyRole: "memory", collage: [editorial2, editorial1, editorial3], motion: "crossfade", galleryStyle: "crossfade", text: "Step. Step. Step. I try to follow the rhythm. For a moment, I imagine telling my cousin about it, then remember that I cannot. I see how much I took for granted when he was here." },
         { label: "THE RHYTHM STAYS", storyRole: "reflection", collage: finaleCollage, collageLabel: "Pantsula finale collage", kind: "fashion-wall", galleryStyle: "crossfade", textStyle: "float", text: "I arrived watching from the edge. Now I’m leaving with the rhythm still in my feet. I wish I could tell my cousin about the hats, the clothes and the way people move together. As I turn towards Skhothane, I am getting closer to the part of this story that belonged to him.", caption: "UP NEXT: SKHOTHANE", nextChapter: "skhothane", nextChapterLabel: "Explore Skhothane next" },
       ]}

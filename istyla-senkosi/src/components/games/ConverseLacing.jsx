@@ -82,7 +82,7 @@ export default function ConverseLacing({ onComplete, onBack }) {
       <p className="converse-custom__help">Drag a patch or initials to place them. You can also select one, then tap the shoe. Keyboard: select a patch, focus the shoe and press Enter.</p>
       {active && <fieldset className="converse-patches__adjust"><legend>Selected: {active.type}</legend><label>Size<input type="range" min=".5" max="2" step=".1" value={active.size} onChange={(event) => updateItem(active.id, { size:Number(event.target.value) })}/></label><label>Angle<input type="range" min="-180" max="180" value={active.rotation} onChange={(event) => updateItem(active.id, { rotation:Number(event.target.value) })}/></label><button type="button" onClick={() => { setItems((previous) => previous.filter((item) => item.id !== active.id)); setSelected(null); }}>Remove decoration</button></fieldset>}
       <p role="status" className="converse-lacing__status">{notice}</p>
-      <button type="button" className="converse-lacing__watch" disabled={!ready} onClick={() => { if (ready) onComplete(); }}>Reveal both videos</button>
+      <button type="button" className="converse-lacing__watch" disabled={!ready} onClick={() => { if (ready) onComplete(); }}>Follow the rhythm</button>
     </div>
     <div className="converse-custom__preview">
       <div className="converse-custom__turntable">

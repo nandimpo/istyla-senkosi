@@ -41,8 +41,6 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
     let paths = [];
     let length = 0;
     let duration = 0;
-    let needlePosition;
-    let lastTime;
     let travelUntil = 0;
     const prepare = () => {
       while (index < letters.length && !letters[index].textContent.trim()) {
@@ -52,8 +50,10 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
       active = letters[index];
       const style = getComputedStyle(active);
       const font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-      const key = font + active.textContent;
-      if (!cache.has(key)) cache.set(key, glyphThread(active.textContent, font));
+      const character = style.textTransform === "uppercase" ? active.textContent.toUpperCase()
+        : style.textTransform === "lowercase" ? active.textContent.toLowerCase() : active.textContent;
+      const key = font + character;
+      if (!cache.has(key)) cache.set(key, glyphThread(character, font));
       const glyph = cache.get(key);
       svg.replaceChildren();
       paths = glyph.paths.map((d) => {
@@ -68,13 +68,12 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
       length = paths.reduce((sum, part) => sum + part.size, 0);
       duration = Math.min(320, Math.max(160, length * 2.4));
       active.dataset.glyphHeight = glyph.height;
+      svg.style.stroke = getComputedStyle(active).getPropertyValue("--thread-main").trim() || "#fff0cb";
       return true;
     };
     const tick = (now) => {
       if (disposed) return;
       if (started === undefined) started = now + delay;
-      const elapsed = lastTime === undefined ? 16 : Math.min(50, now - lastTime);
-      lastTime = now;
       if (now >= started) {
         if (!active && !prepare()) {
           needle.style.visibility = "hidden";
@@ -84,7 +83,6 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
         }
         // Give the hand time to carry the thread between letters and lines.
         const progress = Math.max(0, Math.min(1, (now - Math.max(started, travelUntil)) / duration));
-        active.style.opacity = Math.min(1, progress * 1.25);
         const bounds = active.getBoundingClientRect();
         const container = root.getBoundingClientRect();
         const x = bounds.left - container.left;
@@ -100,18 +98,12 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
         }
         if (tip) {
           needle.style.visibility = "visible";
-          const target = { x: x + tip.x, y: y + tip.y };
-          if (!needlePosition) needlePosition = target;
-          const blend = 1 - Math.exp(-elapsed / 28);
-          needlePosition = {
-            x: needlePosition.x + (target.x - needlePosition.x) * blend,
-            y: needlePosition.y + (target.y - needlePosition.y) * blend,
-          };
-          needle.style.left = `${needlePosition.x}px`;
-          needle.style.top = `${needlePosition.y}px`;
+          needle.style.left = `${x + tip.x}px`;
+          needle.style.top = `${y + tip.y}px`;
         }
         if (progress === 1) {
           active.style.opacity = 1;
+          svg.replaceChildren();
           active = null;
           index++;
           started = now;

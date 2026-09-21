@@ -19,3 +19,8 @@ html[data-reduced-motion="true"] .soweto-arrival { animation:none; }
 @keyframes soweto-arrival-out { to { opacity:0; filter:brightness(.35); transform:scale(1.015); } }
 @media(prefers-reduced-motion:reduce) { .soweto-arrival.is-leaving { animation:none; } }
 html[data-reduced-motion="true"] .soweto-arrival.is-leaving { animation:none; }
+
+.soweto-arrival.is-bridging { animation:none; }
+.soweto-arrival.is-before-clip { background:transparent; }
+.soweto-arrival.is-before-clip::backdrop { background:transparent; }
+.soweto-arrival.is-before-clip video,.soweto-arrival.is-before-clip .soweto-arrival-copy,.soweto-arrival.is-before-clip::after { visibility:hidden; }

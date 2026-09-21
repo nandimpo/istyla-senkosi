@@ -58,7 +58,7 @@ export default function SkhothaneOutfit({ onBack, onComplete }) {
             </div>)}
           </div>
           <p role="status">{ready ? "Your look is ready. Now hear the people behind the style." : `${groups.filter(({ id }) => selected[id]).length} of 3 pieces chosen`}</p>
-          <button type="button" className="skhothane-outfit__watch" disabled={!ready} onClick={onComplete}>Wear this look &amp; watch the videos →</button>
+          <button type="button" className="skhothane-outfit__watch" disabled={!ready} onClick={onComplete}>Step into their world →</button>
         </div>
       </>}
     </div>

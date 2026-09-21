@@ -4,7 +4,7 @@ import NarrativeText from "./NarrativeText";
 import IntroAmbientAudio from "./IntroAmbientAudio";
 import "../styles/UnzipIntro.css";
 
-export default function UnzipIntro({ image, track, audioRef, children }) {
+export default function UnzipIntro({ image, track, nextTrack, audioRef, children }) {
   const [progress, setProgress] = useState(0);
   const [opening, setOpening] = useState(false);
   const [finishedCopy, setFinishedCopy] = useState({});
@@ -54,9 +54,9 @@ export default function UnzipIntro({ image, track, audioRef, children }) {
   const seam = (points, offset = 0) => `M ${points.map(([x, y]) => `${x * 10 + offset},${y * 10}`).join(" L ")} L ${500 + offset},1000`;
 
   return <>
-    {track && <audio ref={audioRef} src={track} loop preload="metadata" aria-hidden="true" />}
+    {track && <audio ref={audioRef} src={track} loop={!nextTrack} preload="metadata" aria-hidden="true" />}
     {opened ? children : <section className={`unzip-intro ${opening ? "is-opening" : ""} ${copyReady ? "is-ready" : "is-reading"}`} aria-label="Unzip the Swenka chapter" style={{ "--zip-progress": progress }}>
-    <IntroAmbientAudio id="swenka" track={track} sharedAudioRef={audioRef} />
+    <IntroAmbientAudio id="swenka" volumeScale={0.45} nextTrack={nextTrack} track={track} sharedAudioRef={audioRef} />
     <img className="unzip-preview" src={image} alt="" />
     <div className="unzip-fabric unzip-fabric-left" aria-hidden="true" style={{ clipPath: `polygon(${polygon([[0, 0], ...leftEdge, [50, 100], [0, 100]])})` }} />
     <div className="unzip-fabric unzip-fabric-right" aria-hidden="true" style={{ clipPath: `polygon(${polygon([...rightEdge, [50, 100], [100, 100], [100, 0]])})` }} />

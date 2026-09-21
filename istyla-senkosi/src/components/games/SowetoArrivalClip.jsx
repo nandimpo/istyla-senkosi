@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { useContinuousZoom } from "../../hooks/useContinuousZoom";
+import VideoBridge from "../VideoBridge";
 import { createPortal } from "react-dom";
 import { useNavigation } from "../../context/NavigationContext";
-import arrivalVideo from "../../assets/Additional Videos/Enviroment/Enter Soweto Video.mp4";
+import arrivalVideo from "../../assets/video-clips/soweto-arrival.mp4";
 import "../../styles/SowetoArrivalClip.css";
 
 const CLIP_SECONDS = 20;
@@ -13,6 +13,8 @@ export default function SowetoArrivalClip({ onComplete }) {
   const watched = useRef(0);
   const lastTime = useRef(0);
   const finished = useRef(false);
+  const [bridging, setBridging] = useState(true);
+  const [covered, setCovered] = useState(false);
   const [seconds, setSeconds] = useState(0);
   const [needsPlay, setNeedsPlay] = useState(false);
   const [failed, setFailed] = useState(false);
@@ -27,7 +29,6 @@ export default function SowetoArrivalClip({ onComplete }) {
       setNavigationLocked(false);
     };
   }, [setNavigationLocked]);
-  useContinuousZoom(videoRef, true);
   const play = () => {
     const video = videoRef.current;
     video.defaultMuted = true;
@@ -57,14 +58,15 @@ export default function SowetoArrivalClip({ onComplete }) {
       completeClip();
     }
   };
-  return createPortal(<dialog ref={dialogRef} className={`soweto-arrival ${leaving ? "is-leaving" : ""}`} aria-labelledby="soweto-arrival-title" onCancel={(event) => event.preventDefault()}>
-    <video ref={videoRef} src={arrivalVideo} autoPlay muted playsInline preload="auto" disablePictureInPicture
-      onLoadedData={play} onTimeUpdate={updateProgress}
+  return createPortal(<dialog ref={dialogRef} className={`soweto-arrival ${bridging ? "is-bridging" : ""} ${!covered ? "is-before-clip" : ""} ${leaving ? "is-leaving" : ""}`} aria-labelledby="soweto-arrival-title" onCancel={(event) => event.preventDefault()}>
+    <video ref={videoRef} src={arrivalVideo} muted playsInline preload="auto" disablePictureInPicture
+      onLoadedData={() => { if (!bridging) play(); }} onTimeUpdate={updateProgress}
       onSeeking={() => { if (Math.abs(videoRef.current.currentTime - lastTime.current) > 0.5) videoRef.current.currentTime = lastTime.current; }}
-      onPause={() => { if (!finished.current) setNeedsPlay(true); }}
+      onPause={() => { if (!finished.current && !bridging) setNeedsPlay(true); }}
       onPlaying={() => setNeedsPlay(false)}
       onEnded={() => { if (!finished.current) { lastTime.current = 0; videoRef.current.currentTime = 0; play(); } }}
       onError={() => setFailed(true)} />
+    {bridging && <VideoBridge text="To understand my cousin?s world, I had to begin where his story lived. In Soweto." onCovered={() => setCovered(true)} onComplete={() => { setBridging(false); play(); }} />}
     <div className="soweto-arrival-copy">
       <p>JAMA / ARRIVING IN SOWETO</p>
       <h1 id="soweto-arrival-title">A little closer to my cousin’s world</h1>

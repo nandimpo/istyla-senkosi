@@ -409,3 +409,18 @@ html[data-reduced-motion="true"] .collage-crossfade img.collage-crossfade__incom
 #skhothane .chapter-player__page:has(.memory-flipbook) .chapter-player__label,#skhothane .chapter-player__page:has(.memory-flipbook) .chapter-player__caption { margin-left:0; }
 @media(max-width:700px) { .memory-flipbook { top:6%; right:12%; width:73vw; height:37%; } .memory-flipbook__controls { bottom:-52px; } .memory-flipbook__hint { bottom:-75px; } #skhothane .chapter-player__visual--memory-album::after { background:linear-gradient(0deg,#171714 15%,transparent 65%); } #skhothane .chapter-player__page:has(.memory-flipbook) .chapter-player__story { left:24px; width:calc(100% - 48px); bottom:100px; } }
 @media(prefers-reduced-motion:reduce) { .memory-flipbook__turning,.memory-flipbook__turning::after,.memory-flipbook__settled-page { animation:none; } }
+
+/* Keep video decoding free of full-screen colour-filter compositing. */
+.chapter-player .chapter-player__visual video { filter:none; }
+
+/* Drag the photographs within their panels; narrative and page stay anchored. */
+.chapter-player__gallery-track--direct { cursor:grab; }
+.chapter-player__gallery-track--direct.is-dragging { cursor:grabbing; }
+.chapter-player__gallery-track--direct .chapter-player__gallery-scroll {
+  transform:translateY(calc(var(--gallery-progress) * -14%));
+  transition:transform .5s cubic-bezier(.22,.65,.3,1);
+}
+.chapter-player__gallery-track--direct.is-dragging .chapter-player__gallery-scroll { transition:none; }
+.chapter-player__gallery-track--direct .chapter-player__gallery-photo img { animation:none; height:100%; transform:none; }
+html[data-reduced-motion="true"] .chapter-player__gallery-track--direct .chapter-player__gallery-scroll { transition:none; }
+@media(prefers-reduced-motion:reduce) { .chapter-player__gallery-track--direct .chapter-player__gallery-scroll { transition:none; } }

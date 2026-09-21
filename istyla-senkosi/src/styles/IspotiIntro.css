@@ -33,3 +33,14 @@
 .ispoti-controls p { grid-column:1/-1; margin:0; font-size:10px; line-height:1.5; text-align:center; }
 @media(max-width:700px) { .ispoti-intro { min-height:650px; } .ispoti-copy { top:11%; width:86%; } .ispoti-copy h1 { font-size:40px; margin:12px 0; } .ispoti-copy h1 br { display:none; } .ispoti-copy p { font-size:12px; max-width:none; margin:6px 0; } .ispoti-workbench { width:85%; right:7%; top:34%; } .ispoti-controls { right:7%; width:86%; bottom:12%; gap:10px; } .ispoti-enter { width:calc(100% - 125px); min-width:220px; } .ispoti-target span { font-size:8px; padding:7px; } }
 @media(prefers-reduced-motion:reduce) { .ispoti-intro,.ispoti-intro::before,.ispoti-intro::after { animation:none; } }
+
+@media(min-width:701px) {
+  .ispoti-workbench { width:min(53%,calc((100svh - 320px) * 1.425)); right:7%; }
+  .ispoti-controls { bottom:95px; right:7%; width:43%; }
+}
+@media(max-width:700px) {
+  .ispoti-intro { min-height:900px; overflow:auto; }
+  .ispoti-copy { top:100px; }
+  .ispoti-workbench { top:350px; }
+  .ispoti-controls { bottom:100px; }
+}

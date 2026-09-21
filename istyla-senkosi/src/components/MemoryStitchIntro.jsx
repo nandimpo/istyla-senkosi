@@ -51,7 +51,7 @@ export default function MemoryStitchIntro({ track, audioRef, children }) {
     <IntroAmbientAudio id="reflection" track={track} sharedAudioRef={audioRef} />
     <div className="memory-stitch__copy">
       <small><NarrativeText onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="04 / REFLECTION · JAMA’S JOURNEY" delay={150} /></small>
-      <h1><NarrativeText onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="PIECE THE" delay={1000} /><br/><em><NarrativeText onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="MEMORY TOGETHER." delay={1900} /></em></h1>
+      <h1><NarrativeText onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="PIECE THE" delay={1000} /><em><NarrativeText onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="MEMORY TOGETHER." delay={1900} /></em></h1>
       <p><NarrativeText onComplete={() => setFinishedCopy((done) => done[3] ? done : { ...done, [3]: true })} text="I have carried fragments of Ree through every chapter. Draw the thread across each tear and bring the photograph back together." delay={3300} /></p>
       <strong>{complete ? "The memory is whole." : `${stitched.size} of ${seams.length} seams joined`}</strong>
     </div>
