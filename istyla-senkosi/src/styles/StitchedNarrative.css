@@ -4,7 +4,7 @@
 .stitched-narrative--needle .floating-word { text-shadow:.5px .5px 0 #f6d9a955,0 2px 4px #000c; }
 .stitched-narrative__thread-wrap { position:relative; width:100%; height:48px; margin-top:11px; overflow:visible; }
 .stitched-narrative__thread { display:block; width:100%; height:120px; overflow:visible; fill:none; stroke:var(--thread-colour); stroke-width:1.3; }
-.stitched-narrative__draw { opacity:0; }
+.stitched-narrative__draw { opacity:0; stroke-dasharray:474; stroke-dashoffset:474; }
 .stitched-narrative[data-phase="sewing"] .stitched-narrative__draw { opacity:1; }
 .stitched-narrative[data-phase="hanging"] .stitched-narrative__draw { opacity:.2; }
 .stitched-narrative__stitches { stroke-dasharray:3 3; opacity:0; }
