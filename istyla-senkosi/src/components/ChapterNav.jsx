@@ -3,6 +3,7 @@ import { useNavigation } from "../context/NavigationContext";
 import "../styles/ChapterNav.css";
 
 const chapters = [
+  ["00", "INTRODUCTION", "Jama’s journey from Johannesburg North to Soweto", "introduction"],
   ["01", "SWENKA", "Elegant competition and township style", "swenka"],
   ["02", "PANTSULA", "Movement, music and street expression", "pantsula"],
   ["03", "SKHOTHANE", "Luxury, confidence and performance", "skhothane"],

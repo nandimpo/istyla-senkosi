@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import NarrativeText from "./NarrativeText";
+import IntroAmbientAudio from "./IntroAmbientAudio";
 import "../styles/UnzipIntro.css";
 
-export default function UnzipIntro({ image, children }) {
+export default function UnzipIntro({ image, track, audioRef, children }) {
   const [progress, setProgress] = useState(0);
   const [opening, setOpening] = useState(false);
+  const [finishedCopy, setFinishedCopy] = useState({});
+  const copyReady = Object.keys(finishedCopy).length === 3;
   const [opened, setOpened] = useState(() => {
     try {
       const savedPage = JSON.parse(sessionStorage.getItem("istyla:swenka:page"));
@@ -14,9 +17,10 @@ export default function UnzipIntro({ image, children }) {
   });
   const { reducedMotion } = useNavigation();
   const drag = useRef(null);
+
   const openingFrom = useRef(0);
   const finish = () => {
-    if (opening) return;
+    if (opening || !copyReady) return;
     openingFrom.current = progress;
     setOpening(true);
   };
@@ -35,7 +39,7 @@ export default function UnzipIntro({ image, children }) {
     animation = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animation);
   }, [opening, reducedMotion, setOpened]);
-  if (opened) return children;
+
 
   const edge = (side) => Array.from({ length: 41 }, (_, index) => {
     const t = index / 40;
@@ -49,7 +53,10 @@ export default function UnzipIntro({ image, children }) {
   const polygon = (points) => points.map(([x, y]) => `${x}% ${y}%`).join(",");
   const seam = (points, offset = 0) => `M ${points.map(([x, y]) => `${x * 10 + offset},${y * 10}`).join(" L ")} L ${500 + offset},1000`;
 
-  return <section className={`unzip-intro ${opening ? "is-opening" : ""}`} aria-label="Unzip the Swenka chapter" style={{ "--zip-progress": progress }}>
+  return <>
+    {track && <audio ref={audioRef} src={track} loop preload="metadata" aria-hidden="true" />}
+    {opened ? children : <section className={`unzip-intro ${opening ? "is-opening" : ""} ${copyReady ? "is-ready" : "is-reading"}`} aria-label="Unzip the Swenka chapter" style={{ "--zip-progress": progress }}>
+    <IntroAmbientAudio id="swenka" track={track} sharedAudioRef={audioRef} />
     <img className="unzip-preview" src={image} alt="" />
     <div className="unzip-fabric unzip-fabric-left" aria-hidden="true" style={{ clipPath: `polygon(${polygon([[0, 0], ...leftEdge, [50, 100], [0, 100]])})` }} />
     <div className="unzip-fabric unzip-fabric-right" aria-hidden="true" style={{ clipPath: `polygon(${polygon([...rightEdge, [50, 100], [100, 100], [100, 0]])})` }} />
@@ -66,9 +73,10 @@ export default function UnzipIntro({ image, children }) {
         </g>;
       })}
     </svg>
-    <div className="unzip-copy"><p><NarrativeText text="01 / SWENKA" delay={150} /></p><h1><NarrativeText text={"Style starts\nwith a detail."} delay={1100} /></h1><p><NarrativeText text="Pull the zip down to open the chapter." delay={3500} /></p></div>
-    <button className="unzip-pull" aria-label="Unzip Swenka. Drag down or press Enter to open." disabled={opening}
+    <div className="unzip-copy"><p><NarrativeText onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="01 / SWENKA" delay={150} /></p><h1><NarrativeText onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text={"Style starts\nwith a detail."} delay={1100} /></h1><p><NarrativeText onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="Pull the zip down to open the chapter." delay={3500} /></p></div>
+    <button className="unzip-pull" aria-label={copyReady ? "Unzip Swenka. Drag down or press Enter to open." : "Finish reading the introduction before unzipping."} disabled={opening || !copyReady}
       onPointerDown={(event) => {
+        if (!copyReady) return;
         if (event.pointerType === "mouse" && event.button !== 0) return;
         event.currentTarget.setPointerCapture(event.pointerId);
         drag.current = { y: event.clientY, progress, moved: false };
@@ -86,7 +94,8 @@ export default function UnzipIntro({ image, children }) {
       onClick={(event) => { if (event.detail === 0 || !drag.current?.moved) finish(); drag.current = null; }}>
       <span className="unzip-slider" aria-hidden="true" /><span className="unzip-ring" aria-hidden="true" />
     </button>
-    <button className="unzip-open" onClick={finish} disabled={opening}>{opening ? "Opening Swenka..." : "Unzip to enter"}<span aria-hidden="true">&#8595;</span></button>
-  </section>;
+    <button className="unzip-open" onClick={finish} disabled={opening || !copyReady}>{opening ? "Opening Swenka..." : copyReady ? "Unzip to enter" : "Read to unlock"}<span aria-hidden="true">{copyReady ? "\u2193" : "\u2026"}</span></button>
+  </section>}
+  </>;
 }
 

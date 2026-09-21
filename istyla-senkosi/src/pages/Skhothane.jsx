@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import ChapterPlayer from "../components/ChapterPlayer";
 import SwipeCarouselGame from "../components/games/SwipeCarouselGame";
@@ -31,10 +32,11 @@ const finaleCollage = Object.entries(import.meta.glob("../assets/Chapter 3_Skoth
   .map(([, src]) => src);
 
 function Skhothane() {
+  const audioRef = useRef(null);
   const { completeChapter } = useNavigation();
 
   return (
-    <SkhothaneBurnIntro>
+    <SkhothaneBurnIntro track={backgroundTrack} audioRef={audioRef}>
     <ChapterPlayer
       id="skhothane"
       chapter="03 / SKHOTHANE"
@@ -48,13 +50,14 @@ function Skhothane() {
       titleTransition="wipe"
       titleWipeDirection="right"
       track={backgroundTrack}
+      sharedAudioRef={audioRef}
       frames={[
-        { label: "Material Culture / Touch Down Tembisa", storyRole: "voices", video: materialCultureVideo, outfitGate: true, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
-        { label: "High energy / Smash cuts", storyRole: "observe", collage: [img1, img9, tkzee1, tkzee2, pantsulaStyle], kind: "memory-album", caption: "COLOUR. BRANDS. PERFORMANCE." },
-        { label: "Build up collage", storyRole: "observe", collage: [img2, img3, img5, img7, blackLabel, manBending], kind: "memory-album", text: "I look at the colours, the confidence and the details. This time, I’m trying to see more than an outfit." },
-        { label: "South Africa's Material Boys 2", storyRole: "voices", video: materialBoysVideo, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
-        { label: "A memory / Slow down", storyRole: "memory", collage: [img6, img4, img8, vilaCoster, brotherhood1, brotherhood2, brotherhood3], text: "I remember him turning at the door to show me his outfit. I laughed at the bright colours. I wish I had looked longer.", kind: "memory-album" },
-        { label: "What I carry forward", storyRole: "reflection", collage: finaleCollage, collageLabel: "Skhothane finale collage", kind: "fashion-wall", galleryStyle: "crossfade", textStyle: "float", text: "I’m beginning to see expression where I once saw only brands. I cannot speak for my cousin, but I can hold his memory with more care. One last look at him is waiting at the end of this journey.", caption: "UP NEXT: REFLECTION", nextChapter: "reflection", nextChapterLabel: "Continue to the reflection" },
+        { label: "THE LOOK SPEAKS", storyRole: "voices", video: materialCultureVideo, outfitGate: true, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
+        { label: "COLOUR IN MOTION", storyRole: "observe", collage: [img1, img9, tkzee1, tkzee2, pantsulaStyle], kind: "memory-album", caption: "COLOUR. BRANDS. PERFORMANCE." },
+        { label: "MADE TO BE SEEN", storyRole: "observe", collage: [img2, img3, img5, img7, blackLabel, manBending], kind: "memory-album", text: "I look at the colours, the confidence and the details. This time, I’m trying to see more than an outfit." },
+        { label: "WHAT IT COSTS TO SHINE", storyRole: "voices", video: materialBoysVideo, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
+        { label: "THE WAY HE TURNED", storyRole: "memory", collage: [img6, img4, img8, vilaCoster, brotherhood1, brotherhood2, brotherhood3], text: "I remember him turning at the door to show me his outfit. I laughed at the bright colours. I wish I had looked longer.", kind: "memory-album" },
+        { label: "LOOKING AGAIN", storyRole: "reflection", collage: finaleCollage, collageLabel: "Skhothane finale collage", kind: "fashion-wall", galleryStyle: "crossfade", textStyle: "float", text: "I’m beginning to see expression where I once saw only brands. I cannot speak for my cousin, but I can hold his memory with more care. One last look at him is waiting at the end of this journey.", caption: "UP NEXT: REFLECTION", nextChapter: "reflection", nextChapterLabel: "Continue to the reflection" },
       ]}
       gamePage={(onComplete) => <SwipeCarouselGame images={carouselImages} onComplete={onComplete} />}
       onComplete={() => completeChapter("skhothane")}

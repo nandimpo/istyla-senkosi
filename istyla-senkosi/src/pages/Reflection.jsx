@@ -1,5 +1,7 @@
+import { useRef } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import ChapterPlayer from "../components/ChapterPlayer";
+import MemoryStitchIntro from "../components/MemoryStitchIntro";
 import cousin1 from "../assets/images/Cousin/Cousin 1.jpeg";
 import cousin2 from "../assets/images/Cousin/Cousin 2.jpeg";
 import chapterImage from "../assets/images/Chapter images/reflection chapter intro.jpg";
@@ -12,6 +14,7 @@ import "../styles/Reflection.css";
 const cousinPhotos = [cousin1, cousin2];
 
 function Reflection() {
+  const audioRef = useRef(null);
   const { completeChapter, goTo } = useNavigation();
 
   const finalPage = (
@@ -34,6 +37,7 @@ function Reflection() {
   );
 
   return (
+    <MemoryStitchIntro track={backgroundTrack} audioRef={audioRef}>
     <ChapterPlayer
       id="reflection"
       chapter="04 / REFLECTION"
@@ -46,16 +50,18 @@ function Reflection() {
       titleImage={chapterImage}
       titleTransition="dissolve"
       track={backgroundTrack}
+      sharedAudioRef={audioRef}
       outro="Back to where it all began…"
       finalPage={finalPage}
       frames={[
-        { label: "Empty streets", image: streetImage, text: "I thought this story was far from my life. My cousin was a connection I had overlooked while he was here.", kind: "quiet" },
-        { label: "Time + realisation", image: buildingImage, text: "The more I paid attention, the more I questioned my own assumptions about him, about Soweto, and about belonging.", kind: "quiet" },
-        { label: "Understanding", image: houseImage, text: "I’m still Jama, still learning. I cannot tell his story for him. I can honour what I remember and keep asking others what their style means to them.", kind: "quiet" },
-        { label: "The photographs I kept", collage: cousinPhotos, text: "These are the photographs I kept of him. Come closer. I want you to meet the cousin I have been remembering." },
+        { label: "AFTER THE NOISE", image: streetImage, text: "I thought this story was far from my life. My cousin was a connection I had overlooked while he was here.", kind: "quiet" },
+        { label: "WHAT CHANGED", image: buildingImage, text: "The more I paid attention, the more I questioned my own assumptions about him, about Soweto, and about belonging.", kind: "quiet" },
+        { label: "WHAT I CAN CARRY", image: houseImage, text: "I’m still Jama, still learning. I cannot tell his story for him. I can honour what I remember and keep asking others what their style means to them.", kind: "quiet" },
+        { label: "THERE HE IS", collage: cousinPhotos, text: "These are the photographs I kept of him. Come closer. I want you to meet the cousin I have been remembering." },
       ]}
       onComplete={() => completeChapter("reflection")}
     />
+    </MemoryStitchIntro>
   );
 }
 

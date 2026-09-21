@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import ChapterPlayer from "../components/ChapterPlayer";
 import BeatGame from "../components/games/BeatGame";
@@ -24,10 +25,11 @@ const finaleCollage = Object.entries(import.meta.glob("../assets/Chapter 2_Pants
   .map(([, src]) => src);
 
 function Pantsula() {
+  const audioRef = useRef(null);
   const { completeChapter } = useNavigation();
 
   return (
-    <IspotiIntro>
+    <IspotiIntro track={backgroundTrack} audioRef={audioRef}>
     <ChapterPlayer
       id="pantsula"
       chapter="02 / PANTSULA"
@@ -41,12 +43,13 @@ function Pantsula() {
       titleTransition="wipe"
       titleWipeDirection="left"
       track={backgroundTrack}
+      sharedAudioRef={audioRef}
       frames={[
-        { label: "Street energy / Fast cuts", storyRole: "voices", video: entryVideo, laceGate: true, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
-        { label: "Details + environment", storyRole: "observe", collage: [marketImage, seatedPortrait], motion: "crossfade", galleryStyle: "crossfade", text: "I watch the steps, the clothes and the space around the dancers. Trying the rhythm helps me notice how each movement fits with the others." },
-        { label: "Interview / Let them speak", storyRole: "voices", video: interviewVideo, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
-        { label: "Memory collage / Jama’s view", storyRole: "memory", collage: [editorial2, editorial1, editorial3], motion: "crossfade", galleryStyle: "crossfade", text: "Step. Step. Step. I try to follow the rhythm. For a moment, I imagine telling my cousin about it, then remember that I cannot. I see how much I took for granted when he was here." },
-        { label: "Taking the rhythm with me / Jama’s reflection", storyRole: "reflection", collage: finaleCollage, collageLabel: "Pantsula finale collage", kind: "fashion-wall", galleryStyle: "crossfade", textStyle: "float", text: "I arrived watching from the edge. Now I’m leaving with the rhythm still in my feet. I wish I could tell my cousin about the hats, the clothes and the way people move together. As I turn towards Skhothane, I am getting closer to the part of this story that belonged to him.", caption: "UP NEXT: SKHOTHANE", nextChapter: "skhothane", nextChapterLabel: "Explore Skhothane next" },
+        { label: "THE STREET MOVES", storyRole: "voices", video: entryVideo, laceGate: true, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
+        { label: "BETWEEN THE STEPS", storyRole: "observe", collage: [marketImage, seatedPortrait], motion: "crossfade", galleryStyle: "crossfade", text: "I watch the steps, the clothes and the space around the dancers. Trying the rhythm helps me notice how each movement fits with the others." },
+        { label: "IN THEIR OWN WORDS", storyRole: "voices", video: interviewVideo, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
+        { label: "TRYING TO KEEP TIME", storyRole: "memory", collage: [editorial2, editorial1, editorial3], motion: "crossfade", galleryStyle: "crossfade", text: "Step. Step. Step. I try to follow the rhythm. For a moment, I imagine telling my cousin about it, then remember that I cannot. I see how much I took for granted when he was here." },
+        { label: "THE RHYTHM STAYS", storyRole: "reflection", collage: finaleCollage, collageLabel: "Pantsula finale collage", kind: "fashion-wall", galleryStyle: "crossfade", textStyle: "float", text: "I arrived watching from the edge. Now I’m leaving with the rhythm still in my feet. I wish I could tell my cousin about the hats, the clothes and the way people move together. As I turn towards Skhothane, I am getting closer to the part of this story that belonged to him.", caption: "UP NEXT: SKHOTHANE", nextChapter: "skhothane", nextChapterLabel: "Explore Skhothane next" },
       ]}
       gamePage={(onComplete) => <BeatGame sceneImages={sceneImages} onComplete={onComplete} />}
       onComplete={() => completeChapter("pantsula")}

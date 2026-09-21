@@ -15,7 +15,7 @@ if (typeof window !== "undefined") {
   window.addEventListener("touchstart", markInteracted, { once: true, passive: true });
 }
 
-const FADE_MS = 1100;
+const FADE_MS = 2200;
 
 function cancelFade(audio) {
   if (audio._fadeRaf) {
@@ -45,16 +45,16 @@ function fadeTo(audio, target, { thenPause = false } = {}) {
   audio._fadeRaf = requestAnimationFrame(step);
 }
 
-export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false }) {
+export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volumeScale = 1, continueWhileLocked = false, fadeOut = false }) {
   const { currentSection, volume, navigationLocked } = useNavigation();
-  const targetVolume = volume * (duckMusic ? 0.01 : 1);
+  const targetVolume = volume * (duckMusic ? 0.01 : volumeScale);
 
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return undefined;
-    audio.muted = !soundOn || navigationLocked;
+    audio.muted = !soundOn;
 
-    if (currentSection !== id) {
+    if (currentSection !== id || fadeOut || (navigationLocked && !continueWhileLocked)) {
       fadeTo(audio, 0, { thenPause: true });
       return undefined;
     }
@@ -70,10 +70,19 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false }) {
       }
     };
     resumeListeners.add(retry);
+    window.addEventListener("pointerdown", retry);
+    window.addEventListener("keydown", retry);
+    window.addEventListener("touchstart", retry, { passive: true });
+    const fadeForTransition = () => fadeTo(audio, 0, { thenPause: true });
+    window.addEventListener("istyla:fade-section-audio", fadeForTransition);
     if (hasInteracted) retry();
     return () => {
       resumeListeners.delete(retry);
+      window.removeEventListener("pointerdown", retry);
+      window.removeEventListener("keydown", retry);
+      window.removeEventListener("touchstart", retry);
+      window.removeEventListener("istyla:fade-section-audio", fadeForTransition);
       cancelFade(audio);
     };
-  }, [currentSection, id, soundOn, audioRef, targetVolume, navigationLocked]);
+  }, [currentSection, id, soundOn, audioRef, targetVolume, navigationLocked, continueWhileLocked, fadeOut]);
 }

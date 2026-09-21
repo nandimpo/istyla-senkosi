@@ -6,6 +6,7 @@ const beats = ["STANCE", "STEP", "RHYTHM", "SWING", "FINALE"];
 const beatNotes = [110, 147, 165, 196, 220];
 
 function BeatGame({ sceneImages, onComplete }) {
+  const [copyReady, setCopyReady] = useState(false);
   const [activeBeat, setActiveBeat] = useState(0);
   const audioContext = useRef(null);
   const ready = activeBeat === beats.length;
@@ -34,7 +35,7 @@ function BeatGame({ sceneImages, onComplete }) {
   };
 
   const activateBeat = (index) => {
-    if (index !== activeBeat) return;
+    if (!copyReady || index !== activeBeat) return;
     playBeat(index);
     setActiveBeat(index + 1);
   };
@@ -46,8 +47,8 @@ function BeatGame({ sceneImages, onComplete }) {
       <div className="game-copy">
         <p className="tag">02 / PANTSULA</p>
         <h1>I tried to feel it,<br />not just watch it.</h1>
-        <StitchedNarrative className="game-copy__narrative" text="Nobody could explain the rhythm to me in words. So I stopped asking and started trying to catch it myself, one beat at a time." placement="inline" />
-        <strong>{currentScene}</strong>
+        <StitchedNarrative onComplete={() => setCopyReady(true)} className="game-copy__narrative" text="Nobody could explain the rhythm to me in words. So I stopped asking and started trying to catch it myself, one beat at a time." placement="inline" />
+        <strong role="status">{copyReady ? currentScene : "READ TO UNLOCK THE BEATS"}</strong>
         <i />
       </div>
       <div className={`pantsula-image beat-scene-${activeBeat}`}>
@@ -58,7 +59,7 @@ function BeatGame({ sceneImages, onComplete }) {
             <button
               key={beat}
               className={`beat beat-${index + 1} ${index < activeBeat ? "complete" : ""} ${index === activeBeat ? "ready" : ""}`}
-              disabled={index !== activeBeat}
+              disabled={!copyReady || index !== activeBeat}
               onClick={() => activateBeat(index)}
               aria-label={`${beat}: ${index < activeBeat ? "complete" : index === activeBeat ? "tap now" : "locked"}`}
             >

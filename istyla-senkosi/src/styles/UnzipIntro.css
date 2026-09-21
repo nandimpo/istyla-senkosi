@@ -28,8 +28,11 @@
 .unzip-ring::after { content:""; position:absolute; left:5px; right:5px; top:9px; height:8px; border-top:1px solid #98785c66; border-bottom:1px solid #21170e; }
 .unzip-pull { cursor:grab; }
 .unzip-pull:active { cursor:grabbing; }
+.unzip-pull:disabled { cursor:not-allowed; filter:grayscale(.75) brightness(.7); opacity:.55; }
 .unzip-open { position:absolute; bottom:110px; right:8%; border:1px solid #d38912; padding:16px 22px; background:#d38912; color:#171512; font:700 12px Montserrat,Arial,sans-serif; }
 .unzip-open span { margin-left:24px; }
+.unzip-open:disabled { cursor:not-allowed; border-color:#8f7b61; color:#d7c7ae; opacity:.72; }
+.unzip-intro.is-ready .unzip-open { animation:unzip-ready-pulse 1.4s ease-out 1; }
 .unzip-intro button:focus-visible { outline:2px solid #fff7e9; outline-offset:5px; }
 .unzip-intro.is-opening .unzip-fabric { transition:transform 1s 1.2s cubic-bezier(.3,0,.3,1); }
 .unzip-intro.is-opening .unzip-fabric-left { transform:translateX(-100%); }
@@ -52,3 +55,4 @@ html[data-reduced-motion="true"] .unzip-intro * { transition:none !important; }
 .unzip-intro.is-opening .unzip-seam--1 { transform:translateX(100%); }
 html[data-reduced-motion="true"] .unzip-fabric::before,html[data-reduced-motion="true"] .unzip-fabric::after { animation:none; }
 @media(prefers-reduced-motion:reduce) { .unzip-fabric::before,.unzip-fabric::after { animation:none; } }
+@keyframes unzip-ready-pulse { 50% { box-shadow:0 0 0 7px #efd3a229; } }

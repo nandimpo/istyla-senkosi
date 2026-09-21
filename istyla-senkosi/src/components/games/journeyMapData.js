@@ -6,11 +6,11 @@ export const ROUTE = [
   { x: 877, y: 1046 },
   { x: 875, y: 1064 },
 ];
-export const MAP_VIEW = "785 965 220 145";
+export const MAP_VIEW = "610 880 570 300";
 export const STOPS = [
-  { id: "north", progress: 0, title: "Johannesburg North", text: "Johannesburg North is where I grew up. I set out with images of my cousin in my mind and questions I can no longer ask him.", label: { dx: 10, dy: -8 }, media: null },
-  { id: "memory", progress: 0.5, title: "The remembered route", text: "On the way, I begin to connect the clothes I notice with the people who wear them. I wonder what my cousin would point out, and what I have been passing without really seeing.", label: { dx: -10, dy: -4 }, media: null },
-  { id: "soweto", progress: 1, title: "Soweto", text: "Arriving in Soweto, I want to listen before I decide what a look means. I cannot bring these stories back to my cousin, but they may help me understand what I failed to ask while he was alive.", label: { dx: 10, dy: 8 }, media: null },
+  { id: "north", progress: 0, title: "Where I begin", text: "Home is the part of the city I thought I understood. I unfold the map with Ree in my mind and questions I can no longer ask him.", label: { dx: 10, dy: -8 }, media: null },
+  { id: "memory", progress: 0.5, title: "What comes back", text: "The clothes catch my eye first. Then the people, the gestures and the care behind each detail begin to surface.", label: { dx: -10, dy: -4 }, media: null },
+  { id: "soweto", progress: 1, title: "Closer to Ree", text: "Soweto is no longer an idea at the edge of my city. I arrive ready to listen, and to look at Ree’s world with more care.", label: { dx: 10, dy: 8 }, media: null },
 ];
 // Optional media: { image: importedAsset, alt: "Description", audio: importedClip }.
 // Audio is rendered with native controls and never starts automatically.

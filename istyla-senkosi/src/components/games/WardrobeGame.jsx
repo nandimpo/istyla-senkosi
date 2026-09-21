@@ -9,12 +9,13 @@ const elements = [
 ];
 
 function WardrobeGame({ portraitImage, onComplete }) {
+  const [copyReady, setCopyReady] = useState(false);
   const [placed, setPlaced] = useState([]);
   const [dragged, setDragged] = useState(null);
   const ready = placed.length === elements.length;
 
   const placeElement = (id) => {
-    if (!id || placed.includes(id)) return;
+    if (!copyReady || !id || placed.includes(id)) return;
     setPlaced((current) => [...current, id]);
     setDragged(null);
   };
@@ -30,11 +31,11 @@ function WardrobeGame({ portraitImage, onComplete }) {
       <div className="game-copy">
         <p className="tag">01 / SWENKA</p>
         <h1>Piece by piece,<br />it came together.</h1>
-        <StitchedNarrative className="game-copy__narrative" text="I couldn't take in the whole outfit at once, not at first. So I broke it down the way I actually noticed it: the hat, the sleeve, the shoes, one detail at a time." placement="inline" />
-        <strong>DRAG EACH DETAIL INTO PLACE, THE WAY I HAD TO</strong>
+        <StitchedNarrative onComplete={() => setCopyReady(true)} className="game-copy__narrative" text="I couldn't take in the whole outfit at once, not at first. So I broke it down the way I actually noticed it: the hat, the sleeve, the shoes, one detail at a time." placement="inline" />
+        <strong role="status">{copyReady ? "DRAG EACH DETAIL INTO PLACE, THE WAY I HAD TO" : "READ TO UNLOCK THE OUTFIT"}</strong>
         <i />
       </div>
-      <div className="fashion-portrait">
+      <div className="fashion-portrait" inert={!copyReady}>
         <div className="portrait-frame">
           <img src={portraitImage} alt="A man in a yellow hat and dark suit, mid dance move" loading="lazy" decoding="async" />
           {elements.map(({ id, zone }) => {
@@ -57,15 +58,15 @@ function WardrobeGame({ portraitImage, onComplete }) {
           })}
         </div>
       </div>
-      <aside className="wardrobe">
+      <aside className="wardrobe" inert={!copyReady}>
         <p>ELEMENTS</p>
         {elements.map(({ id, thumb }) => {
           const isPlaced = placed.includes(id);
           return (
             <button
               key={id}
-              draggable={!isPlaced}
-              disabled={isPlaced}
+              draggable={copyReady && !isPlaced}
+              disabled={!copyReady || isPlaced}
               onDragStart={() => setDragged(id)}
               onClick={() => setDragged(id)}
               className={`${dragged === id ? "selected" : ""} ${isPlaced ? "used" : ""}`}

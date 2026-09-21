@@ -16,6 +16,7 @@ export default function SowetoArrivalClip({ onComplete }) {
   const [seconds, setSeconds] = useState(0);
   const [needsPlay, setNeedsPlay] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const { setNavigationLocked } = useNavigation();
 
   useEffect(() => {
@@ -28,14 +29,22 @@ export default function SowetoArrivalClip({ onComplete }) {
   }, [setNavigationLocked]);
   useContinuousZoom(videoRef, true);
   const play = () => {
-    videoRef.current.play().then(() => setNeedsPlay(false)).catch(() => setNeedsPlay(true));
+    const video = videoRef.current;
+    video.defaultMuted = true;
+    video.muted = true;
+    video.volume = 0;
+    video.play().then(() => setNeedsPlay(false)).catch(() => setNeedsPlay(true));
   };
   const completeClip = () => {
-    if (finished.current) return;
+    if (finished.current || leaving) return;
     finished.current = true;
     videoRef.current.pause();
-    setNavigationLocked(false);
-    onComplete();
+    setLeaving(true);
+    window.dispatchEvent(new Event("istyla:fade-section-audio"));
+    setTimeout(() => {
+      setNavigationLocked(false);
+      onComplete();
+    }, 2200);
   };
   const updateProgress = () => {
     const video = videoRef.current;
@@ -48,8 +57,8 @@ export default function SowetoArrivalClip({ onComplete }) {
       completeClip();
     }
   };
-  return createPortal(<dialog ref={dialogRef} className="soweto-arrival" aria-labelledby="soweto-arrival-title" onCancel={(event) => event.preventDefault()}>
-    <video ref={videoRef} src={arrivalVideo} autoPlay playsInline muted preload="auto" disablePictureInPicture
+  return createPortal(<dialog ref={dialogRef} className={`soweto-arrival ${leaving ? "is-leaving" : ""}`} aria-labelledby="soweto-arrival-title" onCancel={(event) => event.preventDefault()}>
+    <video ref={videoRef} src={arrivalVideo} autoPlay muted playsInline preload="auto" disablePictureInPicture
       onLoadedData={play} onTimeUpdate={updateProgress}
       onSeeking={() => { if (Math.abs(videoRef.current.currentTime - lastTime.current) > 0.5) videoRef.current.currentTime = lastTime.current; }}
       onPause={() => { if (!finished.current) setNeedsPlay(true); }}
@@ -67,6 +76,5 @@ export default function SowetoArrivalClip({ onComplete }) {
       </button>
       {(needsPlay || failed) && <button onClick={() => { if (failed) { setFailed(false); videoRef.current.load(); } play(); }}>{failed ? "Retry clip" : "Play clip"}</button>}
     </div>
-    <span className="soweto-arrival-sound">VIDEO MUTED</span>
   </dialog>, document.body);
 }

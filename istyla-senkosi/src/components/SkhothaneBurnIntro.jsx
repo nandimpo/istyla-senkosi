@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import shirt from "../assets/Chapter 3_Skothane/Images/Extra/Shirt.png";
+import NarrativeText from "./NarrativeText";
+import IntroAmbientAudio from "./IntroAmbientAudio";
 import "../styles/SkhothaneBurnIntro.css";
 
-export default function SkhothaneBurnIntro({ children }) {
+export default function SkhothaneBurnIntro({ track, audioRef, children }) {
+  const [finishedCopy, setFinishedCopy] = useState({});
+  const copyReady = Object.keys(finishedCopy).length === 3;
   const { reducedMotion } = useNavigation();
   const [opened, setOpened] = useState(() => {
     try {
@@ -40,11 +44,12 @@ export default function SkhothaneBurnIntro({ children }) {
   }, [burning, reducedMotion]);
 
   const ignite = () => {
-    if (burning) return;
+    if (!copyReady || burning) return;
     setBurning(true);
     setNotice("The chapter is being revealed.");
   };
   const startDrag = (event) => {
+    if (!copyReady) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
     suppressClick.current = false;
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -68,26 +73,30 @@ export default function SkhothaneBurnIntro({ children }) {
     else setNotice("Match ready. Tap the shirt to set it alight.");
     setMatchOffset({ x:0, y:0 });
   };
-  if (opened) return children;
+
 
   const burnRadius = burnProgress * 95;
   const mask = burning ? `radial-gradient(circle at 50% 57%, transparent ${burnRadius}%, #000 ${Math.min(100, burnRadius + 9)}%)` : undefined;
-  return <section className={`skhothane-burn-intro ${burning ? "is-burning" : ""}`} aria-label="Set the Skhothane shirt alight to reveal the chapter">
+  return <>
+    {track && <audio ref={audioRef} src={track} loop preload="metadata" aria-hidden="true" />}
+    {opened ? children : <section className={`skhothane-burn-intro ${burning ? "is-burning" : ""}`} aria-label="Set the Skhothane shirt alight to reveal the chapter">
+    <IntroAmbientAudio id="skhothane" track={track} sharedAudioRef={audioRef} />
     <div className="skhothane-burn-intro__background" aria-hidden="true" />
     <div className="skhothane-burn-intro__copy">
-      <small>03 / SKHOTHANE · JAMA'S JOURNEY</small>
-      <h1>A look made to be seen.</h1>
-      <p>Set this shirt alight to enter a world of colour, performance and the memories Jama is still trying to understand.</p>
-      <p className="skhothane-burn-intro__instruction" role="status">{notice}</p>
+      <small><NarrativeText onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="03 / SKHOTHANE · JAMA'S JOURNEY" delay={150} /></small>
+      <h1><NarrativeText onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="A look made to be seen." delay={1100} /></h1>
+      <p><NarrativeText onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="Set this shirt alight to enter a world of colour, performance and the memories Jama is still trying to understand." delay={3000} /></p>
+      <p className="skhothane-burn-intro__instruction" role="status">{copyReady ? notice : "Read to unlock the match."}</p>
     </div>
     <div className="skhothane-burn-intro__stage">
-      <button ref={shirtRef} type="button" className="skhothane-burn-intro__shirt" disabled={burning} aria-label={armed ? "Set the shirt alight" : "Shirt. Select the match first, then tap here."} onClick={() => { if (armed) ignite(); else setNotice("Pick up the match first, then tap the shirt."); }}>
+      <button ref={shirtRef} type="button" className="skhothane-burn-intro__shirt" disabled={!copyReady || burning} aria-label={armed ? "Set the shirt alight" : "Shirt. Select the match first, then tap here."} onClick={() => { if (armed) ignite(); else setNotice("Pick up the match first, then tap the shirt."); }}>
         <img src={shirt} alt="" style={{ maskImage:mask, WebkitMaskImage:mask }} />
         {burning && <span className="skhothane-burn-intro__embers" aria-hidden="true" style={{ "--burn-radius":`${burnRadius}%` }} />}
       </button>
-      <button type="button" className="skhothane-burn-intro__match" disabled={burning} aria-label="Pick up the lit match. Drag it onto the shirt or press Enter, then select the shirt." aria-pressed={armed} style={{ transform:`translate(${matchOffset.x}px,${matchOffset.y}px)` }} onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={() => { drag.current = null; setMatchOffset({ x:0, y:0 }); }} onClick={() => { if (suppressClick.current) { suppressClick.current = false; return; } setArmed(true); setNotice("Match ready. Tap the shirt to set it alight."); }}>
+      <button type="button" className="skhothane-burn-intro__match" disabled={!copyReady || burning} aria-label="Pick up the lit match. Drag it onto the shirt or press Enter, then select the shirt." aria-pressed={armed} style={{ transform:`translate(${matchOffset.x}px,${matchOffset.y}px)` }} onPointerDown={startDrag} onPointerMove={moveDrag} onPointerUp={endDrag} onPointerCancel={() => { drag.current = null; setMatchOffset({ x:0, y:0 }); }} onClick={() => { if (suppressClick.current) { suppressClick.current = false; return; } setArmed(true); setNotice("Match ready. Tap the shirt to set it alight."); }}>
         <span className="skhothane-burn-intro__match-head" aria-hidden="true" /><span className="skhothane-burn-intro__match-stick" aria-hidden="true" /><b>{armed ? "MATCH READY" : "PICK UP THE MATCH"}</b>
       </button>
     </div>
-  </section>;
+  </section>}
+  </>;
 }

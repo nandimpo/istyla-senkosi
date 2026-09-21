@@ -1,0 +1,21 @@
+/* Organic torn edges and hand worked thread. */
+.memory-stitch__fragments { gap:var(--piece-gap,9px); transition:gap .75s cubic-bezier(.2,.8,.2,1); }
+.memory-stitch__fragment { transition:transform .8s cubic-bezier(.2,.8,.2,1) var(--piece-delay),filter 1s,clip-path .8s; }
+.memory-stitch__fragment:nth-child(1) { clip-path:polygon(0 2%,95% 0,100% 9%,96% 27%,100% 45%,96% 67%,100% 83%,95% 100%,3% 97%,0 75%,3% 56%,0 32%); }
+.memory-stitch__fragment:nth-child(2) { clip-path:polygon(4% 1%,100% 3%,97% 31%,100% 55%,97% 78%,100% 96%,5% 100%,0 84%,4% 66%,0 45%,4% 26%,0 8%); }
+.memory-stitch__fragment:nth-child(3) { clip-path:polygon(2% 0,96% 3%,100% 19%,96% 41%,100% 64%,96% 82%,100% 98%,4% 96%,0 80%,3% 61%,0 39%,4% 17%); }
+.memory-stitch__fragment:nth-child(4) { clip-path:polygon(4% 3%,98% 0,100% 22%,97% 47%,100% 68%,96% 89%,98% 100%,5% 97%,0 82%,4% 62%,0 38%,4% 18%); }
+.memory-stitch__fragment:nth-child(5) { clip-path:polygon(0 2%,95% 0,100% 18%,96% 39%,100% 58%,96% 79%,100% 100%,3% 97%,0 73%,3% 49%,0 28%); }
+.memory-stitch__fragment:nth-child(6) { clip-path:polygon(4% 0,100% 3%,97% 26%,100% 51%,97% 75%,100% 98%,5% 100%,0 82%,4% 59%,0 34%,4% 15%); }
+.memory-stitch.is-complete .memory-stitch__fragment { clip-path:polygon(0 0,100% 0,100% 100%,0 100%); }
+.memory-stitch__seam.vertical { left:calc(50% - 16px); width:32px; }
+.memory-stitch__seam.horizontal { height:32px; }
+.memory-stitch__seam.seam-h1,.memory-stitch__seam.seam-h2 { top:calc(33.333% - 16px); }
+.memory-stitch__seam.seam-h3,.memory-stitch__seam.seam-h4 { top:calc(66.666% - 16px); }
+.memory-stitch__seam.vertical::before { left:15px; }
+.memory-stitch__seam.horizontal::before { top:15px; }
+.memory-stitch__seam.is-done::before { opacity:.45; border-color:var(--thread-colour); border-width:1px; }
+.memory-stitch__seam.is-done::after { content:""; position:absolute; filter:drop-shadow(0 1px 1px #000b); mix-blend-mode:normal; animation:memory-thread-in .55s ease-out both; }
+.memory-stitch__seam.vertical.is-done::after { inset:0 3px; width:auto; left:3px; background:repeating-linear-gradient(68deg,transparent 0 7px,var(--thread-colour) 8px 10px,transparent 11px 17px),repeating-linear-gradient(112deg,transparent 0 12px,color-mix(in srgb,var(--thread-colour),#fff 18%) 13px 14px,transparent 15px 22px); }
+.memory-stitch__seam.horizontal.is-done::after { inset:3px 0; height:auto; top:3px; background:repeating-linear-gradient(22deg,transparent 0 8px,var(--thread-colour) 9px 11px,transparent 12px 19px),repeating-linear-gradient(-22deg,transparent 0 14px,color-mix(in srgb,var(--thread-colour),#fff 15%) 15px 16px,transparent 17px 24px); }
+@media (prefers-reduced-motion:reduce) { .memory-stitch__fragments,.memory-stitch__fragment { transition:none; } }
