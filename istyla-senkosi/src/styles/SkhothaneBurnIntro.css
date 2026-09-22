@@ -14,7 +14,7 @@
 .skhothane-burn-intro__copy h1 { max-width:540px; margin:20px 0; font:800 clamp(48px,6vw,90px)/.9 'Barlow Condensed',Impact,sans-serif; text-transform:uppercase; }
 .skhothane-burn-intro__copy p { max-width:460px; color:#ead9c3; font-size:15px; line-height:1.65; }
 .skhothane-burn-intro__copy .skhothane-burn-intro__instruction { min-height:48px; margin-top:28px; padding-left:18px; border-left:3px solid #e5a04b; color:#f7c788; font-size:12px; font-weight:700; }
-.skhothane-burn-intro__stage { position:relative; height:100%; min-height:0; }
+.skhothane-burn-intro__stage { position:relative; z-index:1; height:100%; min-height:0; }
 .skhothane-burn-intro__shirt { position:absolute; z-index:1; top:4%; left:6%; width:88%; height:80%; padding:0; border:0; background:none; cursor:pointer; }
 .skhothane-burn-intro__shirt img { width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 25px 20px #000b); transition:filter .5s; }
 .skhothane-burn-intro.is-burning .skhothane-burn-intro__shirt img { filter:sepia(.25) brightness(.78) drop-shadow(0 16px 18px #000b); }

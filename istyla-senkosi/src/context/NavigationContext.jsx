@@ -49,6 +49,18 @@ export function NavigationProvider({ children }) {
     return ORDER.includes(id);
   }, []);
 
+  const goBackChapter = useCallback(() => {
+    const previous = ORDER[ORDER.indexOf(currentSection) - 1];
+    if (!previous) return;
+    try {
+      const lastPage = JSON.parse(sessionStorage.getItem(`istyla:${previous}:last-page`));
+      if (Number.isInteger(lastPage) && lastPage >= 0) sessionStorage.setItem(`istyla:${previous}:page`, JSON.stringify(lastPage));
+    } catch { /* Use the previous chapter's saved position if storage is unavailable. */ }
+    setNavigationLocked(false);
+    setChapterVisit((visit) => visit + 1);
+    setCurrentSection(previous);
+  }, [currentSection, setCurrentSection]);
+
   const goTo = useCallback((id, { intro = false } = {}) => {
     if (!isUnlocked(id)) return;
     if (intro) {
@@ -85,7 +97,7 @@ export function NavigationProvider({ children }) {
   }, [navigationLocked, setCurrentSection]);
 
   return (
-    <NavigationContext.Provider value={{ currentSection, chapterVisit, unlockedIndex, goTo, restartJourney, completeChapter, isUnlocked, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion, navigationLocked, setNavigationLocked }}>
+    <NavigationContext.Provider value={{ currentSection, chapterVisit, unlockedIndex, goTo, goBackChapter, restartJourney, completeChapter, isUnlocked, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion, navigationLocked, setNavigationLocked }}>
       {children}
     </NavigationContext.Provider>
   );

@@ -1,0 +1,22 @@
+Generated using the built-in image generation tool.
+
+Create one final hand-drawn design-process storyboard sheet for the student interactive storytelling project "I'STYLA SENKOSI". This is the LAST image in a sequence of concept development sketches, showing a resolved final concept, grounded in the actual project. The two supplied images are reference images for the earlier thinking and black-pen sketch aesthetic, not edit targets. Produce a NEW coherent finished sketch page, not a reproduction of their empty boxes.
+
+Use case: infographic-diagram / hand-drawn storyboard.
+Style: authentic fine black ink and light graphite pencil on clean warm white paper, slightly imperfect ruled rectangles, readable neat handwritten lettering, small shaded thumbnail drawings. Monochrome. Flat scanned sheet, no hands, stationery, desk, or photorealism. Portrait high-resolution page with generous margins. Clear enough to place in a school process journal. No colour, digital UI polish or unnecessary ornament.
+
+Heading: "I'STYLA SENKOSI"
+Subheading: "FINAL CONCEPT — THE COMPLETE JOURNEY"
+Small concept line: "Follow Jama from curiosity to connection."
+
+Layout: Six numbered rows. Each row has a main landscape screen sketch on the left, an arrow, and a smaller supporting interaction/detail sketch on the right. Far-left row numbers and clear titles. Connect rows downward with a fine continuous directional line, so the sequence is unambiguous. Incorporate concrete thumbnail content inside the boxes, not empty repeated grids. Include brief handwritten design intentions beneath each row. Keep text sparse and accurate.
+
+Row 1 "01 / BEGIN": Main screen with the project title, pencil silhouette of a dressed figure, small "BEGIN" button. Right: compact chapter overview of six small labelled tiles, "Intro", "Map", "Swenka", "Pantsula", "Skhothane", "Reflection". Note: "A personal story with room to explore."
+Row 2 "02 / INTRO + MAP": Main screen with small portrait sketch of Jama and title "Why am I here?" and short text-placeholder lines. Right: simple geographic route diagram from "Johannesburg North" to "Soweto", two location pins joined by a path. Note: "Scroll through the story; trace the journey."
+Row 3 "03 / SWENKA": Main screen split between a suited figure thumbnail with a play triangle and a narrative text column, bottom tiny sound waveform. Right: wardrobe interaction sketch, jacket and shoes with a drag arrow toward an outfit silhouette. Labels: "Video + audio" and "Drag to style". Note: "Precision. Discipline. Respect."
+Row 4 "04 / PANTSULA": Main screen shows loose-pencil dancing figures with play triangle, text lines and sound waveform. Right: small rhythm interaction screen with three beat circles and a tapping finger symbol. Labels: "Video + audio" and "Tap the beat". Note: "Movement. Rhythm. Community."
+Row 5 "05 / SKHOTHANE": Main screen shows expressive fashion silhouettes with play triangle, text lines and audio waveform. Right: three overlapping fashion photo cards with a horizontal swipe arrow. Labels: "Video + audio" and "Swipe to explore". Note: "Expression. Pride. Spectacle."
+Row 6 "06 / REFLECTION": Main screen is a quiet memories/photo collage of two framed portrait thumbnails with heading "Memory. Identity. Future." Right: final intimate portrait screen with heading "There he is." and two small controls "Replay journey" and "Explore chapters". Connecting arrow labelled "fade". Note: "Jama remembers his cousin and rethinks belonging."
+
+At bottom put a small ruled reflection strip, title "FINAL DESIGN INTENT", with exactly this sentence: "The viewer moves from watching, to participating, to reflecting."
+Make it visually evident how the initial generic story grids evolved into purposeful chapter interactions and a personal ending. Do not claim handwritten process text is a quotation from the user. All marks stay within the page. Prioritize excellent legibility, balanced spacing, full uncropped page.

@@ -424,3 +424,36 @@ html[data-reduced-motion="true"] .collage-crossfade img.collage-crossfade__incom
 .chapter-player__gallery-track--direct .chapter-player__gallery-photo img { animation:none; height:100%; transform:none; }
 html[data-reduced-motion="true"] .chapter-player__gallery-track--direct .chapter-player__gallery-scroll { transition:none; }
 @media(prefers-reduced-motion:reduce) { .chapter-player__gallery-track--direct .chapter-player__gallery-scroll { transition:none; } }
+
+/* Titles take their natural height on both sides of the turning sheet. */
+.memory-flipbook { touch-action:pan-y; }
+.memory-flipbook__front { position:absolute; inset:0; padding:clamp(10px,1.5vw,22px); box-sizing:border-box; background:#eee9dc; border:1px solid #c8beaa; backface-visibility:hidden; }
+.memory-flipbook__front img { padding:0; border:0; }
+.memory-flipbook--photo-album .memory-flipbook__page,.memory-flipbook--photo-album .memory-flipbook__front { display:grid; grid-template-rows:auto minmax(0,1fr); gap:14px; }
+.memory-flipbook--photo-album img { min-height:0; }
+.memory-flipbook__album-note { position:relative; color:#493c2a; overflow-wrap:anywhere; }
+.memory-flipbook__album-note small { font:800 10px Montserrat,Arial,sans-serif; letter-spacing:1.5px; }
+.memory-flipbook__album-note p { margin:8px 0; font:italic clamp(19px,1.7vw,27px)/1.2 Georgia,serif; }
+.memory-flipbook__album-note span { font:12px/1.45 Montserrat,Arial,sans-serif; }
+.memory-flipbook__controls button { min-width:44px; min-height:44px; }
+.memory-flipbook__controls { bottom:-70px; }
+.memory-flipbook__hint { bottom:-100px; line-height:1.5; }
+.album-story-controls { display:none; }
+html[data-reduced-motion="true"] .memory-flipbook__turning,html[data-reduced-motion="true"] .memory-flipbook__settled-page { animation:none; }
+
+/* Phones, tablets and short landscape windows use a scrollable reading layout. */
+@media(max-width:1000px),(max-height:700px) {
+  #skhothane:has(.memory-flipbook) { touch-action:pan-y; }
+  #skhothane .chapter-player__page:has(.memory-flipbook) { display:block; inset:64px 0 calc(96px + env(safe-area-inset-bottom)); overflow-y:auto; overflow-x:hidden; overscroll-behavior:contain; touch-action:pan-y; padding:16px max(24px,env(safe-area-inset-right)) 80px max(24px,env(safe-area-inset-left)); box-sizing:border-box; }
+  #skhothane .chapter-player__visual--memory-album { position:relative; inset:auto; background:transparent; overflow:visible; }
+  #skhothane .chapter-player__visual--memory-album::after { display:none; }
+  .memory-flipbook { position:relative; top:auto; right:auto; width:min(100%,620px); height:clamp(360px,65vw,620px); margin:0 auto 130px; }
+  .memory-flipbook__stack { transform:translate(5px,5px); box-shadow:4px 5px 0 #d4cbb9,8px 9px 0 #b9af9d,10px 16px 22px #0008; }
+  #skhothane .chapter-player__page:has(.memory-flipbook) .chapter-player__story { position:relative; inset:auto; width:100%; max-width:620px; margin:0 auto; }
+  #skhothane .chapter-player__page:has(.memory-flipbook) .stitched-narrative::before { display:none; }
+  #skhothane .chapter-player__page:has(.memory-flipbook) .stitched-narrative__copy { font-size:16px; line-height:1.55; }
+  .album-story-controls { position:relative; display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; max-width:620px; margin:64px auto 0; }
+  .album-story-controls button { min-height:44px; padding:10px 16px; border:1px solid #c8b39b; color:#f5eddf; background:#211e19; cursor:pointer; font:700 12px Montserrat,Arial,sans-serif; }
+  .album-story-controls button:disabled { opacity:.5; cursor:default; }
+  #skhothane:has(.memory-flipbook) > .chapter-player__hint { display:none; }
+}

@@ -3,6 +3,7 @@ import { useNavigation } from "../context/NavigationContext";
 import shirt from "../assets/Chapter 3_Skothane/Images/Extra/Shirt.png";
 import NarrativeText from "./NarrativeText";
 import IntroAmbientAudio from "./IntroAmbientAudio";
+import OutfitAmbience from "./games/OutfitAmbience";
 import "../styles/SkhothaneBurnIntro.css";
 
 export default function SkhothaneBurnIntro({ track, audioRef, children }) {
@@ -82,6 +83,7 @@ export default function SkhothaneBurnIntro({ track, audioRef, children }) {
     {opened ? children : <section className={`skhothane-burn-intro ${burning ? "is-burning" : ""}`} aria-label="Set the Skhothane shirt alight to reveal the chapter">
     <IntroAmbientAudio id="skhothane" track={track} sharedAudioRef={audioRef} />
     <div className="skhothane-burn-intro__background" aria-hidden="true" />
+    <OutfitAmbience audioRef={audioRef} />
     <div className="skhothane-burn-intro__copy">
       <small><NarrativeText onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="03 / SKHOTHANE · JAMA'S JOURNEY" delay={150} /></small>
       <h1><NarrativeText onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="A look made to be seen." delay={1100} /></h1>

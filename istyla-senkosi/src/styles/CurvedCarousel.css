@@ -1,4 +1,5 @@
-.game-stage.curved-gallery { display:grid; grid-template-columns:1fr; grid-template-rows:auto minmax(180px,1fr) auto auto; gap:10px; height:100svh; padding:115px 0 92px; box-sizing:border-box; background:#211e19; overflow:hidden; }
+.game-stage.curved-gallery { position:relative; isolation:isolate; display:grid; grid-template-columns:1fr; grid-template-rows:auto minmax(180px,1fr) auto auto; gap:10px; height:100svh; padding:115px 0 92px; box-sizing:border-box; background:#211e19; overflow:hidden; }
+.curved-gallery__stage,.curved-gallery__controls,.curved-gallery__hint { position:relative; z-index:1; }
 .curved-gallery .curved-gallery__copy { padding:10px 7vw 18px; display:flex; align-items:end; justify-content:space-between; gap:30px; }
 .curved-gallery .game-copy p.tag { margin:0 0 12px; font-size:10px; }
 .curved-gallery .game-copy h1 { font-size:clamp(28px,3.4vw,48px); }

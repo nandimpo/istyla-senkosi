@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
 import StitchedNarrative from "../StitchedNarrative";
+import OutfitAmbience from "./OutfitAmbience";
 import "../../styles/ChapterGames.css";
 import "../../styles/CurvedCarousel.css";
 
-function SwipeCarouselGame({ images, onComplete }) {
+function SwipeCarouselGame({ images, onComplete, audioRef }) {
   const [copyReady, setCopyReady] = useState(false);
   const [current, setCurrent] = useState(0);
   const [offset, setOffset] = useState(0);
@@ -56,9 +57,10 @@ function SwipeCarouselGame({ images, onComplete }) {
     wheelLockedUntil.current = now + 450;
   };
   return <section className="game-stage game-stage--skhothane curved-gallery" onWheel={turnWithWheel}>
+    <OutfitAmbience audioRef={audioRef} />
     <header className="game-copy curved-gallery__copy">
-      <div><p className="tag">03 / SKHOTHANE</p><h1>Every photo I took that day.</h1></div>
-      <StitchedNarrative onComplete={() => setCopyReady(true)} className="game-copy__narrative" text="I went back through everything I shot, one image after another, trying to see what I'd missed the first time." placement="inline" />
+      <div><p className="tag">03 / SKHOTHANE</p><h1>Looking closer at their style.</h1></div>
+      <StitchedNarrative onComplete={() => setCopyReady(true)} className="game-copy__narrative" text="I look through photos of other Skhothanes, one image at a time. Their colours, poses and confidence remind me of my cousin and make me wonder what I overlooked in his style." placement="inline" />
     </header>
     <div inert={!copyReady} className={`curved-gallery__stage ${dragging ? "is-dragging" : ""}`} tabIndex={0} role="group" aria-roledescription="carousel" aria-label="Skhothane fashion photographs. Drag, scroll, or use the arrow keys to explore." onPointerDown={down} onPointerMove={move} onPointerUp={release} onPointerCancel={cancel} onLostPointerCapture={cancel} onPointerLeave={() => setCursor(null)} onKeyDown={(event) => { if (["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) { event.preventDefault(); event.stopPropagation(); goTo(event.key === "Home" ? 0 : event.key === "End" ? images.length - 1 : current + (event.key === "ArrowRight" ? 1 : -1)); } }}>
       {images.map((src, index) => {
@@ -73,7 +75,7 @@ function SwipeCarouselGame({ images, onComplete }) {
       <button type="button" disabled={current === images.length - 1} aria-label="Next photograph" onClick={() => goTo(current + 1)}>&rarr;</button>
       {ready && <button type="button" className="curved-gallery__continue" onClick={onComplete}>Continue the story &rarr;</button>}
     </div>
-    <p className="curved-gallery__hint" role="status">{copyReady ? "DRAG, SCROLL OR USE THE ARROWS TO LOOK BACK" : "READ TO UNLOCK THE PHOTOGRAPHS"}</p>
+    <p className="curved-gallery__hint" role="status">{copyReady ? "DRAG, SCROLL OR USE THE ARROWS TO EXPLORE" : "READ TO UNLOCK THE PHOTOGRAPHS"}</p>
   </section>;
 }
 export default SwipeCarouselGame;

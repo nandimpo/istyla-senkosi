@@ -3,8 +3,29 @@ import { useNavigation } from "../context/NavigationContext";
 
 const TURN_MS = 1050;
 
-export default function MemoryFlipbook({ images, paused = false }) {
+const albumTitles = [
+  "I turn the pages, looking for him.",
+  "I notice the details I once missed.",
+  "I think about his confidence.",
+  "I wonder what his clothes meant to him.",
+  "I wish I had asked him more.",
+];
+
+function AlbumNote({ pageIndex, titles }) {
+  return <div className="memory-flipbook__album-note"><small>SKHOTHANE / PHOTO ALBUM</small><p>{titles[pageIndex] ?? "I keep looking, trying to understand him."}</p><span>Their colours and confidence remind me of my cousin.</span></div>;
+}
+
+export default function MemoryFlipbook({ images, paused = false, photoAlbum = false, albumLabel = "Jama's memory album", titles = albumTitles }) {
   const { reducedMotion } = useNavigation();
+  const [systemReducedMotion, setSystemReducedMotion] = useState(false);
+  const quietMotion = reducedMotion || systemReducedMotion;
+  useEffect(() => {
+    const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setSystemReducedMotion(preference.matches);
+    update();
+    preference.addEventListener("change", update);
+    return () => preference.removeEventListener("change", update);
+  }, []);
   const [page, setPage] = useState({ current: 0, previous: null, turn: 0, direction: 1 });
   const busy = useRef(false);
   const startX = useRef(null);
@@ -21,9 +42,9 @@ export default function MemoryFlipbook({ images, paused = false }) {
     turnTimer.current = setTimeout(() => {
       setPage((value) => ({ ...value, previous: null }));
       busy.current = false;
-    }, reducedMotion ? 0 : TURN_MS);
+    }, quietMotion ? 0 : TURN_MS);
   };
-  flipRef.current = flip;
+  useEffect(() => { flipRef.current = flip; });
 
   useEffect(() => {
     if (paused) return undefined;
@@ -40,20 +61,23 @@ export default function MemoryFlipbook({ images, paused = false }) {
 
   const handlePointerDown = (event) => {
     event.stopPropagation();
-    startX.current = event.clientX;
+    if (paused || event.isPrimary === false || event.button !== 0) return;
+    startX.current = { x: event.clientX, y: event.clientY };
     event.currentTarget.setPointerCapture(event.pointerId);
   };
 
   const handlePointerUp = (event) => {
     event.stopPropagation();
     if (startX.current === null) return;
-    const distance = event.clientX - startX.current;
+    const distance = event.clientX - startX.current.x;
+    const vertical = event.clientY - startX.current.y;
     startX.current = null;
+    if (Math.abs(vertical) > Math.max(12, Math.abs(distance))) return;
     flip(Math.abs(distance) > 45 && distance > 0 ? -1 : 1);
   };
 
   return (
-    <div className="memory-flipbook" role="group" tabIndex={paused ? -1 : 0} aria-label={`Jama's memory album, photograph ${page.current + 1} of ${images.length}. Drag or use the buttons to turn a page.`}
+    <div className={`memory-flipbook ${photoAlbum ? "memory-flipbook--photo-album" : ""}`} role="group" tabIndex={paused ? -1 : 0} aria-label={`${albumLabel}, photograph ${page.current + 1} of ${images.length}. Drag or use the buttons to turn a page.`}
       onPointerDown={handlePointerDown} onPointerUp={handlePointerUp}
       onPointerCancel={(event) => { event.stopPropagation(); startX.current = null; }}
       onClick={(event) => event.stopPropagation()} onWheel={(event) => event.stopPropagation()}
@@ -61,20 +85,24 @@ export default function MemoryFlipbook({ images, paused = false }) {
       {page.turn > 0 && <div className="memory-flipbook__settled-page" aria-hidden="true" />}
       <div className="memory-flipbook__stack" aria-hidden="true" />
       <div className="memory-flipbook__page">
-        <img src={images[page.current]} alt={`Memory photograph ${page.current + 1} of ${images.length}`} />
+        {photoAlbum && <AlbumNote pageIndex={page.current} titles={titles} />}
+        <img src={images[page.current]} alt={`${albumLabel}, photograph ${page.current + 1} of ${images.length}`} />
       </div>
-      {page.previous !== null && !paused && !reducedMotion && (
+      {page.previous !== null && !paused && !quietMotion && (
         <div key={page.turn} className={`memory-flipbook__turning memory-flipbook__turning--${page.direction > 0 ? "forward" : "back"}`} aria-hidden="true">
+          <div className="memory-flipbook__front">
+          {photoAlbum && <AlbumNote pageIndex={page.previous} titles={titles} />}
           <img src={images[page.previous]} alt="" />
+          </div>
           <span className="memory-flipbook__paper-back" />
         </div>
       )}
       <div className="memory-flipbook__controls" onPointerDown={(event) => event.stopPropagation()} onPointerUp={(event) => event.stopPropagation()}>
-        <button type="button" onClick={(event) => { event.stopPropagation(); flip(-1); }} aria-label="Previous memory photograph">←</button>
+        <button type="button" onClick={(event) => { event.stopPropagation(); flip(-1); }} aria-label="Previous photograph">←</button>
         <span aria-live="polite">{String(page.current + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}</span>
-        <button type="button" onClick={(event) => { event.stopPropagation(); flip(1); }} aria-label="Next memory photograph">→</button>
+        <button type="button" onClick={(event) => { event.stopPropagation(); flip(1); }} aria-label="Next photograph">→</button>
       </div>
-      <p className="memory-flipbook__hint">DRAG OR TAP TO TURN A MEMORY</p>
+      <p className="memory-flipbook__hint">{photoAlbum ? "DRAG OR TAP TO TURN THE PAGE" : "DRAG OR TAP TO TURN A MEMORY"}</p>
     </div>
   );
 }

@@ -29,3 +29,7 @@
 .skhothane-outfit button:focus-visible { outline:3px solid #fff3c9; outline-offset:2px; }
 @media(max-width:1000px) { .skhothane-outfit__workspace { grid-template-columns:130px minmax(300px,1fr); } .skhothane-outfit__result { grid-column:2; } }
 @media(max-width:650px) { .skhothane-outfit { padding:22px 18px 90px; } .skhothane-outfit__heading h2 { font-size:42px; } .skhothane-outfit__workspace,.skhothane-outfit__workspace:not(.is-open) { display:block; } .skhothane-outfit__bag { max-width:300px; margin:0 auto 22px; } .skhothane-outfit__workspace.is-open .skhothane-outfit__bag img { max-height:110px; } .skhothane-outfit__choices { margin-bottom:20px; } .skhothane-outfit__options button { min-height:104px; } .skhothane-outfit__options img { height:70px; } .skhothane-outfit__result { max-width:390px; margin:auto; } }
+
+/* Soft light stays behind the controls and follows the chapter's live spectrum. */
+.skhothane-outfit { isolation:isolate; }
+.skhothane-outfit__heading,.skhothane-outfit__workspace { position:relative; z-index:1; }

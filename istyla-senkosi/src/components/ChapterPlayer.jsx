@@ -9,6 +9,7 @@ import { useSectionAudio } from "../hooks/useSectionAudio";
 import { useNavigation } from "../context/NavigationContext";
 import StitchedNarrative from "./StitchedNarrative";
 import MemoryFlipbook from "./MemoryFlipbook";
+import { reverseScroll } from "../utils/reverseScroll";
 import SkhothaneOutfit from "./games/SkhothaneOutfit";
 
 import ShoeShine from "./games/ShoeShine";
@@ -110,7 +111,7 @@ function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging
             ))}
           </div>
         ) : frame.kind === "memory-album" && frame.collage ? (
-          <MemoryFlipbook images={frame.collage} paused={visualOnly} />
+          <MemoryFlipbook images={frame.collage} paused={visualOnly} photoAlbum={frame.photoAlbum} albumLabel={frame.albumLabel} titles={frame.albumTitles} />
         ) : frame.collage ? (
           <div className={`chapter-player__collage chapter-player__collage--${frame.collage.length}`}>
             {frame.collage.map((src, index) => (
@@ -167,7 +168,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const finishText = (kind) => setFinishedText((done) => done[kind] ? done : { ...done, [kind]: true });
   const [exiting, setExiting] = useState(false);
   const pendingChapter = useRef(null);
-  const { soundOn, setSoundOn, reducedMotion, goTo } = useNavigation();
+  const { soundOn, setSoundOn, reducedMotion, goTo, goBackChapter } = useNavigation();
   useContinuousZoom(titlePhotoRef, (id === "introduction" || id === "swenka" || id === "pantsula") && pageIndex === 0, pageIndex);
   const [galleryIndex, setGalleryIndex] = useSessionState(`${id}:gallery`, 0, (value) => Number.isInteger(value) && value >= 0 && value < Math.max(1, ...frames.map((frame) => frame.collage?.length || 0)));
   const [frameTransition, setFrameTransition] = useState(null);
@@ -185,6 +186,9 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const framesEnd = framesStart + frames.length - 1;
   const totalPages = 1 + frames.length + (hasGamePage ? 1 : 0) + (finalPage ? 1 : 0);
   const lastFrameIndex = totalPages - 1;
+  useEffect(() => {
+    try { sessionStorage.setItem(`istyla:${id}:last-page`, JSON.stringify(lastFrameIndex)); } catch { /* Optional navigation persistence. */ }
+  }, [id, lastFrameIndex]);
   const currentFrame = pageIndex >= framesStart && pageIndex <= framesEnd ? frames[pageIndex - framesStart] : null;
   const lacesLocked = Boolean(currentFrame?.laceGate && !lacesUnlocked);
   const shoeLocked = Boolean(currentFrame?.shoeShine && !shoeUnlocked);
@@ -294,13 +298,13 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
 
   const retreat = () => {
     if (lockedRef.current || exiting || threadLeaving) return;
+    if (pageIndex === 0) { goBackChapter(); return; }
     if (currentFrame?.motion === "gallery" && galleryIndex > 0) {
       lockedRef.current = true;
       setGalleryIndex((index) => index - 1);
       transitionTimer.current = setTimeout(() => { lockedRef.current = false; }, calm() ? 100 : interaction === "drag" ? 500 : 1450);
       return;
     }
-    if (enterVideoPage(pageIndex - 1)) return;
     if (currentFrame?.motion && pageIndex > framesStart && !calm()) {
       transitionToPage(pageIndex - 1, -1);
       return;
@@ -385,6 +389,9 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const isGamePage = hasGamePage && pageIndex === gamePageIndex;
   const isFinalPage = Boolean(finalPage) && pageIndex === totalPages - 1;
   const isLastFrame = pageIndex === framesEnd;
+  const containAlbumScroll = (event) => {
+    if (currentFrame?.kind === "memory-album" && window.matchMedia("(max-width: 1000px), (max-height: 700px)").matches) event.stopPropagation();
+  };
 
   return (
     <section
@@ -392,6 +399,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
       className={`chapter-player chapter-player--${accent} ${exiting ? `chapter-player--exiting chapter-player--exit-${exitTransition}` : ""}`}
       tabIndex={0}
       onKeyDown={handleKeyDown}
+      onWheelCapture={(event) => reverseScroll(event, guardedRetreat)}
       onAnimationEnd={exiting ? handleExitEnd : undefined}
       aria-label={`${chapter}: ${title}, page ${pageIndex + 1} of ${totalPages}`}
       {...(!isGamePage ? { ...gesture.handlers, ...(interaction !== "drag" ? { onWheel: scrollGesture.handlers.onWheel } : {}), onDragStart: (event) => event.preventDefault() } : interaction !== "drag" ? { onWheel: (event) => { if (event.deltaY < 0) scrollGesture.handlers.onWheel(event); } } : {})}
@@ -425,7 +433,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
 
       {frameTransition?.next && !frameTransition.next.video && <div className="chapter-player__incoming" aria-hidden="true"><Frame frame={frameTransition.next} galleryIndex={frameTransition.nextGalleryIndex} visualOnly /></div>}
       {isGamePage && pageIndex > 0 && <button type="button" className="chapter-player__back-story" onClick={guardedRetreat}>← Back to the story</button>}
-      <div className={`chapter-player__page ${currentFrame?.motion ? "chapter-player__page--cinematic" : ""} ${frameTransition ? `chapter-player__page--leaving-${frameTransition.motion}` : ""} ${threadLeaving ? "chapter-player__page--leaving-thread" : ""}`} key={pageIndex} style={pageStyle} data-travel={frameTransition?.direction} data-direction={interaction === "swipe" ? swipeGesture.direction : undefined}>
+      <div className={`chapter-player__page ${currentFrame?.motion ? "chapter-player__page--cinematic" : ""} ${frameTransition ? `chapter-player__page--leaving-${frameTransition.motion}` : ""} ${threadLeaving ? "chapter-player__page--leaving-thread" : ""}`} key={pageIndex} style={pageStyle} data-travel={frameTransition?.direction} data-direction={interaction === "swipe" ? swipeGesture.direction : undefined} onWheel={containAlbumScroll} onPointerDown={containAlbumScroll} onPointerUp={containAlbumScroll}>
         {isTitleCard ? (
           <div className={`chapter-player__title-card ${titleImage ? `chapter-player__title-card--${titleTransition} chapter-player__title-card--wipe-${titleWipeDirection}` : ""}`}>
             {titleImage && (
@@ -447,11 +455,15 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
           <Frame frame={currentFrame} showStory={!videoBridge?.outgoing} interactionsReady={!sewingLocked} galleryIndex={galleryIndex} directGalleryDrag={interaction === "drag"} galleryDragOffset={interaction === "drag" ? dragGesture.dragOffset : 0} galleryDragging={interaction === "drag" && dragGesture.dragging} videoExiting={Boolean(videoBridge?.outgoing)} videoUnlocked={!videoBridge && !shoeLocked && !lacesLocked && !outfitLocked} allowVideoSound={id !== "introduction"} onNextChapter={leaveForChapter} onVideoStarted={() => setVideoStarted(true)} onTextComplete={() => finishText("frame")} onVideoProgress={updateVideoProgress} />
         )}
         {isLastFrame && outro && <div className="chapter-player__outro"><StitchedNarrative key={outro} text={outro} placement="inline" onComplete={() => finishText("outro")} /></div>}
+        {currentFrame?.kind === "memory-album" && <nav className="album-story-controls" aria-label="Continue the chapter" onClick={(event) => event.stopPropagation()} onPointerDown={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
+          <button type="button" onClick={guardedRetreat}>Back to the story</button>
+          <button type="button" disabled={sewingLocked} onClick={guardedAdvance}>Continue the story →</button>
+        </nav>}
       </div>
 
       {videoBridge && <VideoBridge outgoing={videoBridge.outgoing} text={videoBridge.text} onCovered={videoBridge.reveal} onComplete={() => { setVideoBridge(null); lockedRef.current = false; }} />}
       {lacesLocked && <ConverseLacing key={pageIndex} onBack={guardedRetreat} onComplete={() => bridgeToVideo(currentFrame, () => setLacesUnlocked(true))} />}
-      {outfitLocked && <SkhothaneOutfit onBack={guardedRetreat} onComplete={() => bridgeToVideo(currentFrame, () => setOutfitUnlocked(true))} />}
+      {outfitLocked && <SkhothaneOutfit audioRef={audioRef} onBack={guardedRetreat} onComplete={() => bridgeToVideo(currentFrame, () => setOutfitUnlocked(true))} />}
       {shoeLocked && <ShoeShine onComplete={() => bridgeToVideo(currentFrame, () => setShoeUnlocked(true))} />}
       {currentFrame?.playSeconds && !shoeLocked && !lacesLocked && !outfitLocked && <div className="chapter-player__video-skip" onPointerDown={(event) => event.stopPropagation()} onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
         <span>{Math.floor(videoSeconds)} / {currentFrame.playSeconds} seconds</span>

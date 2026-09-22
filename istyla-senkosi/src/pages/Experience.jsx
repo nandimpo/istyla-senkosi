@@ -5,6 +5,7 @@ import Swenka from "./Swenka";
 import Pantsula from "./Pantsula";
 import Skhothane from "./Skhothane";
 import Reflection from "./Reflection";
+import { reverseScroll } from "../utils/reverseScroll";
 
 const CHAPTERS = {
   introduction: Introduction,
@@ -15,11 +16,13 @@ const CHAPTERS = {
 };
 
 function Experience() {
-  const { currentSection, chapterVisit } = useNavigation();
+  const { currentSection, chapterVisit, goBackChapter } = useNavigation();
 
   if (currentSection === "about") return <Hero />;
   const Chapter = CHAPTERS[currentSection];
-  return Chapter ? <Chapter key={`${currentSection}:${chapterVisit}`} /> : <Hero />;
+  return Chapter ? <div onWheelCapture={(event) => {
+    if (!event.target.closest(".chapter-player")) reverseScroll(event, goBackChapter);
+  }}><Chapter key={`${currentSection}:${chapterVisit}`} /></div> : <Hero />;
 }
 
 export default Experience;
