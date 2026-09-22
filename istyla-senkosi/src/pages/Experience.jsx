@@ -1,18 +1,14 @@
 import { useNavigation } from "../context/NavigationContext";
 import Hero from "../components/Hero";
-import Introduction from "./Introduction";
-import Swenka from "./Swenka";
-import Pantsula from "./Pantsula";
-import Skhothane from "./Skhothane";
-import Reflection from "./Reflection";
+import { lazy, Suspense } from "react";
 import { reverseScroll } from "../utils/reverseScroll";
 
 const CHAPTERS = {
-  introduction: Introduction,
-  swenka: Swenka,
-  pantsula: Pantsula,
-  skhothane: Skhothane,
-  reflection: Reflection,
+  introduction: lazy(() => import("./Introduction")),
+  swenka: lazy(() => import("./Swenka")),
+  pantsula: lazy(() => import("./Pantsula")),
+  skhothane: lazy(() => import("./Skhothane")),
+  reflection: lazy(() => import("./Reflection")),
 };
 
 function Experience() {
@@ -22,7 +18,7 @@ function Experience() {
   const Chapter = CHAPTERS[currentSection];
   return Chapter ? <div onWheelCapture={(event) => {
     if (!event.target.closest(".chapter-player")) reverseScroll(event, goBackChapter);
-  }}><Chapter key={`${currentSection}:${chapterVisit}`} /></div> : <Hero />;
+  }}><Suspense fallback={<div role="status" style={{ minHeight:"100svh", display:"grid", placeItems:"center", background:"#171714", color:"#f5eddf" }}>Opening the chapter…</div>}><Chapter key={`${currentSection}:${chapterVisit}`} /></Suspense></div> : <Hero />;
 }
 
 export default Experience;

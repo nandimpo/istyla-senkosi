@@ -1,0 +1,14 @@
+Generated with the built-in image generator.
+
+Revise the supplied project storyboard into a VERY SIMPLE hand-drawn wireframe flow diagram. The user explicitly rejected drawings and illustrations. ONLY thin black rectangles, straight arrows, simple text labels, plain empty placeholder boxes and small play triangles on a pure white page. No people, no portraits, no clothes, no objects, no icons except play triangles, no shading, no textures, no maps drawn geographically, no decorative elements. Minimal rough pen diagram like a student planning website screens.
+
+Single portrait page. Title "FINAL WEBSITE FLOW". Subtitle "I'STYLA SENKOSI". Six evenly spaced rows with two plain wireframe boxes per row and a short right-pointing arrow between them. A downward arrow at the far left between successive rows makes reading order clear. Short legible handwritten labels. Wide white margins.
+
+Row 1: left label "1. INTRO" above rectangle containing only a small button labelled "BEGIN". Right label "CHAPTER MENU" above rectangle containing six small empty square placeholders in a 3 by 2 grid.
+Row 2: left label "2. INTRO + MAP" above rectangle containing only the word "MAP". Right label "STORY" above rectangle with text "Why am I here?" and three short horizontal placeholder lines.
+Row 3: left label "3. SWENKA" above rectangle with a single play triangle and text "Video + audio". Right label "INTERACTION" above rectangle containing only "Drag to style".
+Row 4: left label "4. PANTSULA" above rectangle with a single play triangle and text "Video + audio". Right label "INTERACTION" above rectangle containing only "Tap the beat".
+Row 5: left label "5. SKHOTHANE" above rectangle with a single play triangle and text "Video + audio". Right label "INTERACTION" above rectangle containing only "Swipe to explore".
+Row 6: left label "6. REFLECTION" above rectangle with two small empty photo placeholder rectangles and label "Memories". Right label "ENDING" above rectangle containing "There he is." plus two small buttons "Replay" and "Chapters". Label this final right arrow "fade".
+
+Small bottom note "Scroll / swipe to continue". Everything sparse, schematic, understated and easily copied by hand. Do not add prose, sketches of physical subjects or detailed artwork. This is a basic box-and-arrow diagram, not an illustrated storyboard.

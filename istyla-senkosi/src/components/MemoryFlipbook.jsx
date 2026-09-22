@@ -27,12 +27,25 @@ export default function MemoryFlipbook({ images, paused = false, photoAlbum = fa
     return () => preference.removeEventListener("change", update);
   }, []);
   const [page, setPage] = useState({ current: 0, previous: null, turn: 0, direction: 1 });
+  const currentPage = page.current;
   const busy = useRef(false);
   const startX = useRef(null);
   const turnTimer = useRef(null);
   const flipRef = useRef(null);
 
   useEffect(() => () => clearTimeout(turnTimer.current), []);
+  useEffect(() => {
+    if (paused || images.length < 2) return;
+    // Decode only the adjacent pages so turning never waits for a cold photo.
+    const adjacent = [1, -1].map((direction) => {
+      const image = new Image();
+      image.decoding = "async";
+      image.src = images[(currentPage + direction + images.length) % images.length];
+      image.decode?.().catch(() => {});
+      return image;
+    });
+    return () => adjacent.forEach((image) => { image.onload = null; });
+  }, [images, currentPage, paused]);
 
   const flip = (direction) => {
     if (paused || busy.current || images.length < 2) return;
@@ -86,7 +99,7 @@ export default function MemoryFlipbook({ images, paused = false, photoAlbum = fa
       <div className="memory-flipbook__stack" aria-hidden="true" />
       <div className="memory-flipbook__page">
         {photoAlbum && <AlbumNote pageIndex={page.current} titles={titles} />}
-        <img src={images[page.current]} alt={`${albumLabel}, photograph ${page.current + 1} of ${images.length}`} />
+        <img src={images[page.current]} alt={`${albumLabel}, photograph ${page.current + 1} of ${images.length}`} decoding="async" />
       </div>
       {page.previous !== null && !paused && !quietMotion && (
         <div key={page.turn} className={`memory-flipbook__turning memory-flipbook__turning--${page.direction > 0 ? "forward" : "back"}`} aria-hidden="true">

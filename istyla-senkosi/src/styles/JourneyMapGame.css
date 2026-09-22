@@ -1,4 +1,4 @@
-﻿/* Scoped to the introduction map. The image and route share an SVG viewBox. */
+/* Scoped to the introduction map. The image and route share an SVG viewBox. */
 .journey-stage { --journey-orange:#d38912; --camera-scale:1; --camera-x:0%; --camera-y:0%; --float-y:0px; position:relative; box-sizing:border-box; height:100svh; overflow:auto; overflow-x:hidden; overscroll-behavior:contain; touch-action:pan-y; padding:85px 7vw 110px; background:radial-gradient(ellipse at 38% 42%,#302619 0%,#171512 45%,#0d0d0d 80%); color:#f5f1e9; isolation:isolate; }
 .journey-stage * { box-sizing:border-box; }
 .journey-heading { position:relative; z-index:2; max-width:720px; }
@@ -21,16 +21,16 @@
 .journey-stop-halo { fill:#15120ecc; stroke:#f5f1e955; stroke-width:.5; transition:r .3s,fill .3s; }
 .journey-stop-core { fill:#ddd1bc; stroke:#17130e; stroke-width:.6; transition:r .3s; }
 .journey-stop-pin-stem { fill:none; stroke:#f5d5bd; stroke-width:2; stroke-linecap:round; filter:drop-shadow(0 2px 2px #0009); }
-.journey-stop-pin { fill:#c51e2d; stroke:#fff2d7; stroke-width:1.2; transition:fill .25s,transform .25s; transform-box:fill-box; transform-origin:center; filter:drop-shadow(0 2px 3px #000b); }
+.journey-stop-pin { fill:#25834a; stroke:#fff2d7; stroke-width:1.2; transition:fill .25s,transform .25s; transform-box:fill-box; transform-origin:center; filter:drop-shadow(0 2px 3px #000b); }
 .journey-stop-pin-core { fill:#fff7e9; pointer-events:none; }
-.journey-map-stop.reached .journey-stop-pin { fill:#e05d24; }
-.journey-map-stop.active .journey-stop-pin { fill:#d38912; filter:drop-shadow(0 0 4px #ffbb44); animation:journey-stop-breathe 1.8s ease-in-out infinite; }
+.journey-map-stop.reached .journey-stop-pin { fill:#25834a; }
+.journey-map-stop.active .journey-stop-pin { fill:#309f5a; filter:drop-shadow(0 0 4px #7ae7a0); animation:journey-stop-breathe 1.8s ease-in-out infinite; }
 .journey-map-stop:not(.locked):hover .journey-stop-pin,.journey-map-stop:not(.locked):focus-visible .journey-stop-pin { transform:scale(1.18); }
 .journey-map-stop text { fill:#fff7e9; font:700 6.5px Montserrat,Arial,sans-serif; paint-order:stroke; stroke:#19130e; stroke-width:1.7; stroke-linejoin:round; }
 .journey-map-photo { cursor:pointer; outline:none; filter:drop-shadow(0 2px 3px #000b); }
-.journey-map-photo circle { fill:#701017; stroke:#fff2d7; stroke-width:1.1; transition:transform .2s,fill .2s; transform-box:fill-box; transform-origin:center; }
+.journey-map-photo circle { fill:#25834a; stroke:#fff2d7; stroke-width:1.1; transition:transform .2s,fill .2s; transform-box:fill-box; transform-origin:center; }
 .journey-map-photo path { fill:none; stroke:#fff6e5; stroke-width:1; stroke-linejoin:round; pointer-events:none; }
-.journey-map-photo:hover circle,.journey-map-photo:focus-visible circle,.journey-map-photo.selected circle { fill:#d38912; transform:scale(1.24); }
+.journey-map-photo:hover circle,.journey-map-photo:focus-visible circle,.journey-map-photo.selected circle { fill:#3aaf65; transform:scale(1.24); }
 .journey-traveller-shadow { fill:#0009; filter:blur(1px); pointer-events:none; }
 .journey-traveller { fill:#d38912; stroke:#fff7e9; stroke-width:1.2; pointer-events:none; }
 .journey-drag-pulse { fill:#d3891222; stroke:#ffd27a; stroke-width:1.2; pointer-events:none; transform-box:fill-box; transform-origin:center; animation:journey-marker-pulse 1.5s ease-out infinite; filter:drop-shadow(0 0 3px #d38912); }
@@ -104,7 +104,7 @@
 @media(prefers-reduced-motion:reduce) { .journey-map-light { display:none; } }
 
 /* Keep the route steady and give its marker a reliable touch/mouse target. */
-.journey-route-layer { touch-action:none; }
+.journey-route-layer { touch-action:pan-y; }
 .journey-drag-target { pointer-events:all; }
 .journey-map-image,.journey-paper,.journey-map-caption { pointer-events:none; }
 .journey-stage { padding-top:125px; }
@@ -148,8 +148,8 @@
 .journey-heading h1 { font-size:clamp(38px,5vw,72px); }
 .journey-heading>p:last-child { max-width:720px; font:400 clamp(14px,1.2vw,17px)/1.7 Georgia,serif; }
 .journey-layout { position:relative; display:block; margin-top:28px; }
-.journey-viewport { height:clamp(500px,68vh,760px); overflow:hidden; border:1px solid #826c4a; background:#17130e; cursor:grab; }
-.journey-viewport:active { cursor:grabbing; }
+.journey-viewport { height:clamp(500px,68vh,760px); overflow:hidden; border:1px solid #826c4a; background:#17130e; cursor:default; }
+.journey-viewport:active { cursor:default; }
 .journey-camera { inset:7% 5%; transform:translate(var(--pan-x),var(--pan-y)) translate(var(--camera-x),var(--camera-y)) rotateX(var(--hover-x)) rotateY(var(--hover-y)) translateZ(var(--hover-lift)) scale(var(--camera-scale)); transform-origin:center; }
 .journey-story-column { position:absolute; z-index:6; right:22px; top:22px; width:min(350px,34%); padding:18px; background:#111d; backdrop-filter:blur(12px); border:1px solid #d3891266; }
 .journey-controls { display:grid; grid-template-columns:minmax(260px,.8fr) minmax(480px,1.6fr); gap:24px; align-items:start; margin-top:16px; }
@@ -157,9 +157,9 @@
 .journey-zoom-controls { position:absolute; z-index:8; left:18px; top:18px; display:flex; gap:5px; }
 .journey-zoom-controls button { min-width:40px; height:40px; padding:0 12px; border:1px solid #e5c78988; background:#17130ee8; color:#fff4dd; font-weight:700; }
 .journey-fashion-pin { cursor:pointer; outline:none; filter:drop-shadow(0 2px 3px #000b); }
-.journey-fashion-pin circle { fill:#7d111b; stroke:#fff2d7; stroke-width:1.2; transition:transform .25s,fill .25s; transform-box:fill-box; transform-origin:center; }
+.journey-fashion-pin circle { fill:#25834a; stroke:#fff2d7; stroke-width:1.2; transition:transform .25s,fill .25s; transform-box:fill-box; transform-origin:center; }
 .journey-fashion-pin path { fill:none; stroke:#fff6e5; stroke-width:1; stroke-linejoin:round; pointer-events:none; }
-.journey-fashion-pin:hover circle,.journey-fashion-pin:focus-visible circle,.journey-fashion-pin.selected circle { fill:#d38912; transform:scale(1.22); }
+.journey-fashion-pin:hover circle,.journey-fashion-pin:focus-visible circle,.journey-fashion-pin.selected circle { fill:#3aaf65; transform:scale(1.22); }
 .journey-pin-card { position:absolute; z-index:9; left:22px; bottom:24px; display:grid; grid-template-columns:minmax(110px,42%) 1fr; gap:16px; width:min(480px,calc(100% - 44px)); min-height:150px; padding:12px; background:#f0e7d5; color:#17130e; box-shadow:0 18px 45px #000b; animation:journey-card-in .28s ease-out; }
 .journey-pin-card img { width:100%; height:100%; max-height:190px; object-fit:cover; filter:sepia(.16) contrast(1.05); }
 .journey-pin-card div { align-self:center; padding:8px 28px 8px 0; }
@@ -195,3 +195,8 @@
   .journey-map-column:has(.journey-pin-card) .journey-controls { opacity:0; pointer-events:none; }
   .journey-map-caption { display:none; }
 }
+
+/* The paper stays anchored; only the traveller moves along the route. */
+.journey-camera,.journey-calm .journey-camera { transform:none; transition:none; }
+.journey-map-stop.locked .journey-stop-pin { fill:#6d726a; }
+.journey-stage.journey-entering { transform:none; }

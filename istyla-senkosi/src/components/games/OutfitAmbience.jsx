@@ -20,6 +20,7 @@ export default function OutfitAmbience({ audioRef }) {
     let shimmer = 0;
     let phase = 0;
     let previous = 0;
+    let running = false;
     let analyser = audio && analysers.get(audio);
     const bins = new Uint8Array(512);
 
@@ -45,6 +46,10 @@ export default function OutfitAmbience({ audioRef }) {
     };
 
     const draw = (now) => {
+      if (previous && now - previous < 1000 / 30) {
+        animation = requestAnimationFrame(draw);
+        return;
+      }
       const delta = Math.min((now - (previous || now)) / 1000, 0.05);
       previous = now;
       let low = 0;
@@ -72,10 +77,17 @@ export default function OutfitAmbience({ audioRef }) {
       animation = requestAnimationFrame(draw);
     };
     const updateMotion = () => {
-      cancelAnimationFrame(animation);
-      if (!reducedMotion && !preference.matches && !document.hidden) {
+      const shouldRun = !reducedMotion && !preference.matches && !document.hidden && soundOn && audio && !audio.paused && !audio.muted && audio.volume > 0;
+      if (shouldRun && !running) {
+        running = true;
         previous = 0;
         animation = requestAnimationFrame(draw);
+      } else if (!shouldRun) {
+        running = false;
+        cancelAnimationFrame(animation);
+        layer.style.setProperty("--ambient-scale", "1");
+        layer.style.setProperty("--ambient-glow", ".42");
+        layer.style.setProperty("--ambient-shimmer", ".2");
       }
     };
     connect();
@@ -83,6 +95,9 @@ export default function OutfitAmbience({ audioRef }) {
     window.addEventListener("pointerdown", connect, true);
     window.addEventListener("keydown", connect, true);
     audio?.addEventListener("play", connect);
+    audio?.addEventListener("playing", updateMotion);
+    audio?.addEventListener("pause", updateMotion);
+    audio?.addEventListener("volumechange", updateMotion);
     preference.addEventListener("change", updateMotion);
     document.addEventListener("visibilitychange", updateMotion);
     return () => {
@@ -91,6 +106,9 @@ export default function OutfitAmbience({ audioRef }) {
       window.removeEventListener("pointerdown", connect, true);
       window.removeEventListener("keydown", connect, true);
       audio?.removeEventListener("play", connect);
+      audio?.removeEventListener("playing", updateMotion);
+      audio?.removeEventListener("pause", updateMotion);
+      audio?.removeEventListener("volumechange", updateMotion);
       preference.removeEventListener("change", updateMotion);
       document.removeEventListener("visibilitychange", updateMotion);
     };

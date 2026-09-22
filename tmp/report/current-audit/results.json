@@ -1,0 +1,23 @@
+[
+  {
+    "check": "wrong wardrobe target",
+    "hatRevealed": 1
+  },
+  {
+    "check": "wardrobe keyboard placement",
+    "hatRevealed": 0
+  },
+  {
+    "check": "map upward wheel",
+    "page": "4",
+    "mapVisible": 0
+  },
+  {
+    "check": "credits destination",
+    "section": "\"about\""
+  },
+  {
+    "check": "closed chapter drawer focus",
+    "focused": true
+  }
+]

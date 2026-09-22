@@ -35,70 +35,23 @@ function JourneyMapGame({ mapImage, onComplete }) {
   const [entering, setEntering] = useState(false);
   const [showArrivalClip, setShowArrivalClip] = useState(false);
   const [selectedMemory, setSelectedMemory] = useState(null);
-  const [zoom, setZoom] = useState(1);
-  const [pan, setPan] = useState({ x: 0, y: 0 });
   const [systemReduced, setSystemReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const { reducedMotion, setNavigationLocked } = useNavigation();
   const calm = reducedMotion || systemReduced;
   const drag = useRef(null);
   const progressRef = useRef(progress);
   const sliderRef = useRef(null);
-  const viewportRef = useRef(null);
-  const hoverFrame = useRef(null);
-  const mapPan = useRef(null);
   const activeIndex = progress >= 1 ? 2 : progress >= 0.5 ? 1 : 0;
   const activeStop = STOPS[activeIndex];
   const cardOpen = closedStop !== activeStop.id;
   const ready = progress >= 1;
   const point = routePoint(progress);
 
-  useEffect(() => () => cancelAnimationFrame(hoverFrame.current), []);
   useEffect(() => {
     if (!entering) return undefined;
     const timer = setTimeout(() => setShowArrivalClip(true), calm ? 0 : 1800);
     return () => clearTimeout(timer);
   }, [entering, calm]);
-
-  const resetHover = () => {
-    cancelAnimationFrame(hoverFrame.current);
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-    for (const property of ["--hover-x", "--hover-y", "--hover-lift", "--light-x", "--light-y", "--light-opacity"]) {
-      viewport.style.removeProperty(property);
-    }
-  };
-  const hoverMap = (event) => {
-    if (calm || entering || drag.current || event.buttons || event.pointerType !== "mouse") return;
-    const viewport = viewportRef.current;
-    const bounds = viewport.getBoundingClientRect();
-    const x = Math.max(-1, Math.min(1, (event.clientX - bounds.left) / bounds.width * 2 - 1));
-    const y = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1));
-    cancelAnimationFrame(hoverFrame.current);
-    hoverFrame.current = requestAnimationFrame(() => {
-      viewport.style.setProperty("--hover-x", `${-y * 3.5}deg`);
-      viewport.style.setProperty("--hover-y", `${x * 4.5}deg`);
-      viewport.style.setProperty("--hover-lift", "8px");
-      viewport.style.setProperty("--light-x", `${50 + x * 35}%`);
-      viewport.style.setProperty("--light-y", `${50 + y * 35}%`);
-      viewport.style.setProperty("--light-opacity", "0.2");
-    });
-  };
-  const beginMapPan = (event) => {
-    if (entering || event.button !== 0 || event.target.closest("[role='button'], .journey-drag-target, button")) return;
-    mapPan.current = { x: event.clientX, y: event.clientY, pan };
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-  const moveMap = (event) => {
-    if (!mapPan.current) return hoverMap(event);
-    event.preventDefault();
-    setPan({ x: mapPan.current.pan.x + event.clientX - mapPan.current.x, y: mapPan.current.pan.y + event.clientY - mapPan.current.y });
-  };
-  const endMapPan = (event) => {
-    mapPan.current = null;
-    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
-    resetHover();
-  };
-  const zoomMap = (amount) => setZoom((value) => Math.min(2.4, Math.max(1, Number((value + amount).toFixed(2)))));
 
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -127,7 +80,6 @@ function JourneyMapGame({ mapImage, onComplete }) {
     if (entering || (event.pointerType === "mouse" && event.button !== 0)) return;
     event.preventDefault();
     event.stopPropagation();
-    cancelAnimationFrame(hoverFrame.current);
     event.currentTarget.focus();
     event.currentTarget.setPointerCapture(event.pointerId);
     const bounds = event.currentTarget.ownerSVGElement.getBoundingClientRect();
@@ -163,19 +115,10 @@ function JourneyMapGame({ mapImage, onComplete }) {
     setClosedStop(activeStop.id);
     sliderRef.current?.focus();
   };
-  const cameraStyle = {
-    "--camera-scale": (calm ? 1 : 1 + progress * 0.025) * zoom,
-    "--camera-x": calm ? "0%" : `${progress * .6}%`,
-    "--camera-y": calm ? "0%" : `${progress * -1}%`,
-    "--float-y": calm ? "0px" : `${progress * -1}px`,
-    "--pan-x": `${pan.x}px`,
-    "--pan-y": `${pan.y}px`,
-  };
-
   if (showArrivalClip) return <SowetoArrivalClip onComplete={onComplete} />;
 
   return (
-    <section className={`journey-stage ${calm ? "journey-calm" : ""} ${ready ? "journey-arrived" : ""} ${entering ? "journey-entering" : ""}`} aria-labelledby="journey-title" style={cameraStyle}>
+    <section className={`journey-stage ${calm ? "journey-calm" : ""} ${ready ? "journey-arrived" : ""} ${entering ? "journey-entering" : ""}`} aria-labelledby="journey-title">
       <header className="journey-heading">
         <p className="journey-eyebrow">A MAP, UNFOLDED</p>
         <h1 id="journey-title">TRACES OF REE<span>.</span></h1>
@@ -183,7 +126,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
       </header>
       <div className="journey-layout">
         <div className="journey-map-column">
-          <div ref={viewportRef} className="journey-viewport" onPointerDown={beginMapPan} onPointerMove={moveMap} onPointerLeave={(event) => { if (!event.buttons) resetHover(); }} onPointerUp={endMapPan} onPointerCancel={endMapPan} onWheel={(event) => { event.preventDefault(); zoomMap(event.deltaY < 0 ? .16 : -.16); }}>
+          <div className="journey-viewport" onPointerDown={(event) => event.stopPropagation()} onWheel={(event) => event.stopPropagation()} onDragStart={(event) => event.preventDefault()}>
             <div className="journey-camera">
               <div className="journey-depth-shadow" aria-hidden="true" />
               <div className="journey-paper" aria-hidden="true" />
@@ -217,7 +160,6 @@ function JourneyMapGame({ mapImage, onComplete }) {
                   onPointerCancel={() => { drag.current = null; }} onLostPointerCapture={() => { drag.current = null; }} onKeyDown={keyDown} />
               </svg>
             </div>
-            <div className="journey-zoom-controls" aria-label="Map zoom controls"><button onClick={() => zoomMap(.2)} aria-label="Zoom in">+</button><button onClick={() => zoomMap(-.2)} aria-label="Zoom out">−</button><button onClick={() => { setZoom(1); setPan({ x: 0, y: 0 }); }}>Reset</button></div>
             {selectedMemory && <article className="journey-pin-card journey-photo-card">
               <button className="journey-pin-close" onClick={() => setSelectedMemory(null)} aria-label="Close fashion memory">×</button>
               <img src={selectedMemory.src} alt={`Fashion memory from ${selectedMemory.folder}`} />
@@ -226,7 +168,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
             <span className="journey-map-caption">A personal geography</span>
           </div>
           <div className="journey-controls">
-            <p id="journey-instruction">Follow the gold thread towards Soweto.<small>Drag the glowing circle to travel. Scroll to look closer; drag the map to wander.</small></p>
+            <p id="journey-instruction">Follow the gold thread towards Soweto.<small>Open the green pins to explore. Drag the glowing circle to travel along the gold thread.</small></p>
             <div className="journey-stop-buttons" aria-label="Journey stops">
               {STOPS.map((stop, index) => <button key={stop.id} disabled={entering || index > activeIndex + 1} aria-current={index === activeIndex ? "step" : undefined} onClick={() => selectStop(index)}><span>0{index + 1}</span>{stop.title}</button>)}
             </div>

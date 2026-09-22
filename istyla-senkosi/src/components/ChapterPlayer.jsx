@@ -22,7 +22,7 @@ const HINTS = {
   drag: "DRAG UP TO CONTINUE",
   click: "TAP TO CONTINUE",
   swipe: "SWIPE TO CONTINUE",
-  scroll: "SCROLL TO CONTINUE",
+  scroll: "SCROLL DOWN TO CONTINUE",
 };
 
 const STORY_BEATS = {

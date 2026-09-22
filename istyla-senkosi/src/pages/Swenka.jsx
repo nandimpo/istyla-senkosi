@@ -41,7 +41,7 @@ function Swenka() {
         title="Precision. Discipline. Respect."
         subtitle="More than style. It’s about how you carry yourself."
         context="To understand Ree and his Skhothane fashion, I’m looking back at township style. Swenka is where I begin. Watching these men dress with care and carry themselves with pride, I remember my cousin getting ready. I used to see only his finished outfit. Now I’m beginning to ask what dressing up meant to him."
-        interaction="drag"
+        interaction="scroll"
         exitTransition="fade"
         titleImage={chapterImage}
         titleTransition="cut"
