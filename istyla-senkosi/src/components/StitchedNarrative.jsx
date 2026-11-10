@@ -37,9 +37,12 @@ export default function StitchedNarrative({ text, placement = "lower-left", chap
     const length = line.getTotalLength();
     let frame;
     let started;
+    let lastPaint = 0;
     line.style.strokeDasharray = `${length}`;
     line.style.strokeDashoffset = `${length}`;
     const draw = (now) => {
+      if (now - lastPaint < 1000 / 30) { frame = requestAnimationFrame(draw); return; }
+      lastPaint = now;
       if (started === undefined) started = now;
       const elapsed = Math.min(1, (now - started) / threadDuration);
       const progress = elapsed * elapsed * (3 - 2 * elapsed);

@@ -42,12 +42,17 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
     let length = 0;
     let duration = 0;
     let travelUntil = 0;
+    let lastPaint = 0;
+    let origin;
+    const resizeObserver = new ResizeObserver(() => { origin = null; });
+    resizeObserver.observe(root);
     const prepare = () => {
       while (index < letters.length && !letters[index].textContent.trim()) {
         letters[index++].style.opacity = 1;
       }
       if (index >= letters.length) return false;
       active = letters[index];
+      origin = null;
       const style = getComputedStyle(active);
       const font = `${style.fontStyle} ${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
       const character = style.textTransform === "uppercase" ? active.textContent.toUpperCase()
@@ -73,6 +78,8 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
     };
     const tick = (now) => {
       if (disposed) return;
+      if (now - lastPaint < 1000 / 30) { frame = requestAnimationFrame(tick); return; }
+      lastPaint = now;
       if (started === undefined) started = now + delay;
       if (now >= started) {
         if (!active && !prepare()) {
@@ -83,14 +90,16 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
         }
         // Give the hand time to carry the thread between letters and lines.
         const progress = Math.max(0, Math.min(1, (now - Math.max(started, travelUntil)) / duration));
-        const bounds = active.getBoundingClientRect();
-        const container = root.getBoundingClientRect();
-        const x = bounds.left - container.left;
-        const y = bounds.top - container.top + (bounds.height - Number(active.dataset.glyphHeight)) / 2;
+        if (!origin) {
+          const bounds = active.getBoundingClientRect();
+          const container = root.getBoundingClientRect();
+          origin = { x: bounds.left - container.left, y: bounds.top - container.top + (bounds.height - Number(active.dataset.glyphHeight)) / 2 };
+          paths.forEach(({ path }) => path.setAttribute("transform", `translate(${origin.x} ${origin.y})`));
+        }
+        const { x, y } = origin;
         let remaining = progress * length;
         let tip;
         for (const part of paths) {
-          part.path.setAttribute("transform", `translate(${x} ${y})`);
           const drawn = Math.max(0, Math.min(part.size, remaining));
           part.path.style.strokeDashoffset = part.size - drawn;
           if (remaining >= 0) tip = part.path.getPointAtLength(drawn);
@@ -98,8 +107,7 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
         }
         if (tip) {
           needle.style.visibility = "visible";
-          needle.style.left = `${x + tip.x}px`;
-          needle.style.top = `${y + tip.y}px`;
+          needle.style.transform = `translate3d(${x + tip.x}px, ${y + tip.y}px, 0)`;
         }
         if (progress === 1) {
           active.style.opacity = 1;
@@ -113,7 +121,7 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
       frame = requestAnimationFrame(tick);
     };
     document.fonts.ready.then(() => { if (!disposed) frame = requestAnimationFrame(tick); });
-    return () => { disposed = true; cancelAnimationFrame(frame); };
+    return () => { disposed = true; cancelAnimationFrame(frame); resizeObserver.disconnect(); };
   }, [text, delay, reducedMotion, systemReduced]);
 
   return <>

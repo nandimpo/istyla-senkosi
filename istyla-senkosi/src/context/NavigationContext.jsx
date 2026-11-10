@@ -6,7 +6,10 @@ const ORDER = ["about", "introduction", "swenka", "pantsula", "skhothane", "refl
 
 function readPreferences() {
   try {
-    return JSON.parse(localStorage.getItem("istyla-preferences")) || {};
+    const saved = JSON.parse(localStorage.getItem("istyla-preferences")) || {};
+    if (typeof saved !== "object" || Array.isArray(saved)) return {};
+    delete saved.soundOn;
+    return saved;
   } catch {
     return {};
   }
@@ -25,11 +28,11 @@ export function NavigationProvider({ children }) {
   const [chapterVisit, setChapterVisit] = useState(0);
   const [navigationLocked, setNavigationLocked] = useState(false);
   const [preferences, setPreferences] = useState(readPreferences);
-  const soundOn = preferences.soundOn !== false;
+  const [soundOn, setSoundOnState] = useState(true);
   const volume = Number.isFinite(preferences.volume) ? Math.max(0, Math.min(1, preferences.volume)) : 0.7;
   const profileName = typeof preferences.profileName === "string" ? preferences.profileName : "";
   const reducedMotion = preferences.reducedMotion === true;
-  const setSoundOn = (value) => setPreferences((p) => ({ ...p, soundOn: typeof value === "function" ? value(p.soundOn !== false) : value }));
+  const setSoundOn = (value) => setSoundOnState((current) => typeof value === "function" ? value(current) : value);
   const setVolume = (value) => setPreferences((p) => ({ ...p, volume: value }));
   const setProfileName = (value) => setPreferences((p) => ({ ...p, profileName: value }));
   const setReducedMotion = (value) => setPreferences((p) => ({ ...p, reducedMotion: value }));

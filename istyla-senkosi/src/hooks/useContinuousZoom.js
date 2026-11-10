@@ -8,23 +8,25 @@ export function useContinuousZoom(ref, enabled, resetKey) {
     if (!enabled || !media) return undefined;
     const preference = window.matchMedia("(prefers-reduced-motion: reduce)");
     let animation;
+    const syncVisibility = () => {
+      if (document.hidden) animation?.pause();
+      else animation?.play();
+    };
     const update = () => {
-      cancelAnimationFrame(animation);
-      media.style.transform = "none";
+      animation?.cancel();
+      animation = undefined;
       if (reducedMotion || preference.matches) return;
-      const start = performance.now();
-      const zoom = (now) => {
-        media.style.transform = `scale(${1 + (now - start) / 60000})`;
-        animation = requestAnimationFrame(zoom);
-      };
-      animation = requestAnimationFrame(zoom);
+      // Run the slow zoom on the compositor, with a bounded image size.
+      animation = media.animate([{ transform: "scale(1)" }, { transform: "scale(1.18)" }], { duration: 60000, iterations: Infinity, direction: "alternate", easing: "ease-in-out" });
+      syncVisibility();
     };
     update();
     preference.addEventListener("change", update);
+    document.addEventListener("visibilitychange", syncVisibility);
     return () => {
-      cancelAnimationFrame(animation);
+      animation?.cancel();
       preference.removeEventListener("change", update);
-      media.style.transform = "none";
+      document.removeEventListener("visibilitychange", syncVisibility);
     };
   }, [ref, enabled, resetKey, reducedMotion]);
 }

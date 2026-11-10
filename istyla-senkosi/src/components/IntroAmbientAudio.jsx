@@ -11,7 +11,7 @@ export default function IntroAmbientAudio({ id, track, sharedAudioRef, volumeSca
 
   if (!track) return null;
   return <>
-    {!sharedAudioRef && <audio ref={audioRef} src={track} loop={!nextTrack} preload="metadata" aria-hidden="true" />}
+    {!sharedAudioRef && <audio ref={audioRef} src={track} autoPlay loop={!nextTrack} preload="metadata" aria-hidden="true" />}
     <button type="button" className="intro-ambient-sound" aria-label={soundOn ? "Turn sound off" : "Turn sound on"} aria-pressed={soundOn} onClick={() => setSoundOn((current) => !current)}>
       {soundOn ? "SOUND ON" : "SOUND OFF"}
     </button>

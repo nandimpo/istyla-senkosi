@@ -408,8 +408,9 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
         <audio
           ref={audioRef}
           src={track}
+          autoPlay
           loop
-          preload="none"
+          preload="metadata"
           onLoadedMetadata={seekTrackToStart}
           onTimeUpdate={holdTrackStart}
         />

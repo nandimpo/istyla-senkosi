@@ -1,6 +1,9 @@
 // Trace the rendered font, including enclosed counters and detached dots.
 // Canvas supplies glyph geometry without shipping a font parser or animation library.
+const glyphCache = new Map();
 export function glyphThread(character, font) {
+  const cacheKey = `${font}:${character}`;
+  if (glyphCache.has(cacheKey)) return glyphCache.get(cacheKey);
   const scale = 3;
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d", { willReadFrequently: true });
@@ -53,5 +56,8 @@ export function glyphThread(character, font) {
     points.forEach((point, index) => { path += ` Q${point.join(",")} ${midpoint(point, points[(index + 1) % points.length]).join(",")}`; });
     return path + " Z";
   };
-  return { height: ascent + descent, paths: contours.map(smoothPath).filter(Boolean) };
+  const result = { height: ascent + descent, paths: contours.map(smoothPath).filter(Boolean) };
+  if (glyphCache.size >= 128) glyphCache.delete(glyphCache.keys().next().value);
+  glyphCache.set(cacheKey, result);
+  return result;
 }
