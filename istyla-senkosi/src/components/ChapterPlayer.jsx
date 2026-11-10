@@ -155,6 +155,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const titlePhotoRef = useRef(null);
   const [finishedText, setFinishedText] = useState({});
   const goToPage = (target) => {
+    if (target !== pageIndex) setSoundOn(true);
     setThreadLeaving(false);
     setVideoSeconds(0);
     setVideoStarted(false);
