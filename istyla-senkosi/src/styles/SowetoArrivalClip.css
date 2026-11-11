@@ -24,3 +24,9 @@ html[data-reduced-motion="true"] .soweto-arrival.is-leaving { animation:none; }
 .soweto-arrival.is-before-clip { background:transparent; }
 .soweto-arrival.is-before-clip::backdrop { background:transparent; }
 .soweto-arrival.is-before-clip video,.soweto-arrival.is-before-clip .soweto-arrival-copy,.soweto-arrival.is-before-clip::after { visibility:hidden; }
+.soweto-arrival.is-outro-covered video,.soweto-arrival.is-outro-covered .soweto-arrival-copy { visibility:hidden; }
+.soweto-arrival .video-bridge--outgoing { animation-name:soweto-reflection-shade; }
+.soweto-arrival .video-bridge--outgoing p { animation-name:soweto-reflection-copy; }
+@keyframes soweto-reflection-shade { 0% { background:#0d0d0d00; } 22%,100% { background:#0d0d0d; } }
+@keyframes soweto-reflection-copy { 0%,15% { opacity:0; } 25%,92% { opacity:1; } 100% { opacity:0; } }
+.soweto-arrival .video-bridge--calm,.soweto-arrival .video-bridge--calm p { animation:none; }

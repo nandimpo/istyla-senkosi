@@ -1,4 +1,4 @@
-﻿// Map coordinates use the photograph's 1920 x 1280 reference space.
+// Map coordinates use the photograph's 1920 x 1280 reference space.
 // Edit the four Bezier points together to move the route on map.jpg.
 export const ROUTE = [
   { x: 900, y: 1010 },
@@ -6,11 +6,11 @@ export const ROUTE = [
   { x: 877, y: 1046 },
   { x: 875, y: 1064 },
 ];
-export const MAP_VIEW = "610 880 570 300";
+export const MAP_VIEW = "780 920 300 220";
 export const STOPS = [
   { id: "north", progress: 0, title: "Where I begin", text: "Home is the part of the city I thought I understood. I unfold the map with Ree in my mind and questions I can no longer ask him.", label: { dx: 10, dy: -8 }, media: null },
-  { id: "memory", progress: 0.5, title: "What comes back", text: "The clothes catch my eye first. Then the people, the gestures and the care behind each detail begin to surface.", label: { dx: -10, dy: -4 }, media: null },
-  { id: "soweto", progress: 1, title: "Closer to Ree", text: "Soweto is no longer an idea at the edge of my city. I arrive ready to listen, and to look at Ree’s world with more care.", label: { dx: 10, dy: 8 }, media: null },
+  { id: "memory", progress: 0.5, title: "What comes back", text: "I keep looking at the clothes, trying to remember what I noticed about his. Did I see the care, or only the outfit? I wish I had stayed with those small details a little longer.", label: { dx: -10, dy: -4 }, media: null },
+  { id: "soweto", progress: 1, title: "Closer to Ree", text: "I cannot ask him to show me this place now. But I can stop keeping it at a distance. I follow the photographs towards Soweto, carrying what I remember of him and making room for everything I never knew.", label: { dx: 10, dy: 8 }, media: null },
 ];
 // Optional media: { image: importedAsset, alt: "Description", audio: importedClip }.
 // Audio is rendered with native controls and never starts automatically.
@@ -41,3 +41,4 @@ export function travelledPath(progress) {
     return `${index ? "L" : "M"}${point.x} ${point.y}`;
   }).join(" ");
 }
+

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import VideoBridge from "../VideoBridge";
 import { createPortal } from "react-dom";
 import { useNavigation } from "../../context/NavigationContext";
-import arrivalVideo from "../../assets/video-clips/soweto-arrival.mp4";
+import arrivalVideo from "../../assets/Additional Videos/Enviroment/Enter Soweto Video.mov?url";
 import "../../styles/SowetoArrivalClip.css";
 
 const CLIP_SECONDS = 20;
@@ -19,6 +19,7 @@ export default function SowetoArrivalClip({ onComplete }) {
   const [needsPlay, setNeedsPlay] = useState(false);
   const [failed, setFailed] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  const [outroCovered, setOutroCovered] = useState(false);
   const { setNavigationLocked } = useNavigation();
 
   useEffect(() => {
@@ -42,10 +43,6 @@ export default function SowetoArrivalClip({ onComplete }) {
     videoRef.current.pause();
     setLeaving(true);
     window.dispatchEvent(new Event("istyla:fade-section-audio"));
-    setTimeout(() => {
-      setNavigationLocked(false);
-      onComplete();
-    }, 2200);
   };
   const updateProgress = () => {
     const video = videoRef.current;
@@ -58,7 +55,7 @@ export default function SowetoArrivalClip({ onComplete }) {
       completeClip();
     }
   };
-  return createPortal(<dialog ref={dialogRef} className={`soweto-arrival ${bridging ? "is-bridging" : ""} ${!covered ? "is-before-clip" : ""} ${leaving ? "is-leaving" : ""}`} aria-labelledby="soweto-arrival-title" onCancel={(event) => event.preventDefault()}>
+  return createPortal(<dialog ref={dialogRef} className={`soweto-arrival ${bridging ? "is-bridging" : ""} ${!covered ? "is-before-clip" : ""} ${leaving ? "is-reflecting" : ""} ${outroCovered ? "is-outro-covered" : ""}`} aria-labelledby="soweto-arrival-title" onCancel={(event) => event.preventDefault()}>
     <video ref={videoRef} src={arrivalVideo} muted playsInline preload="auto" disablePictureInPicture
       onLoadedData={() => { if (!bridging) play(); }} onTimeUpdate={updateProgress}
       onSeeking={() => { if (Math.abs(videoRef.current.currentTime - lastTime.current) > 0.5) videoRef.current.currentTime = lastTime.current; }}
@@ -67,10 +64,11 @@ export default function SowetoArrivalClip({ onComplete }) {
       onEnded={() => { if (!finished.current) { lastTime.current = 0; videoRef.current.currentTime = 0; play(); } }}
       onError={() => setFailed(true)} />
     {bridging && <VideoBridge text="To understand my cousin's world, I had to begin where his story lived. In Soweto." onCovered={() => setCovered(true)} onComplete={() => { setBridging(false); play(); }} />}
+    {leaving && <VideoBridge outgoing durationMs={14000} text="I arrive in Soweto looking for Ree. I begin tracing the roots of township fashion through Swenka: the care in a suit, the pride in a polished shoe. I want to understand what dressing meant before I can understand what it meant to him." onCovered={() => setOutroCovered(true)} onComplete={() => { setNavigationLocked(false); onComplete(); }} />}
     <div className="soweto-arrival-copy">
-      <p>JAMA / ARRIVING IN SOWETO</p>
-      <h1 id="soweto-arrival-title">A little closer to my cousin’s world</h1>
-      <p>{failed ? "The clip could not load. Please retry." : "I’m arriving in Soweto with my cousin on my mind. He is gone, but I can still listen to the stories behind the clothes he loved."}</p>
+      <p>I AM ENTERING SOWETO</p>
+      <h1 id="soweto-arrival-title">I’m a little closer to my cousin’s world</h1>
+      <p>{failed ? "The clip could not load. Please retry." : "I am entering Soweto with Ree on my mind. I cannot ask him to show me his world now, but I can listen to the stories behind the clothes he loved."}</p>
       <progress max={CLIP_SECONDS} value={seconds} aria-label="Arrival clip playback progress" />
       <span>{seconds} / {CLIP_SECONDS} seconds</span>
       <button disabled={seconds < SKIP_AFTER_SECONDS} onClick={() => { if (watched.current >= SKIP_AFTER_SECONDS) completeClip(); }}>
