@@ -33,7 +33,7 @@ const STORY_BEATS = {
 };
 
 function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging = false, directGalleryDrag = false, visualOnly = false, showStory = true, onTextComplete, videoUnlocked = true, videoExiting = false, onVideoProgress, onVideoStarted, allowVideoSound = true, onNextChapter, interactionsReady = true }) {
-  const { soundOn, setSoundOn } = useNavigation();
+  const { soundOn } = useNavigation();
   const videoRef = useRef(null);
   const [videoNeedsStart, setVideoNeedsStart] = useState(false);
   const [clipStarted, setClipStarted] = useState(false);
@@ -68,9 +68,8 @@ function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging
     event.stopPropagation();
     const video = videoRef.current;
     if (!video || !videoUnlocked) return;
-    if (allowVideoSound) setSoundOn(true);
     video.defaultMuted = false;
-    video.muted = !allowVideoSound;
+    video.muted = !allowVideoSound || !soundOn;
     video.volume = 1;
     setClipStarted(true);
     video.play()
@@ -155,7 +154,6 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const titlePhotoRef = useRef(null);
   const [finishedText, setFinishedText] = useState({});
   const goToPage = (target) => {
-    if (target !== pageIndex) setSoundOn(true);
     setThreadLeaving(false);
     setVideoSeconds(0);
     setVideoStarted(false);
@@ -456,7 +454,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
         ) : lacesLocked || outfitLocked ? null : (
           <Frame frame={currentFrame} showStory={!videoBridge?.outgoing} interactionsReady={!sewingLocked} galleryIndex={galleryIndex} directGalleryDrag={interaction === "drag"} galleryDragOffset={interaction === "drag" ? dragGesture.dragOffset : 0} galleryDragging={interaction === "drag" && dragGesture.dragging} videoExiting={Boolean(videoBridge?.outgoing)} videoUnlocked={!videoBridge && !shoeLocked && !lacesLocked && !outfitLocked} allowVideoSound={id !== "introduction"} onNextChapter={leaveForChapter} onVideoStarted={() => setVideoStarted(true)} onTextComplete={() => finishText("frame")} onVideoProgress={updateVideoProgress} />
         )}
-        {isLastFrame && outro && <div className="chapter-player__outro"><StitchedNarrative key={outro} text={outro} placement="inline" onComplete={() => finishText("outro")} /></div>}
+        {isLastFrame && outro && <div className="chapter-player__outro"><StitchedNarrative key={outro} text={outro} placement="inline" showThread={!currentFrame?.text} onComplete={() => finishText("outro")} /></div>}
         {currentFrame?.kind === "memory-album" && <nav className="album-story-controls" aria-label="Continue the chapter" onClick={(event) => event.stopPropagation()} onPointerDown={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
           <button type="button" onClick={guardedRetreat}>Back to the story</button>
           <button type="button" disabled={sewingLocked} onClick={guardedAdvance}>Continue the story →</button>

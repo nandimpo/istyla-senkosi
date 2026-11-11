@@ -3,7 +3,7 @@ import { useNavigation } from "../context/NavigationContext";
 import ChapterPlayer from "../components/ChapterPlayer";
 import BeatGame from "../components/games/BeatGame";
 import IspotiIntro from "../components/IspotiIntro";
-import interviewVideo from "../assets/video-clips/pantsula-voices.mp4";
+import interviewVideo from "../assets/Chapter 2_Pantsula/Video/South African Ama Pantsula Dance culture (showYourLegs Ep.1).mp4";
 import entryVideo from "../assets/video-clips/pantsula-movement.mp4";
 import readyImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-0-ready.jpg";
 import stanceImage from "../assets/Chapter 2_Pantsula/Pantsula/pantsula-1-stance.jpg";

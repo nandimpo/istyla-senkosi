@@ -66,7 +66,7 @@ export default function SowetoArrivalClip({ onComplete }) {
       onPlaying={() => setNeedsPlay(false)}
       onEnded={() => { if (!finished.current) { lastTime.current = 0; videoRef.current.currentTime = 0; play(); } }}
       onError={() => setFailed(true)} />
-    {bridging && <VideoBridge text="To understand my cousin?s world, I had to begin where his story lived. In Soweto." onCovered={() => setCovered(true)} onComplete={() => { setBridging(false); play(); }} />}
+    {bridging && <VideoBridge text="To understand my cousin's world, I had to begin where his story lived. In Soweto." onCovered={() => setCovered(true)} onComplete={() => { setBridging(false); play(); }} />}
     <div className="soweto-arrival-copy">
       <p>JAMA / ARRIVING IN SOWETO</p>
       <h1 id="soweto-arrival-title">A little closer to my cousin’s world</h1>

@@ -5,7 +5,7 @@ import "../styles/StitchedNarrative.css";
 
 const DEFAULT_TIMING = { thread: 2600 };
 
-export default function StitchedNarrative({ text, placement = "lower-left", chapterColour, timing = DEFAULT_TIMING, onComplete, animation = "needle", className = "" }) {
+export default function StitchedNarrative({ text, placement = "lower-left", chapterColour, timing = DEFAULT_TIMING, onComplete, animation = "needle", className = "", showThread = true }) {
   const { reducedMotion } = useNavigation();
   const [phase, setPhase] = useState("sewing");
   const lineRef = useRef(null);
@@ -21,7 +21,7 @@ export default function StitchedNarrative({ text, placement = "lower-left", chap
 
   const textComplete = () => {
     textDoneRef.current = true;
-    if (reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (!showThread || reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       needleRef.current?.setAttribute("transform", "translate(475 14) rotate(28)");
       setPhase("hanging");
     } else if (threadDoneRef.current) {
@@ -31,6 +31,7 @@ export default function StitchedNarrative({ text, placement = "lower-left", chap
 
   useEffect(() => {
     if (phase !== "sewing") return undefined;
+    if (!showThread) return undefined;
     if (reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return undefined;
     const line = lineRef.current;
     const needle = needleRef.current;
@@ -57,7 +58,7 @@ export default function StitchedNarrative({ text, placement = "lower-left", chap
     };
     frame = requestAnimationFrame(draw);
     return () => cancelAnimationFrame(frame);
-  }, [phase, reducedMotion, threadDuration]);
+  }, [phase, reducedMotion, threadDuration, showThread]);
 
   useEffect(() => {
     if (phase !== "hanging" || completedRef.current) return undefined;
@@ -72,7 +73,7 @@ export default function StitchedNarrative({ text, placement = "lower-left", chap
 
   return <div className={`stitched-narrative stitched-narrative--${placement} stitched-narrative--${animation} ${className}`} data-phase={phase} style={{ "--thread-colour": chapterColour || "var(--narrative-accent, #e0ba7e)" }}>
     <div className="stitched-narrative__copy"><FloatingText text={text} onComplete={textComplete} /></div>
-    <div className="stitched-narrative__thread-wrap" aria-hidden="true">
+    {showThread && <div className="stitched-narrative__thread-wrap" aria-hidden="true">
       <svg className="stitched-narrative__thread" viewBox="0 0 500 120" preserveAspectRatio="none">
         <path className="stitched-narrative__draw" ref={lineRef} d="M1 14 H475" />
         <path className="stitched-narrative__stitches" d="M1 14 H475" />
@@ -83,6 +84,6 @@ export default function StitchedNarrative({ text, placement = "lower-left", chap
           <ellipse className="stitched-narrative__needle-eye" cx="-29" cy="0" rx="2.9" ry="1.15" />
         </g>
       </svg>
-    </div>
+    </div>}
   </div>;
 }

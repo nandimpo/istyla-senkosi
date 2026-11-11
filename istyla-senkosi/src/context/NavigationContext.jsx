@@ -55,7 +55,6 @@ export function NavigationProvider({ children }) {
   const goBackChapter = useCallback(() => {
     const previous = ORDER[ORDER.indexOf(currentSection) - 1];
     if (!previous) return;
-    setSoundOnState(true);
     try {
       const lastPage = JSON.parse(sessionStorage.getItem(`istyla:${previous}:last-page`));
       if (Number.isInteger(lastPage) && lastPage >= 0) sessionStorage.setItem(`istyla:${previous}:page`, JSON.stringify(lastPage));
@@ -67,7 +66,6 @@ export function NavigationProvider({ children }) {
 
   const goTo = useCallback((id, { intro = false } = {}) => {
     if (!isUnlocked(id)) return;
-    setSoundOnState(true);
     if (intro) {
       // Explicit menu visits start at the title; reload still restores saved progress.
       try {
@@ -80,7 +78,6 @@ export function NavigationProvider({ children }) {
   }, [isUnlocked, setCurrentSection]);
 
   const restartJourney = useCallback(() => {
-    setSoundOnState(true);
     // Only this explicit action clears progress. Reloads continue using the saved page.
     try {
       const keys = Array.from({ length: sessionStorage.length }, (_, index) => sessionStorage.key(index));
@@ -100,7 +97,6 @@ export function NavigationProvider({ children }) {
     setUnlockedIndex((current) => Math.max(current, nextIndex));
     const nextId = ORDER[nextIndex];
     if (nextId) {
-      setSoundOnState(true);
       setCurrentSection(nextId);
     }
   }, [navigationLocked, setCurrentSection]);
