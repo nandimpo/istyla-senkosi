@@ -16,8 +16,13 @@
 
 /* Swenka: wardrobe drag-and-drop */
 .game-stage--swenka { grid-template-columns: minmax(220px, .8fr) minmax(300px, 1.6fr) clamp(270px, 23vw, 360px); background:linear-gradient(135deg,#171717,#24211c); }
+.game-stage--swenka { position:relative; isolation:isolate; }
+.game-stage--swenka::before { content:""; position:absolute; grid-column:2 / 4; grid-row:1 / 2; inset:0; z-index:-1; background-image:linear-gradient(90deg,#17171766,transparent 55%,#17171733),var(--suit-background); background-size:cover; background-position:center; opacity:.16; pointer-events:none; animation:suit-background-drift 28s ease-in-out infinite alternate; }
+@keyframes suit-background-drift { from { background-position:48% 48%; } to { background-position:52% 52%; } }
+html[data-reduced-motion="true"] .game-stage--swenka::before { animation:none; }
+@media(prefers-reduced-motion:reduce) { .game-stage--swenka::before { animation:none; } }
 .fashion-portrait { height: 100svh; display: flex; justify-content: center; align-items: center; overflow: hidden; border-inline: 1px solid rgba(245, 241, 233, .12); background: linear-gradient(135deg, #171717, #24211c); }
-.portrait-frame { position: relative; height: 92%; width: fit-content; }
+.portrait-frame { position: relative; height: 100%; width: fit-content; }
 .portrait-frame img { height: 100%; width: auto; max-width: 100%; display: block; object-fit: cover; }
 .puzzle-zone { position: absolute; display: grid; place-items: center; border: 2px dashed rgba(245, 241, 233, .85); background: rgba(20, 19, 17, .94); backdrop-filter: blur(2px); color: #c8b39b; font: 700 9px Montserrat, Arial, sans-serif; letter-spacing: 1.2px; cursor: pointer; transition: opacity .5s ease, transform .5s ease; }
 .puzzle-zone.revealed { opacity: 0; pointer-events: none; transform: scale(1.06); }
@@ -40,15 +45,18 @@
 .wardrobe span:not(.item-preview) { float: left; margin: 6px 6px 0 0; color: #777; font-size: 12px; }
 
 /* A spool of black thread holds the outfit details. */
-.game-stage--swenka .wardrobe{padding:90px 15px 90px;background:transparent;border-left:0;overflow:hidden;gap:0;min-height:0}
-.wardrobe-spool{position:relative;display:flex;flex-direction:column;gap:18px;margin:0;padding:46px 19% 46px;background:none;isolation:isolate;flex-shrink:0;height:min(700px,calc(100svh - 180px));box-sizing:border-box}
+.game-stage--swenka .wardrobe{padding:70px 10px 70px;background:transparent;border-left:0;overflow:hidden;gap:0;min-height:0}
+.wardrobe-spool{position:relative;display:grid;grid-template-rows:auto repeat(3,minmax(0,1fr)) auto;gap:14px;margin:0;padding:48px 17% 48px;background:none;isolation:isolate;flex-shrink:0;height:calc(100svh - 140px);box-sizing:border-box}
 .wardrobe-spool::before,.wardrobe-spool::after{content:none}
 .wardrobe-spool-backdrop{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.4;}
 .wardrobe-spool>p,.wardrobe-spool>button,.wardrobe-spool-note{position:relative;z-index:1}
 .wardrobe-spool>p{margin:0 0 4px;color:#e6ddc6;font:600 8px/1.7 Montserrat,Arial,sans-serif;letter-spacing:1px;text-align:center}
 .wardrobe-spool>p small{display:block;color:#bda780;font-size:7px;letter-spacing:1.5px;margin-top:5px}
-.wardrobe-spool button{flex:1;min-height:0;touch-action:none;user-select:none;cursor:grab;background:#eee7d7;border-color:#d2c5a9}
-.wardrobe-spool .item-preview{height:clamp(36px,9svh,90px);max-height:calc(100% - 24px)}
+.wardrobe-spool button{display:flex;flex-direction:column;align-self:center;justify-self:center;width:86%;height:90%;box-sizing:border-box;min-height:0;min-width:0;overflow:hidden;touch-action:none;user-select:none;cursor:grab;background:#eee7d7;border-color:#d2c5a9}
+.wardrobe-spool .item-preview{flex:1;min-height:0;height:auto;max-height:none;background-size:280% auto}
+.wardrobe-spool button>b{flex-shrink:0}
+.wardrobe-spool button>span:not(.item-preview){position:absolute;bottom:8px;left:7px;margin:0}
+.wardrobe-spool button>b{padding-left:15px}
 .wardrobe-spool-note{color:#c9baa0;text-align:center;font:italic 11px/1.7 Georgia,serif;margin-top:4px}
 .wardrobe-thread-canvas{position:fixed;inset:0;width:100vw;height:100dvh;z-index:45;pointer-events:none}
 .wardrobe-thread-preview{position:fixed;left:0;top:0;z-index:46;width:116px;height:96px;padding:5px;background:#eee5d2;border:1px solid #8e7d61;box-shadow:0 6px 18px #0006;pointer-events:none;will-change:transform}
@@ -57,7 +65,7 @@
 .wardrobe-thread-preview>b{display:block;color:#29251c;font:600 9px/1.5 Montserrat,Arial,sans-serif;letter-spacing:1px;margin-top:5px}
 .wardrobe-thread-preview[data-phase='wrong']{border:2px solid #bb2925;background:#f3dccf}
 .wardrobe-thread-preview[data-phase='wrong']>b{color:#9e231d}
-@media(max-width:850px){.game-stage--swenka .wardrobe{padding:90px 7px 90px}.wardrobe-spool{margin-inline:0;padding-inline:16px;gap:16px}.wardrobe-spool::before,.wardrobe-spool::after{left:-10px;right:-10px}.wardrobe-spool button{min-height:0;padding:4px}.wardrobe-spool .item-preview{height:clamp(28px,6.5svh,56px)}.wardrobe-spool-note{font-size:9px}.wardrobe-spool>p{font-size:6px;letter-spacing:.5px}.wardrobe-spool b{font-size:8px}}
+@media(max-width:850px){.game-stage--swenka .wardrobe{padding:70px 4px}.wardrobe-spool{margin-inline:0;gap:10px;padding-block:38px}.wardrobe-spool button{min-height:0;padding:5px}.wardrobe-spool-note{font-size:9px}.wardrobe-spool>p{font-size:7px;letter-spacing:.5px}.wardrobe-spool b{font-size:9px}}
 
 /* Pantsula: beat-tap rhythm game */
 .game-stage--pantsula { grid-template-columns: minmax(290px, .82fr) minmax(420px, 1.18fr); }
@@ -123,9 +131,9 @@
 .game-stage--swenka .game-copy h1{font-size:clamp(30px,3.3vw,50px)}
 .game-stage--swenka .game-copy p.tag{margin-bottom:20px}
 .game-stage--swenka .game-copy__narrative{margin-top:18px}
-.game-stage--swenka .game-copy strong{margin-top:16px;line-height:1.5;overflow-wrap:anywhere}
+.game-stage--swenka .game-copy strong{margin-top:16px;padding-left:10px;border-left:2px solid var(--accent,#d38912);font-size:10px;font-weight:700;line-height:1.6;letter-spacing:.7px;color:#f5dfb7;overflow-wrap:break-word}
 .game-stage--swenka .wardrobe-feedback{min-height:0;margin-top:14px;width:100%;box-sizing:border-box;overflow-wrap:anywhere}
 .game-stage--swenka .wardrobe-feedback p{font-size:11px;line-height:1.5;padding:8px 10px}
-@media(max-width:850px){.wardrobe-spool{padding-inline:19%}.game-stage--swenka .game-copy{padding-left:4vw;padding-right:2vw}}
+@media(max-width:850px){.wardrobe-spool{padding-inline:17%}.game-stage--swenka .game-copy{padding-left:4vw;padding-right:2vw}}
 
 .wardrobe-feedback-accessible{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import StitchedNarrative from "../StitchedNarrative";
 import WardrobeThreads from "./WardrobeThreads";
+import suitBackground from "../../assets/Chapter 1_Swenka/Images/Page Backgrounds/Suit_Background.jpg";
 import "../../styles/ChapterGames.css";
 
 const elements = [
@@ -83,7 +84,7 @@ function WardrobeGame({ portraitImage, onComplete }) {
   }, [ready, onComplete]);
 
   return (
-    <div className="game-stage game-stage--swenka">
+    <div className="game-stage game-stage--swenka" style={{ "--suit-background": `url("${suitBackground}")` }}>
       <div className="game-copy">
         <p className="tag">01 / SWENKA</p>
         <h1>Piece by piece,<br />it came together.</h1>

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import VideoBridge from "../VideoBridge";
+import VideoPlayButton from "../VideoPlayButton";
 import { createPortal } from "react-dom";
 import { useNavigation } from "../../context/NavigationContext";
 import arrivalVideo from "../../assets/Additional Videos/Enviroment/Enter Soweto Video.mov?url";
@@ -74,7 +75,7 @@ export default function SowetoArrivalClip({ onComplete }) {
       <button disabled={seconds < SKIP_AFTER_SECONDS} onClick={() => { if (watched.current >= SKIP_AFTER_SECONDS) completeClip(); }}>
         {seconds < SKIP_AFTER_SECONDS ? `Skip in ${SKIP_AFTER_SECONDS - seconds}s` : "Skip clip"}
       </button>
-      {(needsPlay || failed) && <button onClick={() => { if (failed) { setFailed(false); videoRef.current.load(); } play(); }}>{failed ? "Retry clip" : "Play clip"}</button>}
     </div>
+    {!bridging && !leaving && (needsPlay || failed) && <VideoPlayButton label={failed ? "Retry video" : "Play video"} onClick={() => { if (failed) { setFailed(false); videoRef.current.load(); } play(); }} />}
   </dialog>, document.body);
 }

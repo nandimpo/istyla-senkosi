@@ -1,0 +1,28 @@
+.chapter-player .fashion-wall.fashion-wall--scrapbook { display:block; inset:7% 3% 11% 40%; background:transparent; box-shadow:none; border:0; overflow:visible; isolation:isolate; }
+.scrapbook-masthead { position:absolute; left:5%; top:5%; width:90%; color:#f5eddd; pointer-events:none; padding-bottom:16px; border-bottom:1px solid #d5be9055; }
+.scrapbook-masthead>span { font:700 8px Montserrat,Arial,sans-serif; letter-spacing:2px; }
+.scrapbook-masthead h3 { margin:12px 0 0; font:500 clamp(30px,3.2vw,54px)/1.1 Georgia,serif; letter-spacing:-2px; }
+.scrapbook-masthead h3 br { display:none; }
+.scrapbook-masthead h3 em { padding-left:12px; }
+.scrapbook-masthead small { position:absolute; right:0; bottom:20px; max-width:26%; text-align:right; font:italic 12px/1.4 Georgia,serif; }
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping { position:absolute; left:var(--clip-x); top:var(--clip-y); width:var(--clip-w); height:var(--clip-h); box-sizing:border-box; padding:4px; background:#f4f0e6; transform:rotate(var(--tilt)); z-index:var(--clip-layer); box-shadow:2px 4px 9px #33281e40; animation:none; transition:transform .35s ease,box-shadow .35s ease; }
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping:nth-of-type(3n)::before { content:""; position:absolute; z-index:2; width:40%; height:15px; top:-7px; left:30%; transform:rotate(-7deg); background:#c6ad6ca6; box-shadow:0 1px 1px #0001; pointer-events:none; }
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping--article { padding:3px; background:#faf8f1; transform:rotate(var(--tilt)); }
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping--detail { padding:0; background:transparent; box-shadow:none; }
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping--detail .fashion-album__photo { background:transparent; }
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping--detail img { object-fit:contain; mix-blend-mode:multiply; }
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping--article img { object-fit:contain; background:#faf8f1; }
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping--portrait { padding:0; clip-path:polygon(2% 1%,98% 0,100% 26%,97% 45%,100% 67%,98% 100%,1% 98%,3% 72%,0 48%); }
+.chapter-player .fashion-wall--scrapbook img { filter:none; object-position:center; }
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping--outfit img { object-fit:contain; background:#f4f0e6; }
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping:focus-within { z-index:100; transform:rotate(0) scale(1.2); box-shadow:0 14px 35px #0006; }
+@media(hover:hover) { .chapter-player .fashion-wall--scrapbook .scrapbook-clipping:hover { z-index:100; transform:rotate(0) scale(1.2); box-shadow:0 14px 35px #0006; } }
+.scrapbook-note { position:absolute; left:39%; top:52%; z-index:40; transform:rotate(-4deg); padding:5px 10px; color:#33382f; background:#c9cdb7; font:italic clamp(11px,.9vw,15px) Georgia,serif; pointer-events:none; box-shadow:1px 2px 3px #0002; }
+.chapter-player__page:has(.fashion-wall--scrapbook) .chapter-player__story-beat { display:none; }
+@media(min-width:1001px) and (min-height:701px) { #swenka .chapter-player__page:has(.fashion-wall--scrapbook) .chapter-player__story { bottom:170px; } }
+.chapter-player__page:has(.fashion-wall--scrapbook) .chapter-player__collage-backdrop { opacity:.07; }
+.chapter-player__page:has(.fashion-wall--scrapbook) .chapter-player__story .stitched-narrative__copy { font-size:clamp(16px,1.1vw,19px); line-height:1.65; }
+.scrapbook-footer { position:absolute; bottom:1.5%; left:4%; color:#d1c5ae; font:700 7px Montserrat,Arial,sans-serif; letter-spacing:1px; }
+@media(max-width:700px) { .chapter-player .fashion-wall.fashion-wall--scrapbook { inset:7% 5% 53%; } .scrapbook-masthead h3 { font-size:28px; letter-spacing:-1px; } .scrapbook-masthead small { display:none; } .scrapbook-masthead>span,.scrapbook-footer { font-size:6px; letter-spacing:.5px; } .scrapbook-note { font-size:10px; padding:4px 6px; } }
+@media(prefers-reduced-motion:reduce) { .chapter-player .fashion-wall--scrapbook .scrapbook-clipping { transition:none; } }
+html[data-reduced-motion="true"] .chapter-player .fashion-wall--scrapbook .scrapbook-clipping { transition:none; }

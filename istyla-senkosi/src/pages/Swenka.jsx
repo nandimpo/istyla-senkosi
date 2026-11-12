@@ -4,8 +4,8 @@ import { useNavigation } from "../context/NavigationContext";
 import ChapterPlayer from "../components/ChapterPlayer";
 import UnzipIntro from "../components/UnzipIntro";
 import WardrobeGame from "../components/games/WardrobeGame";
-import interviewVideo from "../assets/video-clips/swenka-voices.mp4";
-import interviewVideoTwo from "../assets/video-clips/swenka-preparation.mp4";
+import interviewVideo from "../assets/Chapter 1_Swenka/Video/Swenka_Intro_Video.mp4";
+import interviewVideoTwo from "../assets/Chapter 1_Swenka/Video/Swenka_Explainer.mp4";
 import editorial1 from "../assets/Chapter 1_Swenka/Images/Editorial/Portraits from apartheid-era South Africa - in pictures , Art and design , The Guardian.jpg";
 import editorial4 from "../assets/Chapter 1_Swenka/Images/Editorial/Man with pinstripe jacket.jpg";
 import editorial5 from "../assets/Chapter 1_Swenka/Images/Editorial/Inkabi nation.jpg";
@@ -13,6 +13,7 @@ import editorial6 from "../assets/Chapter 1_Swenka/Images/Editorial/South Africa
 import xhosaMen from "../assets/Chapter 1_Swenka/Images/Editorial/Xhosa men.jpg";
 import portraitImage from "../assets/Chapter 1_Swenka/Images/Editorial/Man with yellow and blue suit.jpg";
 import chapterImage from "../assets/images/Chapter images/swenka chapter image.jpg";
+import collageBackground from "../assets/Chapter 1_Swenka/Images/Historical Images/Collage background image.jpg";
 import backgroundTrack from "../assets/audio/New Music/Miriam Makeba - Khawuleza (Live 1966) _ Swenka.mp3";
 
 const fashionImages = Object.entries(
@@ -23,6 +24,21 @@ const fashionImages = Object.entries(
 )
   .sort(([a], [b]) => a.localeCompare(b))
   .map(([, src]) => src);
+
+const scrapbookDetails = import.meta.glob(
+  "../assets/Chapter 1_Swenka/Images/Fashion Visuals/*.{jpg,png}",
+  { eager: true, query: "?url", import: "default" },
+);
+const clipping = (name) => scrapbookDetails[`../assets/Chapter 1_Swenka/Images/Fashion Visuals/${name}`];
+const scrapbookImages = [
+  fashionImages[0], clipping("Article.png"), clipping("Dandy.jpg"),
+  clipping("Suit Sketch _1.jpg"), fashionImages[16], clipping("Article 4.png"),
+  fashionImages[20], clipping("Shoes.jpg"), clipping("Tie.jpg"),
+  clipping("Info_1.jpg"),
+  fashionImages[9], fashionImages[17], clipping("Article 2.png"),
+  clipping("Article 3.png"), fashionImages[4], fashionImages[18],
+];
+const clippingKinds = ["portrait", "article", "detail", "detail", "photo", "article", "outfit", "detail", "detail", "article", "photo", "outfit", "article", "article", "photo", "outfit"];
 
 function Swenka() {
   const { completeChapter } = useNavigation();
@@ -56,9 +72,9 @@ function Swenka() {
             videoOutro:
               "After hearing them speak, I had to look back at their outfits.",
             videoBridge: "To understand Swenka, I had to hear it from them.",
-            playSeconds: 20,
+            playToEnd: true,
             skipAfter: 10,
-            caption: "20 SECOND CLIP",
+            caption: "WATCH THE FULL VIDEO",
           },
           {
             label: "THE WEIGHT OF DETAIL",
@@ -72,13 +88,13 @@ function Swenka() {
             storyRole: "voices",
             video: interviewVideoTwo,
             videoOutro:
-              "This desire look good despite hardship reminded me of my cousin.",
+              "This desire to look good despite hardship reminded me of my cousin.",
             videoBridge:
               "They may have looked glamourous, but there was more to it. They lived a hard life",
             shoeShine: true,
-            playSeconds: 20,
-            skipAfter: 10,
-            caption: "20 SECOND CLIP",
+            playToEnd: true,
+            skipAfter: 38,
+            caption: "WATCH THE FULL EXPLAINER",
           },
           {
             label: "WHAT FELT FAMILIAR",
@@ -88,12 +104,16 @@ function Swenka() {
             text: "That attention to an outfit feels familiar. I remember my cousin checking every detail before he stepped outside. I never asked him which details mattered most.",
           },
           {
-            label: "CARRYING IT FORWARD",
+            label: "WHAT I KEEP",
             storyRole: "reflection",
-            collage: fashionImages,
+            collage: scrapbookImages,
+            clippingKinds,
+            scrapbookChapter: "01 / SWENKA",
+            collageLabel: "Jama’s Swenka scrapbook: past and present",
             kind: "fashion-wall",
+            backgroundImage: collageBackground,
             textStyle: "float",
-            text: "Looking at these outfits, I keep thinking about my cousin. I cannot ask him now, so I listen to the people who carry these styles forward. As my journey turns towards Pantsula, I wonder what movement can tell me that clothes alone cannot.",
+            text: "After going back to Swenka, I notice its echoes in the styles around me today. The suits, the hats, the care in each detail. I see my cousin in them, too. These are the fragments I keep: a way to keep looking, and keep him close.",
             caption: "UP NEXT: PANTSULA",
             nextChapter: "pantsula",
             nextChapterLabel: "Explore Pantsula next",

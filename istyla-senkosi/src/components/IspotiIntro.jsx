@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import hatImage from "../assets/images/Chapter images/Bucket-Hat.jpg";
+import townshipSketch from "../assets/Chapter 2_Pantsula/Background images/Township_Sketch.jpg";
 import NarrativeText from "./NarrativeText";
 import IntroAmbientAudio from "./IntroAmbientAudio";
 import "../styles/IspotiIntro.css";
@@ -48,7 +49,7 @@ export default function IspotiIntro({ track, audioRef, children }) {
     {opened ? children : <section
       className="ispoti-intro"
       aria-label="Break in your ispoti to enter Pantsula"
-      style={{ "--wear": wear / 100, "--bend": bend / 100 }}
+      style={{ "--wear": wear / 100, "--bend": bend / 100, "--township-sketch": `url("${townshipSketch}")` }}
     >
       <IntroAmbientAudio id="pantsula" track={track} sharedAudioRef={audioRef} />
       <div className="ispoti-copy">
