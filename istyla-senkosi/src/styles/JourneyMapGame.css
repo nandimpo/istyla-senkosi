@@ -154,7 +154,7 @@
 .journey-thread-soweto{--thread:#c78370;--thread-width:.7;--thread-dash:4 1.8}
 .journey-reference-line.journey-thread-home,.journey-reference-line.journey-thread-memory,.journey-reference-line.journey-thread-soweto,.journey-cluster-label path{stroke:var(--thread);stroke-width:var(--thread-width);stroke-dasharray:var(--thread-dash);fill:none}
 .journey-cluster-label{pointer-events:none}
-.journey-cluster-label text{fill:var(--thread);font:700 7px 'Segoe Print','Bradley Hand','Comic Sans MS',cursive;letter-spacing:.15px;paint-order:stroke;stroke:#181713;stroke-width:1.1;stroke-linejoin:round}
+.journey-cluster-label text{fill:var(--thread);font:400 7px var(--handwriting);letter-spacing:.15px;paint-order:stroke;stroke:#181713;stroke-width:1.1;stroke-linejoin:round}
 .journey-cluster-label .journey-label-underline{stroke-width:.5;stroke-dasharray:none;opacity:.8}
 .journey-photo-paper{fill:#dbd1bb;stroke:#b9ac91;stroke-width:.18}
 .journey-map-photo:nth-of-type(3n) .journey-photo-paper{fill:#d0c7b6}
@@ -162,20 +162,20 @@
 .journey-map-photo{filter:drop-shadow(.5px 1.2px 1px #0009)}
 .journey-thought{pointer-events:none}
 .journey-thought>path{fill:#27251ff2;stroke:#d2b57c;stroke-width:.3;stroke-dasharray:5 .6}
-.journey-thought text{fill:#f0dbb0;font:italic 3.4px 'Segoe Print','Bradley Hand',Georgia,serif}
+.journey-thought text{fill:#f0dbb0;font:400 3.4px var(--handwriting)}
 .journey-thought-memory>path{stroke:#b7bcd5;fill:#23242bf2}
 .journey-thought-memory text{fill:#d7dbee}
 .journey-thought-soweto>path{stroke:#c78370;fill:#30241ff2}
 .journey-thought-soweto text{fill:#e8c1ad}
 .journey-fashion-sketch{pointer-events:none;color:#d3cbb7;opacity:.85}
 .journey-fashion-sketch path,.journey-fashion-sketch circle{fill:none;stroke:currentColor;stroke-width:.3;stroke-linecap:round;stroke-linejoin:round}
-.journey-fashion-sketch text{fill:currentColor;font:italic 2.4px 'Segoe Print',Georgia,serif}
+.journey-fashion-sketch text{fill:currentColor;font:400 2.4px var(--handwriting)}
 .journey-sketch-image{mix-blend-mode:screen}
 .journey-fashion-sketch:has(.journey-sketch-image){opacity:1}
 .journey-drafting{opacity:.4}
 /* Wayfinding: an inviting start, green completed stops, and a fresh memory glow. */
 .journey-stop-halo{fill:#d9a84c0d;stroke:#e5bd7433;stroke-width:.25;pointer-events:none}
-.journey-map-stop text{font:700 4.5px 'Segoe Print','Bradley Hand','Comic Sans MS',cursive;letter-spacing:0;stroke-width:1.5}
+.journey-map-stop text{font:400 4.5px var(--handwriting);letter-spacing:0;stroke-width:1.5}
 .journey-map-stop.starting .journey-stop-pin{fill:#bd8834;stroke:#ffe4aa;filter:drop-shadow(0 0 2px #e9ad43)}
 .journey-map-stop.starting .journey-stop-halo,.journey-drag-pulse.starting{transform-box:fill-box;transform-origin:center;animation:journey-start-pulse 2.2s ease-out infinite}
 .journey-map-stop.completed .journey-stop-pin{fill:#437e58;stroke:#b8dcaa;filter:drop-shadow(0 0 1px #77b66b88)}

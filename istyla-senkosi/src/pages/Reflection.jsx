@@ -20,9 +20,9 @@ function Reflection() {
   const finalPage = (
     <section className="final-frame" aria-label="End of story">
       <div className="final-frame__meeting">
-        <img src={cousin1} alt="Jama’s cousin, remembered in his Skhothane style" />
+        <img src={cousin1} alt="My cousin, remembered in his Skhothane style" />
         <div>
-          <small>JAMA / A MEMORY</small>
+          <small>MY MEMORY</small>
           <h1>There he is.</h1>
           <p>You meet my cousin here, in the photographs I kept. He died before this journey began. I remember him stepping out in colour, asking me to really look.</p>
           <p>Now I understand what I missed: my cousin was a Skhothane. I cannot ask him what it meant to him, but I can remember him without reducing his style to showing off.</p>
@@ -56,7 +56,7 @@ function Reflection() {
       frames={[
         { label: "AFTER THE NOISE", image: streetImage, text: "I thought this story was far from my life. My cousin was a connection I had overlooked while he was here.", kind: "quiet" },
         { label: "WHAT CHANGED", image: buildingImage, text: "The more I paid attention, the more I questioned my own assumptions about him, about Soweto, and about belonging.", kind: "quiet" },
-        { label: "WHAT I CAN CARRY", image: houseImage, text: "I’m still Jama, still learning. I cannot tell his story for him. I can honour what I remember and keep asking others what their style means to them.", kind: "quiet" },
+        { label: "WHAT I CAN CARRY", image: houseImage, text: "I’m still learning. I cannot tell his story for him. I can honour what I remember and keep asking others what their style means to them.", kind: "quiet" },
         { label: "THERE HE IS", collage: cousinPhotos, text: "These are the photographs I kept of him. Come closer. I want you to meet the cousin I have been remembering." },
       ]}
       onComplete={() => completeChapter("reflection")}

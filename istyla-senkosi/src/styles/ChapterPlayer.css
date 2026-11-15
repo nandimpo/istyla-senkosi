@@ -28,15 +28,18 @@
   color: var(--accent);
 }
 .chapter-player__sound {
-  border: 0;
-  padding: 0;
-  background: none;
-  color: rgba(245, 241, 233, .6);
+  border: 1px solid #c8b39b80;
+  padding: 10px 14px;
+  background: #10130fe6;
+  color: #f5f1e9;
   font: inherit;
   letter-spacing: inherit;
   cursor: pointer;
 }
-.chapter-player__sound.on { color: var(--accent); }
+.chapter-player__sound.on { color: #f4d598; }
+.chapter-player__sound:hover { background:#24271fee; border-color:#f4d598; }
+.chapter-player__sound:focus-visible { outline:2px solid #f4d598; outline-offset:3px; }
+.chapter-player__rail.chapter-player__rail--customising { z-index:9; }
 
 .chapter-player__page {
   position: absolute;
@@ -456,4 +459,56 @@ html[data-reduced-motion="true"] .memory-flipbook__turning,html[data-reduced-mot
   .album-story-controls button { min-height:44px; padding:10px 16px; border:1px solid #c8b39b; color:#f5eddf; background:#211e19; cursor:pointer; font:700 12px Montserrat,Arial,sans-serif; }
   .album-story-controls button:disabled { opacity:.5; cursor:default; }
   #skhothane:has(.memory-flipbook) > .chapter-player__hint { display:none; }
+}
+
+.chapter-player__video-note { position:absolute; z-index:3; left:7vw; bottom:19%; width:min(420px,70vw); padding:12px 18px; color:#fff0c8; background:radial-gradient(ellipse at center,#14120fc9,transparent 75%); pointer-events:none; animation:video-note-appear .45s ease-out both; }
+.chapter-player__video-note small { display:block; font:600 9px Montserrat,Arial,sans-serif; letter-spacing:1.5px; color:#e4c995; }
+.chapter-player__video-note p { margin:5px 0 0; font:400 clamp(23px,2.1vw,32px)/1.25 var(--handwriting); text-shadow:0 2px 4px #000; }
+@keyframes video-note-appear { from { opacity:0; transform:translateY(6px) rotate(-2deg); } to { opacity:1; transform:translateY(0) rotate(-2deg); } }
+@media(max-width:650px) { .chapter-player__video-note { left:18px; bottom:24%; padding:10px; } }
+@media(prefers-reduced-motion:reduce) { .chapter-player__video-note { animation:none; } }
+html[data-reduced-motion="true"] .chapter-player__video-note { animation:none; }
+
+
+.memory-flipbook__album-note .album-typewriter { display:grid; }
+.album-typewriter__reserve,.album-typewriter__visible { grid-area:1 / 1; }
+.album-typewriter__reserve { visibility:hidden; }
+.memory-flipbook__controls button:disabled { opacity:.4; cursor:wait; }
+.memory-flipbook__album-note .album-typewriter > span { font:inherit; color:inherit; }
+
+/* The texture belongs to the physical album sheets, not the surrounding page. */
+.memory-flipbook--photo-album .memory-flipbook__page,
+.memory-flipbook--photo-album .memory-flipbook__front,
+.memory-flipbook--photo-album .memory-flipbook__settled-page,
+.memory-flipbook--photo-album .memory-flipbook__paper-back,
+.memory-flipbook--photo-album .memory-flipbook__stack {
+  background:linear-gradient(#17171466,#17171466),url("../assets/Chapter%203_Skothane/Images/Background/Photo_Album.jpg") center/cover no-repeat;
+  border-color:#6d685b;
+}
+.memory-flipbook--photo-album .memory-flipbook__album-note { color:#f2e4c8; }
+.memory-flipbook--photo-album .memory-flipbook__stack { box-shadow:6px 7px 0 #49463e,12px 13px 0 #34332d,16px 25px 28px #0009; }
+
+.memory-flipbook__album-note p { font:400 clamp(23px,2vw,32px)/1.2 var(--handwriting); }
+
+/* Match the surrounding album scene to the backpack page. */
+#skhothane .chapter-player__visual--memory-album {
+  background:radial-gradient(circle at 68% 38%,#3e271fe8,#171816ed 68%),url("../assets/Chapter%203_Skothane/Images/Background/Galley_Background_2.jpg") center/cover no-repeat;
+}
+@media(max-width:700px) {
+  #skhothane .chapter-player__page:has(.memory-flipbook--photo-album) {
+    background:radial-gradient(circle at 68% 38%,#3e271fe8,#171816ed 68%),url("../assets/Chapter%203_Skothane/Images/Background/Galley_Background_2.jpg") center/cover no-repeat;
+  }
+  #skhothane .chapter-player__visual--memory-album { background:transparent; }
+}
+
+/* Fill the album width while keeping the top of each photograph in frame. */
+.memory-flipbook--photo-album .memory-flipbook__page > img,
+.memory-flipbook--photo-album .memory-flipbook__front > img { object-fit:cover; object-position:center top; background:transparent; }
+
+/* Reserve a clear band below the fixed sound control. */
+@media(min-width:1001px) and (min-height:701px) {
+  #skhothane .memory-flipbook { top:120px; height:calc(100% - 270px); }
+}
+@media(max-width:1000px),(max-height:700px) {
+  #skhothane .chapter-player__page:has(.memory-flipbook) { padding-top:56px; }
 }

@@ -53,14 +53,14 @@ export default function IspotiIntro({ track, audioRef, children }) {
     >
       <IntroAmbientAudio id="pantsula" track={track} sharedAudioRef={audioRef} />
       <div className="ispoti-copy">
-        <small><NarrativeText onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="02 / PANTSULA · JAMA’S JOURNEY" delay={150} /></small>
+        <small><NarrativeText onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="02 / PANTSULA · MY INTO AMAPANTSULA JOURNEY" delay={150} /></small>
         <h1>
           <NarrativeText onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="Make it" delay={900} />
           <br />
           <em><NarrativeText onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="your own." delay={1800} /></em>
         </h1>
         <p><NarrativeText onComplete={() => setFinishedCopy((done) => done[3] ? done : { ...done, [3]: true })} text="I remember the care my cousin took with every detail. Now it’s my turn to try." delay={3000} /></p>
-        <p><NarrativeText onComplete={() => setFinishedCopy((done) => done[4] ? done : { ...done, [4]: true })} text="Help Jama rub the crown and pull the brim upward to shape her ispoti." delay={5000} /></p>
+        <p><NarrativeText onComplete={() => setFinishedCopy((done) => done[4] ? done : { ...done, [4]: true })} text="I shape my ispoti by rubbing the crown and pulling the brim upward." delay={5000} /></p>
       </div>
       <div className="ispoti-workbench" inert={!copyReady}>
         <svg

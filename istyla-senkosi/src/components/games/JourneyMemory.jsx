@@ -26,7 +26,7 @@ export default function JourneyMemory({ stop, calm, onDone }) {
   }, [enlarged]);
   const nameOf = (path) => path.split("/").at(-1).replace(/\.[^.]+$/, "");
   return <aside className={`journey-memory ${calm ? "journey-memory--calm" : ""}`} aria-labelledby={titleId} style={{ animationPlayState: enlarged ? "paused" : "running" }}>
-    <div className="journey-memory__heading"><small>JAMA / A MEMORY ALONG THE WAY</small><h2 id={titleId}>{captions[stop]}</h2></div>
+    <div className="journey-memory__heading"><small>MY MEMORY ALONG THE WAY</small><h2 id={titleId}>{captions[stop]}</h2></div>
     <div className="journey-memory__collage">{images.map(([path, src], index) => <figure key={path} style={{ "--memory-tilt": `${[-5,3,-2,4,-3,2,1][index]}deg`, "--memory-delay": `${index * 90}ms` }}><button type="button" className="journey-memory__photo" aria-label={`Enlarge ${nameOf(path)}`} onClick={() => setSelected(index)}><img src={src} alt={`${folders[stop]} fashion memory: ${nameOf(path)}`} draggable={false}/><span>View full image</span></button></figure>)}</div>
     <button type="button" onClick={onDone}>Return to the route</button>
     {enlarged && createPortal(<dialog ref={dialogRef} className="journey-photo-viewer" aria-label="Enlarged fashion photograph" onCancel={(event) => { event.preventDefault(); setSelected(null); }} onClick={(event) => { if (event.target === event.currentTarget) setSelected(null); }} onKeyDown={(event) => { event.stopPropagation(); if (event.key === "ArrowRight") { event.preventDefault(); setSelected((selected + 1) % images.length); } if (event.key === "ArrowLeft") { event.preventDefault(); setSelected((selected + images.length - 1) % images.length); } }}>

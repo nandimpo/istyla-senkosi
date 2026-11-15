@@ -1,4 +1,7 @@
 .chapter-player .fashion-wall.fashion-wall--scrapbook { display:block; inset:7% 3% 11% 40%; background:transparent; box-shadow:none; border:0; overflow:visible; isolation:isolate; }
+.scrapbook-canvas { display:contents; }
+:is(#pantsula,#swenka,#skhothane) .scrapbook-canvas { display:block; position:absolute; inset:20% 0 6%; overflow:hidden; border-top:1px solid #d5be9055; border-bottom:1px solid #d5be9055; }
+:is(#pantsula,#swenka,#skhothane) .scrapbook-masthead { border-bottom:0; }
 .scrapbook-masthead { position:absolute; left:5%; top:5%; width:90%; color:#f5eddd; pointer-events:none; padding-bottom:16px; border-bottom:1px solid #d5be9055; }
 .scrapbook-masthead>span { font:700 8px Montserrat,Arial,sans-serif; letter-spacing:2px; }
 .scrapbook-masthead h3 { margin:12px 0 0; font:500 clamp(30px,3.2vw,54px)/1.1 Georgia,serif; letter-spacing:-2px; }
@@ -26,3 +29,54 @@
 @media(max-width:700px) { .chapter-player .fashion-wall.fashion-wall--scrapbook { inset:7% 5% 53%; } .scrapbook-masthead h3 { font-size:28px; letter-spacing:-1px; } .scrapbook-masthead small { display:none; } .scrapbook-masthead>span,.scrapbook-footer { font-size:6px; letter-spacing:.5px; } .scrapbook-note { font-size:10px; padding:4px 6px; } }
 @media(prefers-reduced-motion:reduce) { .chapter-player .fashion-wall--scrapbook .scrapbook-clipping { transition:none; } }
 html[data-reduced-motion="true"] .chapter-player .fashion-wall--scrapbook .scrapbook-clipping { transition:none; }
+.scrapbook-scribble { position:absolute; z-index:35; max-width:32%; color:#e6d8ab; font:400 clamp(11px,1.1vw,20px)/1.2 var(--handwriting); transform:rotate(var(--note-tilt)); pointer-events:none; text-shadow:0 1px 2px #182017; }
+#pantsula .fashion-wall--scrapbook .scrapbook-note { display:none; }
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping--detail { filter:drop-shadow(2px 4px 3px #0003); }
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping--detail img { mix-blend-mode:normal; }
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping--photo { padding:0; border:0; background:transparent; }
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping--article { clip-path:polygon(1% 0,98% 1%,100% 32%,99% 68%,100% 99%,2% 100%,0 73%,1% 39%); }
+#pantsula.chapter-player .fashion-wall.fashion-wall--scrapbook { overflow:hidden; }
+#pantsula .scrapbook-footer { bottom:0; }
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping { z-index:12; }
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping:nth-of-type(n+11) { z-index:1; }
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping--detail { z-index:22; }
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping--detail .fashion-album__photo { overflow:hidden; }
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping--detail img { transform:scale(1.15); }
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping--detail:nth-of-type(9) img,
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping--detail:nth-of-type(10) img { transform:scale(1.65); }
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping:hover,
+#pantsula .fashion-wall--scrapbook .scrapbook-clipping:focus-within { z-index:100; transform:rotate(0) scale(1.04); }
+@media(max-width:700px) { .scrapbook-scribble { font-size:9px; } }
+
+/* Thin, imperfect materials from the site's wine / olive / gold palette. */
+:is(#pantsula,#swenka,#skhothane) .scrapbook-canvas { --craft-wine:#701017; --craft-olive:#4e5b34; --craft-gold:#d38912; --craft-sand:#c8b39b; isolation:isolate; background:transparent; }
+.scrapbook-mixed-papers { position:absolute; inset:0; pointer-events:none; z-index:0; }
+.scrapbook-mixed-papers span { position:absolute; box-shadow:3px 6px 9px #0005; clip-path:polygon(1% 2%,31% 0,60% 2%,99% 0,98% 36%,100% 69%,98% 100%,64% 98%,29% 100%,0 98%,2% 66%,0 33%); }
+.scrapbook-mixed-papers span:nth-child(1) { left:2%; top:3%; width:33%; height:40%; transform:rotate(-5deg); background:url("../assets/Chapter%203_Skothane/Images/Background/Collage_2.jpg") center/cover no-repeat; opacity:.28; }
+.scrapbook-mixed-papers span:nth-child(2) { left:33%; top:48%; width:36%; height:46%; transform:rotate(4deg); background:url("../assets/Chapter%203_Skothane/Images/Background/Collage_3.jpg") center/cover no-repeat; opacity:.28; }
+.scrapbook-mixed-papers span:nth-child(3) { left:68%; top:36%; width:30%; height:47%; transform:rotate(-5deg); background:url("../assets/Chapter%203_Skothane/Images/Background/Collage_4.jpg") center/cover no-repeat; opacity:.25; }
+.scrapbook-doodles { position:absolute; inset:0; width:100%; height:100%; z-index:28; pointer-events:none; }
+.scrapbook-doodles__sand { stroke:var(--craft-sand); }
+.scrapbook-doodles__gold { stroke:var(--craft-gold); }
+.scrapbook-doodles__wine { stroke:var(--craft-wine); }
+:is(#pantsula,#swenka,#skhothane) .fashion-wall--scrapbook .scrapbook-clipping--photo { padding:2px; background:var(--craft-olive); box-shadow:2px 3px 2px #0006,5px 9px 13px #0005; }
+:is(#pantsula,#swenka,#skhothane) .fashion-wall--scrapbook .scrapbook-clipping--photo:nth-of-type(3n+1) { background:var(--craft-wine); padding:2px 3px 3px 2px; }
+:is(#pantsula,#swenka,#skhothane) .fashion-wall--scrapbook .scrapbook-clipping--photo:nth-of-type(3n) { background:var(--craft-gold); padding:2px 2px 3px; }
+:is(#pantsula,#swenka,#skhothane) .fashion-wall--scrapbook .scrapbook-clipping--photo .fashion-album__photo { clip-path:polygon(0 1%,34% 0,68% 1%,100% 0,99% 42%,100% 100%,58% 99%,0 100%); }
+:is(#pantsula,#swenka,#skhothane) .fashion-wall--scrapbook .scrapbook-clipping--photo::before { content:""; position:absolute; z-index:3; top:-5px; left:12%; width:29%; height:12px; transform:rotate(-18deg); background:repeating-linear-gradient(90deg,#c8b39b08 0 2px,#c8b39b33 2px 3px),#c8b39b99; clip-path:polygon(2% 0,99% 4%,97% 28%,100% 53%,96% 78%,99% 100%,0 98%,3% 70%,0 43%); box-shadow:1px 2px 2px #0002; pointer-events:none; }
+:is(#pantsula,#swenka,#skhothane) .fashion-wall--scrapbook .scrapbook-clipping--photo:nth-of-type(even)::before { left:64%; top:auto; bottom:-4px; transform:rotate(-27deg); background-color:#701017b3; }
+:is(#pantsula,#swenka,#skhothane) .fashion-wall--scrapbook .scrapbook-clipping--photo:nth-of-type(3)::after { content:""; position:absolute; width:16px; height:6px; left:8px; top:10px; border:1px solid #c8b39b; border-radius:3px; transform:rotate(-12deg); box-shadow:1px 1px 1px #0008; pointer-events:none; }
+:is(#pantsula,#swenka,#skhothane) .fashion-wall--scrapbook .scrapbook-clipping--article { filter:drop-shadow(3px 5px 3px #0005); }
+:is(#pantsula,#swenka,#skhothane) .scrapbook-scribble { text-shadow:1px 1px 1px #111b; }
+
+:is(#swenka,#skhothane).chapter-player .fashion-wall.fashion-wall--scrapbook { overflow:hidden; }
+:is(#swenka,#skhothane) .scrapbook-note { display:none; }
+:is(#swenka,#skhothane) .fashion-wall--scrapbook .scrapbook-clipping:hover,:is(#swenka,#skhothane) .fashion-wall--scrapbook .scrapbook-clipping:focus-within { transform:rotate(0) scale(1.04); }
+
+/* Reuse the supplied collage scraps without moving the existing paper layers. */
+#swenka .scrapbook-mixed-papers span:nth-child(1) { background-image:url("../assets/Chapter%203_Skothane/Images/Background/Collage_5.jpg"); }
+#swenka .scrapbook-mixed-papers span:nth-child(3) { background-image:url("../assets/Chapter%203_Skothane/Images/Background/Collage_1.jpg"); }
+#pantsula .scrapbook-mixed-papers span:nth-child(2) { background-image:url("../assets/Chapter%203_Skothane/Images/Background/Collage_1.jpg"); }
+#pantsula .scrapbook-mixed-papers span:nth-child(3) { background-image:url("../assets/Chapter%203_Skothane/Images/Background/Collage_5.jpg"); }
+
+:is(#pantsula,#swenka,#skhothane) .scrapbook-scribble { z-index:110; color:#fff0bf; text-shadow:0 2px 3px #111,0 0 5px #111c; }

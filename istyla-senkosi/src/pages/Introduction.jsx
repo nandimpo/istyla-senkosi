@@ -20,7 +20,7 @@ function Introduction() {
       chapter="00 / INTRO"
       title="Why am I here?"
       subtitle="A slow journey from Johannesburg North to Soweto"
-      context="I’m Jama. My cousin Ree’s Skhothane fashion always caught my eye, but I never asked what it meant to him. Since he died, I’ve wanted to understand him beyond the clothes. I’m looking back at township style, travelling from Johannesburg North towards Soweto. I begin with Swenka, with the care, pride and self-expression that open my search for understanding."
+      context="My cousin Ree’s Skhothane fashion always caught my eye, but I never asked what it meant to him. Since he died, I’ve wanted to understand him beyond the clothes. I’m looking back at township style, travelling from Johannesburg North towards Soweto. I begin with Swenka, with the care, pride and self-expression that open my search for understanding."
       accent="beige"
       interaction="scroll"
       exitTransition="fade"

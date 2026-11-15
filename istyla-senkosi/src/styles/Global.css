@@ -18,3 +18,9 @@ body {
 }
 
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+.scrapbook-note,.scrapbook-masthead small,.wardrobe-spool-note,
+.memory-flipbook__album-note p,.journey-map-caption em {
+  font-family:var(--handwriting)!important;
+  font-style:normal!important;
+  font-weight:400!important;
+}

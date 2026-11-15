@@ -58,6 +58,9 @@ export default function SowetoArrivalClip({ onComplete }) {
   };
   return createPortal(<dialog ref={dialogRef} className={`soweto-arrival ${bridging ? "is-bridging" : ""} ${!covered ? "is-before-clip" : ""} ${leaving ? "is-reflecting" : ""} ${outroCovered ? "is-outro-covered" : ""}`} aria-labelledby="soweto-arrival-title" onCancel={(event) => event.preventDefault()}>
     <video ref={videoRef} src={arrivalVideo} muted playsInline preload="auto" disablePictureInPicture
+      role="button" tabIndex={0} aria-label="Click to pause or play arrival video"
+      onClick={() => { if (!bridging && !leaving) { if (videoRef.current.paused) play(); else videoRef.current.pause(); } }}
+      onKeyDown={(event) => { if (event.key === " " || event.key === "Enter") { event.preventDefault(); if (!bridging && !leaving) { if (videoRef.current.paused) play(); else videoRef.current.pause(); } } }}
       onLoadedData={() => { if (!bridging) play(); }} onTimeUpdate={updateProgress}
       onSeeking={() => { if (Math.abs(videoRef.current.currentTime - lastTime.current) > 0.5) videoRef.current.currentTime = lastTime.current; }}
       onPause={() => { if (!finished.current && !bridging) setNeedsPlay(true); }}

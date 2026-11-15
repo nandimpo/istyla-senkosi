@@ -11,11 +11,17 @@ const albumTitles = [
   "I wish I had asked him more.",
 ];
 
-function AlbumNote({ pageIndex, titles }) {
-  return <div className="memory-flipbook__album-note"><small>SKHOTHANE / PHOTO ALBUM</small><p>{titles[pageIndex] ?? "I keep looking, trying to understand him."}</p><span>Their colours and confidence remind me of my cousin.</span></div>;
+const albumSubtitle = "Their colours and confidence remind me of my cousin.";
+function AlbumNote({ pageIndex, titles, notes, count = Infinity }) {
+  const title = titles[pageIndex] ?? "I keep looking, trying to understand him.";
+  const subtitle = notes[pageIndex] ?? albumSubtitle;
+  return <div className="memory-flipbook__album-note">
+    <p className="album-typewriter"><span className="album-typewriter__reserve" aria-hidden="true">{title}</span><span className="album-typewriter__visible" aria-hidden="true">{title.slice(0, count)}</span><span className="narrative-text__accessible">{title}</span></p>
+    <span className="album-typewriter"><span className="album-typewriter__reserve" aria-hidden="true">{subtitle}</span><span className="album-typewriter__visible" aria-hidden="true">{subtitle.slice(0, Math.max(0, count - title.length))}</span><span className="narrative-text__accessible">{subtitle}</span></span>
+  </div>;
 }
 
-export default function MemoryFlipbook({ images, paused = false, photoAlbum = false, albumLabel = "Jama's memory album", titles = albumTitles }) {
+export default function MemoryFlipbook({ images, paused = false, photoAlbum = false, albumLabel = "My memory album", titles = albumTitles, notes = [], imagePositions = [], onWritingReady }) {
   const { reducedMotion } = useNavigation();
   const [systemReducedMotion, setSystemReducedMotion] = useState(false);
   const quietMotion = reducedMotion || systemReducedMotion;
@@ -28,6 +34,29 @@ export default function MemoryFlipbook({ images, paused = false, photoAlbum = fa
   }, []);
   const [page, setPage] = useState({ current: 0, previous: null, turn: 0, direction: 1 });
   const currentPage = page.current;
+  const [typing, setTyping] = useState({ page: -1, count: 0 });
+  const count = quietMotion ? Infinity : typing.page === currentPage ? typing.count : 0;
+  const title = titles[currentPage] ?? "I keep looking, trying to understand him.";
+  const subtitle = notes[currentPage] ?? albumSubtitle;
+  const writingReady = !photoAlbum || count >= title.length + subtitle.length;
+  const completedPages = useRef(new Set());
+  const readyCallback = useRef(onWritingReady);
+  useEffect(() => { readyCallback.current = onWritingReady; });
+  useEffect(() => {
+    if (writingReady && !paused) completedPages.current.add(currentPage);
+    readyCallback.current?.(writingReady, completedPages.current.size === images.length);
+  }, [writingReady, currentPage, paused, images.length]);
+  useEffect(() => {
+    if (!photoAlbum || paused || quietMotion) return;
+    let written = 0;
+    const timer = setInterval(() => {
+      written += 1;
+      setTyping({ page: currentPage, count: written });
+      if (written >= title.length + subtitle.length) clearInterval(timer);
+    }, 35);
+    return () => clearInterval(timer);
+  }, [currentPage, photoAlbum, paused, quietMotion, title, subtitle]);
+
   const busy = useRef(false);
   const startX = useRef(null);
   const turnTimer = useRef(null);
@@ -48,9 +77,11 @@ export default function MemoryFlipbook({ images, paused = false, photoAlbum = fa
   }, [images, currentPage, paused]);
 
   const flip = (direction) => {
-    if (paused || busy.current || images.length < 2) return;
+    if (paused || !writingReady || busy.current || images.length < 2) return;
+    const target = photoAlbum ? Math.max(0, Math.min(images.length - 1, currentPage + direction)) : (currentPage + direction + images.length) % images.length;
+    if (target === currentPage) return;
     busy.current = true;
-    setPage(({ current, turn }) => ({ current: (current + direction + images.length) % images.length, previous: current, turn: turn + 1, direction }));
+    setPage(({ current, turn }) => ({ current: target, previous: current, turn: turn + 1, direction }));
     clearTimeout(turnTimer.current);
     turnTimer.current = setTimeout(() => {
       setPage((value) => ({ ...value, previous: null }));
@@ -98,24 +129,24 @@ export default function MemoryFlipbook({ images, paused = false, photoAlbum = fa
       {page.turn > 0 && <div className="memory-flipbook__settled-page" aria-hidden="true" />}
       <div className="memory-flipbook__stack" aria-hidden="true" />
       <div className="memory-flipbook__page">
-        {photoAlbum && <AlbumNote pageIndex={page.current} titles={titles} />}
-        <img src={images[page.current]} alt={`${albumLabel}, photograph ${page.current + 1} of ${images.length}`} decoding="async" />
+        {photoAlbum && <AlbumNote pageIndex={page.current} titles={titles} notes={notes} count={count} />}
+        <img src={images[page.current]} style={{ objectPosition: imagePositions[page.current] || "center top" }} alt={`${albumLabel}, photograph ${page.current + 1} of ${images.length}`} decoding="async" />
       </div>
       {page.previous !== null && !paused && !quietMotion && (
         <div key={page.turn} className={`memory-flipbook__turning memory-flipbook__turning--${page.direction > 0 ? "forward" : "back"}`} aria-hidden="true">
           <div className="memory-flipbook__front">
-          {photoAlbum && <AlbumNote pageIndex={page.previous} titles={titles} />}
-          <img src={images[page.previous]} alt="" />
+          {photoAlbum && <AlbumNote pageIndex={page.previous} titles={titles} notes={notes} />}
+          <img src={images[page.previous]} style={{ objectPosition: imagePositions[page.previous] || "center top" }} alt="" />
           </div>
           <span className="memory-flipbook__paper-back" />
         </div>
       )}
       <div className="memory-flipbook__controls" onPointerDown={(event) => event.stopPropagation()} onPointerUp={(event) => event.stopPropagation()}>
-        <button type="button" onClick={(event) => { event.stopPropagation(); flip(-1); }} aria-label="Previous photograph">←</button>
+        <button type="button" disabled={!writingReady || paused || (photoAlbum && currentPage === 0)} onClick={(event) => { event.stopPropagation(); flip(-1); }} aria-label="Previous photograph">←</button>
         <span aria-live="polite">{String(page.current + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}</span>
-        <button type="button" onClick={(event) => { event.stopPropagation(); flip(1); }} aria-label="Next photograph">→</button>
+        <button type="button" disabled={!writingReady || paused || (photoAlbum && currentPage === images.length - 1)} onClick={(event) => { event.stopPropagation(); flip(1); }} aria-label="Next photograph">→</button>
       </div>
-      <p className="memory-flipbook__hint">{photoAlbum ? "DRAG OR TAP TO TURN THE PAGE" : "DRAG OR TAP TO TURN A MEMORY"}</p>
+      <p className="memory-flipbook__hint">{!writingReady ? "LET THE WORDS FINISH BEFORE TURNING THE PAGE" : photoAlbum ? "VIEW EVERY PHOTO TO CONTINUE ? DRAG OR TAP TO TURN THE PAGE" : "DRAG OR TAP TO TURN A MEMORY"}</p>
     </div>
   );
 }

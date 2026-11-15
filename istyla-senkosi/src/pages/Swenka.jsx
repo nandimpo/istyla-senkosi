@@ -109,7 +109,7 @@ function Swenka() {
             collage: scrapbookImages,
             clippingKinds,
             scrapbookChapter: "01 / SWENKA",
-            collageLabel: "Jama’s Swenka scrapbook: past and present",
+            collageLabel: "My Swenka scrapbook: past and present",
             kind: "fashion-wall",
             backgroundImage: collageBackground,
             textStyle: "float",

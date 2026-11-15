@@ -1,0 +1,6 @@
+.collage-asset-marks { mix-blend-mode:screen; opacity:.38; pointer-events:none; }
+.collage-asset-marks image { transform-box:fill-box; transform-origin:center; transform:scale(2); }
+
+.collage-asset-marks .collage-mark--circle { transform:scale(3.4); }
+.collage-mark--blueStar { filter:hue-rotate(195deg) saturate(1.6); }
+.collage-asset-marks .collage-mark--star { transform:scale(3.2); }

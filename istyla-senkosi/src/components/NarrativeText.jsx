@@ -3,7 +3,7 @@ import { useNavigation } from "../context/NavigationContext";
 import { glyphThread } from "./glyphThread";
 import "../styles/NarrativeText.css";
 
-export default function NarrativeText({ text, delay = 400, embroidered = false, onComplete }) {
+export default function NarrativeText({ text, delay = 400, embroidered = false, speed = 1, onComplete }) {
   const { reducedMotion } = useNavigation();
   const [systemReduced, setSystemReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const rootRef = useRef(null);
@@ -71,7 +71,7 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
         return { path, size };
       });
       length = paths.reduce((sum, part) => sum + part.size, 0);
-      duration = Math.min(320, Math.max(160, length * 2.4));
+      duration = Math.min(320, Math.max(160, length * 2.4)) * speed;
       active.dataset.glyphHeight = glyph.height;
       svg.style.stroke = getComputedStyle(active).getPropertyValue("--thread-main").trim() || "#fff0cb";
       return true;
@@ -115,14 +115,14 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
           active = null;
           index++;
           started = now;
-          travelUntil = now + 65;
+          travelUntil = now + 65 * speed;
         }
       }
       frame = requestAnimationFrame(tick);
     };
     document.fonts.ready.then(() => { if (!disposed) frame = requestAnimationFrame(tick); });
     return () => { disposed = true; cancelAnimationFrame(frame); resizeObserver.disconnect(); };
-  }, [text, delay, reducedMotion, systemReduced]);
+  }, [text, delay, speed, reducedMotion, systemReduced]);
 
   return <>
     <span className="narrative-text__accessible">{text}</span>

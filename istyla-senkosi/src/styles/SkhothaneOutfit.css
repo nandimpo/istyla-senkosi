@@ -1,4 +1,4 @@
-.skhothane-outfit { position:absolute; inset:0; z-index:2; overflow:auto; padding:clamp(28px,4vw,64px) clamp(24px,5vw,80px) 80px; box-sizing:border-box; background:radial-gradient(circle at 68% 38%,#3e271f,#171816 68%); color:#f6f0e4; font-family:Montserrat,Arial,sans-serif; touch-action:pan-y; }
+.skhothane-outfit { position:absolute; inset:0; z-index:2; overflow:auto; padding:clamp(28px,4vw,64px) clamp(24px,5vw,80px) 80px; box-sizing:border-box; background:radial-gradient(circle at 68% 38%,#3e271fe8,#171816ed 68%),url("../assets/Chapter%203_Skothane/Images/Background/Galley_Background_2.jpg") center/cover no-repeat; color:#f6f0e4; font-family:Montserrat,Arial,sans-serif; touch-action:pan-y; }
 .skhothane-outfit__heading { max-width:760px; }
 .skhothane-outfit__back { display:block; margin:0 0 28px; padding:0; border:0; background:none; color:#e4c187; cursor:pointer; font:700 11px Montserrat,Arial,sans-serif; letter-spacing:1px; }
 .skhothane-outfit__heading small,.skhothane-outfit__result small { color:#e0b46a; font:800 10px Montserrat,Arial,sans-serif; letter-spacing:2px; }
@@ -33,3 +33,197 @@
 /* Soft light stays behind the controls and follows the chapter's live spectrum. */
 .skhothane-outfit { isolation:isolate; }
 .skhothane-outfit__heading,.skhothane-outfit__workspace { position:relative; z-index:1; }
+
+/* Paper clippings and clothing cutouts echo the chapter's scrapbook. */
+.skhothane-outfit__workspace { padding:24px 12px 18px; }
+.skhothane-outfit__scribble { position:absolute; top:-14px; right:5%; color:#ead097; font:400 clamp(20px,2vw,30px)/1.2 var(--handwriting); transform:rotate(-4deg); pointer-events:none; }
+.skhothane-outfit__bag { position:relative; isolation:isolate; border:0; background:transparent; transform:rotate(-3deg); padding:30px 18px 22px; color:#31271d; }
+.skhothane-outfit__bag::before { content:""; position:absolute; inset:0; z-index:-1; background:#d5c9a9 url("../assets/Chapter%203_Skothane/Images/Background/Collage_Paper.jpg") center/cover no-repeat; clip-path:polygon(2% 0,98% 2%,100% 26%,98% 47%,100% 72%,97% 100%,0 98%,2% 74%,0 48%); }
+.skhothane-outfit__bag::after,.skhothane-outfit__result::before { content:""; position:absolute; top:-9px; left:30%; width:40%; height:22px; background:#c6ad6ca6; transform:rotate(-7deg); pointer-events:none; }
+.skhothane-outfit__bag img { filter:drop-shadow(4px 6px 2px #30291e55); }
+.skhothane-outfit__bag span { border-bottom:1px dashed #6c553f; padding-bottom:6px; }
+.skhothane-outfit__choices { gap:20px; }
+.skhothane-outfit__choices fieldset { border:0; padding:8px 4px 5px; }
+.skhothane-outfit__choices legend { padding:5px 12px; background:#6d191e; color:#f5ebd8; transform:rotate(-2deg); box-shadow:2px 3px 0 #0003; }
+.skhothane-outfit__choices fieldset:nth-child(2) legend { background:#a9b39b; color:#24291f; transform:rotate(2deg); }
+.skhothane-outfit__choices fieldset:nth-child(3) legend { background:#c5a262; color:#30271c; }
+.skhothane-outfit__options { gap:14px; }
+.skhothane-outfit__options button { position:relative; border:1px solid #c9bea8; padding:10px 7px 12px; background:repeating-linear-gradient(0deg,#00000004 0 1px,transparent 1px 3px),#eee5d2; box-shadow:3px 5px 8px #0004; transform:rotate(-3deg); transition:transform .2s ease; }
+.skhothane-outfit__options button:nth-child(2) { transform:rotate(3deg); background-color:#d3d8c5; }
+.skhothane-outfit__options button:nth-child(3) { transform:rotate(-1deg); background-color:#dbc8ad; }
+.skhothane-outfit__options button::before { content:""; position:absolute; top:-6px; left:33%; width:34%; height:13px; background:#bda36a99; transform:rotate(-6deg); pointer-events:none; }
+.skhothane-outfit__options button:hover,.skhothane-outfit__options button:focus-visible { transform:rotate(0) translateY(-3px); z-index:2; }
+.skhothane-outfit__options button.is-selected { border:1px solid #791e25; outline:2px solid #e8b851; outline-offset:2px; box-shadow:3px 5px 8px #0004; }
+.skhothane-outfit__options img { filter:drop-shadow(2px 3px 1px #30291e44); }
+.skhothane-outfit__options button span { font:italic 12px/1.2 Georgia,serif; }
+.skhothane-outfit__result { position:relative; border:0; padding:22px 16px 16px; background:repeating-linear-gradient(0deg,#00000005 0 1px,transparent 1px 4px),#e4d9bf; color:#30271c; box-shadow:4px 6px 12px #0005; transform:rotate(1deg); }
+.skhothane-outfit__result small { color:#6d191e; }
+.skhothane-outfit__result p { color:#51422f; }
+.skhothane-outfit__look { background:repeating-linear-gradient(90deg,#6d191e0c 0 1px,transparent 1px 20px),repeating-linear-gradient(0deg,#6d191e0c 0 1px,transparent 1px 20px),#c7cdb8; }
+.skhothane-outfit__slot { border:0; border-bottom:1px dashed #6c553f66; background:transparent; }
+.skhothane-outfit__slot img { filter:drop-shadow(3px 4px 2px #30291e44); transform:rotate(-3deg); }
+.skhothane-outfit__slot--jeans img { transform:rotate(3deg); }
+.skhothane-outfit__watch { background:#6d191e; color:#fff0d4; }
+@media(max-width:650px) { .skhothane-outfit__workspace { padding:30px 0 10px; } .skhothane-outfit__scribble { top:-4px; right:0; font-size:21px; } .skhothane-outfit__options { gap:10px; } }
+@media(prefers-reduced-motion:reduce) { .skhothane-outfit__options button { transition:none; } }
+
+/* An assembled scrapbook spread, with the backpack as its central cutout. */
+.skhothane-outfit__workspace:not(.is-open) { width:min(1100px,100%); min-height:410px; margin:30px auto 0; padding:26px 0; grid-template-columns:34%; align-items:center; }
+.skhothane-outfit__workspace:not(.is-open)::before { content:""; position:absolute; inset:0; background:url("../assets/Chapter%203_Skothane/Images/Background/Collage_5.jpg") center/cover no-repeat; opacity:.25; clip-path:polygon(1% 0,99% 2%,100% 97%,76% 100%,45% 98%,0 100%); box-shadow:4px 8px 20px #0004; }
+.skhothane-outfit__collage { position:absolute; inset:0; pointer-events:none; }
+.backpack-clipping { position:absolute; margin:0; box-sizing:border-box; box-shadow:3px 4px 4px #0005; }
+.backpack-clipping img { width:100%; height:100%; object-fit:cover; display:block; }
+.backpack-clipping--green { left:3%; top:5%; width:27%; height:47%; padding:10px 10px 26px; background:#70a477; transform:rotate(-3deg); }
+.backpack-clipping--green figcaption { color:#1e3526; text-align:center; font:italic 12px Georgia,serif; padding-top:5px; }
+.backpack-clipping--orange { left:5%; bottom:4%; width:27%; height:39%; border:10px solid #db7832; transform:rotate(2deg); }
+.backpack-cutout { position:absolute; object-fit:contain; filter:drop-shadow(3px 5px 2px #0006); }
+.backpack-cutout--shirt { width:30%; height:70%; right:2%; top:-3%; transform:rotate(9deg); }
+.backpack-cutout--shoes { width:24%; height:33%; right:7%; bottom:4%; transform:rotate(-12deg); }
+.backpack-collage-note { position:absolute; right:25%; bottom:10%; color:#e8d993; font:400 24px/1.1 var(--handwriting); transform:rotate(-8deg); }
+.backpack-doodles { position:absolute; inset:0; width:100%; height:100%; color:#a62e30; }
+.skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag { z-index:1; transform:rotate(-4deg); padding:24px 10px 18px; }
+.skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag::before { background:#d5c9a9 url("../assets/Chapter%203_Skothane/Images/Background/Collage_Paper.jpg") center/cover no-repeat; }
+.skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag img { max-height:270px; }
+.skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__scribble { z-index:2; right:8%; top:-24px; color:#e8d993; }
+@media(max-width:650px) { .skhothane-outfit__workspace:not(.is-open) { display:grid; min-height:330px; grid-template-columns:38%; padding:25px 0; margin-top:42px; } .skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag { margin:0; padding:18px 5px 12px; } .skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag img { max-height:190px; } .skhothane-outfit__bag span { font-size:8px; } .backpack-clipping--green { padding:5px; height:43%; } .backpack-clipping--green figcaption { display:none; } .backpack-clipping--orange { border-width:5px; } .backpack-collage-note { font-size:17px; right:15%; bottom:32%; } }
+
+.backpack-clipping--orange img { object-position:center top; }
+.backpack-collage-note { z-index:3; right:21%; bottom:12%; padding:6px 10px; color:#f4df9b; text-shadow:0 2px 3px #30251b; }
+.skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag { animation:backpack-invitation 2.8s ease-in-out infinite; transform-origin:center; }
+.skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag:hover,
+.skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag:focus-visible { animation-play-state:paused; }
+@keyframes backpack-invitation { 0%,100% { transform:rotate(-4deg) scale(1); } 50% { transform:rotate(-4deg) scale(1.035); } }
+@media(max-width:650px) { .backpack-collage-note { right:8%; bottom:30%; font-size:17px; } }
+@media(prefers-reduced-motion:reduce) { .skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag { animation:none; } }
+html[data-reduced-motion="true"] .skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag { animation:none; }
+
+/* Let the paper's white surround disappear into the collage underneath. */
+.skhothane-outfit__bag { isolation:auto; }
+.skhothane-outfit__bag::before { mix-blend-mode:multiply; }
+
+/* Crop inside the source paper so its baked-in white margins never show. */
+.skhothane-outfit__bag::before,
+.skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag::before { background-size:170% 140%; background-position:center; mix-blend-mode:normal; }
+.skhothane-outfit__bag { isolation:isolate; }
+.skhothane-outfit__bag span { font-size:15px; line-height:1.4; padding:8px 4px; }
+@media(max-width:650px) { .skhothane-outfit__bag span { font-size:12px; } }
+
+.skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag::before { inset:40px 44px 24px; }
+.skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag::after { top:32px; }
+@media(max-width:650px) { .skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag::before { inset:16px 10px 8px; } .skhothane-outfit__workspace:not(.is-open) .skhothane-outfit__bag::after { top:8px; } }
+
+/* The opened backpack fits the available screen height. */
+@media(min-width:1001px) {
+  .skhothane-outfit:has(.is-open) { display:grid; grid-template-rows:auto minmax(0,1fr); gap:16px; overflow:hidden; padding:24px 5vw 76px; }
+  .skhothane-outfit:has(.is-open) .skhothane-outfit__back { margin-bottom:18px; }
+  .skhothane-outfit:has(.is-open) .skhothane-outfit__heading { max-width:850px; }
+  .skhothane-outfit:has(.is-open) .skhothane-outfit__heading h2 { font-size:clamp(36px,4vw,58px); margin:8px 0; }
+  .skhothane-outfit:has(.is-open) .skhothane-outfit__heading p { max-width:820px; font-size:12px; line-height:1.45; }
+  .skhothane-outfit__workspace.is-open { min-height:0; margin:0; padding:16px 12px 8px; grid-template-columns:minmax(120px,.55fr) minmax(360px,1.8fr) minmax(210px,.85fr); align-items:stretch; }
+  .is-open .skhothane-outfit__bag { align-self:start; padding:22px 12px 18px; }
+  .is-open .skhothane-outfit__bag img { max-height:min(160px,23svh); }
+  .is-open .skhothane-outfit__bag span { font-size:11px; }
+  .is-open .skhothane-outfit__choices { min-height:0; grid-template-rows:repeat(3,minmax(0,1fr)); gap:10px; }
+  .is-open .skhothane-outfit__choices fieldset { min-height:0; display:flex; flex-direction:column; padding:4px; }
+  .is-open .skhothane-outfit__choices legend { font-size:9px; padding:3px 10px; }
+  .is-open .skhothane-outfit__options { flex:1; min-height:0; }
+  .is-open .skhothane-outfit__options button { min-height:0; padding:5px 6px; gap:2px; }
+  .is-open .skhothane-outfit__options img { height:clamp(36px,8svh,80px); min-height:0; }
+  .is-open .skhothane-outfit__options button span { font-size:11px; }
+  .is-open .skhothane-outfit__result { min-height:0; display:grid; grid-template-rows:auto minmax(0,1fr) auto auto; padding:18px 12px 12px; }
+  .is-open .skhothane-outfit__look { min-height:0; grid-template-rows:1fr 1fr .7fr; margin:10px 0; padding:8px; }
+  .is-open .skhothane-outfit__result p { min-height:0; font-size:10px; }
+  .is-open .skhothane-outfit__watch { min-height:36px; }
+  .is-open .skhothane-outfit__scribble { top:-12px; font-size:22px; }
+}
+
+/* Give the clothing the card's available space without enlarging the cards. */
+.is-open .skhothane-outfit__options button { display:grid; grid-template-rows:minmax(0,1fr) auto; justify-items:center; overflow:hidden; }
+.is-open .skhothane-outfit__options img { width:100%; height:100%; min-height:0; object-fit:contain; transform:scale(1.45); transform-origin:center; }
+.is-open .skhothane-outfit__options button span { position:relative; z-index:1; margin-top:3px; }
+@media(min-width:1001px) {
+  .is-open .skhothane-outfit__options button { padding:10px 6px 6px; }
+  .is-open .skhothane-outfit__options img { height:100%; }
+}
+
+/* Bright paper frames and loose ink marks make the open spread a collage. */
+.outfit-collage-marks { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0; }
+.skhothane-outfit__workspace.is-open { isolation:isolate; }
+.skhothane-outfit__workspace.is-open::before { content:""; position:absolute; inset:0 -14px -10px; z-index:-1; background:repeating-linear-gradient(0deg,#66573d08 0 1px,transparent 1px 3px),linear-gradient(164deg,#eee6c9 0 48%,#49362a 48%); clip-path:polygon(0 1%,33% 0,67% 2%,100% 0,99% 99%,72% 100%,37% 98%,0 100%); }
+.is-open .skhothane-outfit__choices,.is-open .skhothane-outfit__result,.is-open .skhothane-outfit__bag { position:relative; z-index:1; }
+.is-open .skhothane-outfit__options button { border:6px solid #72a17b; background:#e7dcc5; box-shadow:3px 4px 3px #30261b55; transform:rotate(-2deg); }
+.is-open .skhothane-outfit__options button:nth-child(2) { border-color:#e57d36; background:#eaddc9; transform:rotate(2deg); }
+.is-open .skhothane-outfit__options button:nth-child(3) { border-color:#a8b976; background:#e2dcc2; transform:rotate(-1deg); }
+.is-open .skhothane-outfit__choices fieldset:nth-child(2) button { border-color:#43515a; }
+.is-open .skhothane-outfit__choices fieldset:nth-child(2) button:nth-child(2) { border-color:#8ea371; }
+.is-open .skhothane-outfit__choices fieldset:nth-child(2) button:nth-child(3) { border-color:#c99791; }
+.is-open .skhothane-outfit__choices fieldset:nth-child(3) button { border-color:#c2c987; }
+.is-open .skhothane-outfit__choices fieldset:nth-child(3) button:nth-child(2) { border-color:#779a7d; }
+.is-open .skhothane-outfit__choices fieldset:nth-child(3) button:nth-child(3) { border-color:#b092a7; }
+.is-open .skhothane-outfit__options button::before { display:none; }
+.is-open .skhothane-outfit__options button.is-selected { outline:3px solid #842d32; outline-offset:2px; }
+.is-open .skhothane-outfit__options button:hover,.is-open .skhothane-outfit__options button:focus-visible { transform:rotate(0); }
+.is-open .skhothane-outfit__options img { filter:drop-shadow(2px 0 #f7edcc) drop-shadow(-2px 0 #f7edcc) drop-shadow(0 2px #f7edcc) drop-shadow(2px 3px 2px #30291e44); }
+.is-open .skhothane-outfit__choices legend { background:#385c43; color:#fff1d2; font-size:10px; }
+.is-open .skhothane-outfit__choices fieldset:nth-child(2) legend { background:#df7835; color:#30271c; }
+.is-open .skhothane-outfit__choices fieldset:nth-child(3) legend { background:#a9b976; }
+.is-open .skhothane-outfit__result { border:7px solid #78a07b; background:#e8dec5; }
+.is-open .skhothane-outfit__scribble { color:#433728; z-index:2; }
+.is-open .skhothane-outfit__result::after { content:""; position:absolute; right:-12px; bottom:55px; width:16px; height:60px; border:3px solid #b99bc1; border-left:0; border-radius:0 70% 70% 0; pointer-events:none; }
+
+.skhothane-outfit__workspace.is-open::before { display:none; }
+
+/* Faint illustrated scraps sit behind the interactive clothing cards. */
+.skhothane-outfit__illustrations { position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
+.outfit-illustration { position:absolute; object-fit:contain; mix-blend-mode:screen; opacity:.23; }
+.outfit-illustration--backpack { width:clamp(170px,20vw,320px); height:38%; left:-2%; bottom:5%; transform:rotate(-14deg); }
+.outfit-illustration--jewelry { width:clamp(180px,23vw,360px); height:42%; right:16%; top:-6%; transform:rotate(17deg); opacity:.28; }
+.outfit-illustration--loafers { width:clamp(150px,18vw,290px); height:36%; right:-4%; bottom:3%; transform:rotate(22deg); }
+@media(max-width:650px) { .outfit-illustration--backpack { left:-10%; width:160px; } .outfit-illustration--jewelry { right:-12%; width:180px; top:0; } .outfit-illustration--loafers { width:150px; right:-12%; } }
+
+/* Keep the note readable and the navigation links separate. */
+.is-open .skhothane-outfit__scribble { color:#f4dfa3; text-shadow:0 2px 4px #191610; }
+.skhothane-outfit__back { margin-left:150px; width:fit-content; }
+.skhothane-outfit__bag::before { opacity:.28; }
+@media(max-width:650px) { .skhothane-outfit__back { margin-left:100px; } }
+
+.skhothane-outfit__bag span { color:#fff0c8; font-weight:800; text-shadow:0 2px 3px #17120f,0 0 6px #17120faa; border-bottom-color:#f0d39a; }
+.is-open .skhothane-outfit__bag span { font-size:13px; }
+
+.skhothane-outfit__bag span,
+.is-open .skhothane-outfit__bag span { font:400 clamp(20px,2vw,30px)/1.2 var(--handwriting); letter-spacing:0; text-transform:none; color:#f4dfa3; text-shadow:0 2px 4px #191610; }
+@media(max-width:650px) { .skhothane-outfit__bag span,.is-open .skhothane-outfit__bag span { font-size:20px; } }
+
+@media(min-width:1001px) { .is-open .skhothane-outfit__bag span { font-size:22px; } }
+
+.is-open .skhothane-outfit__result::after { border:0; border-radius:0; background:url("../assets/images/Illustrations/Swiggle.png") center/100% 100% no-repeat; mix-blend-mode:screen; opacity:.38; }
+.is-open .skhothane-outfit__result::after { transform:scale(2); transform-origin:center; }
+
+/* Larger garments within the existing outfit preview. */
+.skhothane-outfit__slot { overflow:hidden; }
+.skhothane-outfit__slot img { transform:rotate(-3deg) scale(1.55); }
+.skhothane-outfit__slot--jeans img { transform:rotate(3deg) scale(1.55); }
+
+.outfit-reveal { position:fixed; inset:0; z-index:50; display:grid; place-items:center; background:#161411eb; pointer-events:auto; animation:outfit-reveal-in .35s ease-out both; }
+.outfit-reveal__sheet { position:relative; width:min(520px,85vw); height:min(730px,85svh); overflow:hidden; background:repeating-linear-gradient(0deg,#493c2308 0 1px,transparent 1px 3px),#e6dcc2; box-shadow:0 15px 60px #0009; transform:rotate(-2deg); }
+.outfit-reveal__label { position:absolute; left:7%; top:4%; color:#6d191e; font:800 10px Montserrat,Arial,sans-serif; letter-spacing:2px; }
+.outfit-reveal__scrap { position:absolute; clip-path:polygon(3% 0,97% 3%,100% 97%,0 100%); }
+.outfit-reveal__scrap--green { left:25%; top:14%; width:58%; height:67%; background:url("../assets/Chapter%203_Skothane/Images/Background/Collage_2.jpg") center/cover no-repeat; opacity:.4; transform:rotate(13deg); }
+.outfit-reveal__scrap--print { left:12%; top:38%; width:60%; height:43%; background:url("../assets/Chapter%203_Skothane/Images/Background/Collage_1.jpg") center/cover no-repeat; opacity:.4; transform:rotate(-17deg); }
+.outfit-reveal__piece { position:absolute; object-fit:contain; z-index:3; filter:drop-shadow(3px 5px 2px #33271966); animation:outfit-piece-arrive .8s cubic-bezier(.2,.8,.3,1) var(--piece-delay) both; }
+.outfit-reveal__piece--shirt { left:25%; top:11%; width:52%; height:34%; --piece-turn:-8deg; }
+.outfit-reveal__piece--jeans { left:31%; top:37%; width:47%; height:39%; --piece-turn:10deg; }
+.outfit-reveal__piece--shoes { left:40%; top:69%; width:43%; height:18%; --piece-turn:-12deg; }
+.outfit-reveal__photo { position:absolute; left:64%; top:7%; width:28%; height:24%; object-fit:cover; border:6px solid #b99566; transform:rotate(12deg); }
+.outfit-reveal__bag { position:absolute; left:3%; top:46%; width:29%; height:30%; object-fit:contain; transform:rotate(-17deg); z-index:4; animation:outfit-reveal-in .6s 1s both; }
+.outfit-reveal__jewelry { position:absolute; right:0; top:31%; width:30%; height:29%; object-fit:contain; mix-blend-mode:multiply; opacity:.6; transform:rotate(20deg); }
+.outfit-reveal__marks { position:absolute; inset:0; width:100%; height:100%; z-index:4; }
+.outfit-reveal__sheet p { position:absolute; left:8%; bottom:2%; z-index:5; margin:0; color:#473b29; font:400 clamp(21px,2.3vw,29px)/1.1 var(--handwriting); transform:rotate(-3deg); }
+@keyframes outfit-piece-arrive { from { opacity:0; transform:translate(60px,-40px) rotate(25deg) scale(1.2); } to { opacity:1; transform:translate(0,0) rotate(var(--piece-turn)) scale(1); } }
+@keyframes outfit-reveal-in { from { opacity:0; } to { opacity:1; } }
+@media(prefers-reduced-motion:reduce) { .outfit-reveal,.outfit-reveal__piece,.outfit-reveal__bag { animation:none; } .outfit-reveal__piece { transform:rotate(var(--piece-turn)); } }
+html[data-reduced-motion="true"] :is(.outfit-reveal,.outfit-reveal__piece,.outfit-reveal__bag) { animation:none; }
+
+/* Textured paper for the assembled outfit, independent of its contents. */
+.outfit-reveal__sheet { background:transparent; isolation:isolate; }
+.outfit-reveal__sheet::before { content:""; position:absolute; inset:0; z-index:-1; background:url("../assets/Chapter%203_Skothane/Images/Background/Collage_Paper.jpg") center/170% 140% no-repeat; opacity:.9; }
