@@ -30,3 +30,5 @@ html[data-reduced-motion="true"] .soweto-arrival.is-leaving { animation:none; }
 @keyframes soweto-reflection-shade { 0% { background:#0d0d0d00; } 22%,100% { background:#0d0d0d; } }
 @keyframes soweto-reflection-copy { 0%,15% { opacity:0; } 25%,92% { opacity:1; } 100% { opacity:0; } }
 .soweto-arrival .video-bridge--calm,.soweto-arrival .video-bridge--calm p { animation:none; }
+
+.soweto-arrival .soweto-arrival__note { z-index:4; top:100px; bottom:auto; }

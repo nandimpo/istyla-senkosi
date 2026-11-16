@@ -1,3 +1,4 @@
+import RhythmAdvance from "./RhythmAdvance";
 import { useRef, useState } from "react";
 import hatImage from "../assets/images/Chapter images/Bucket-Hat.jpg";
 import townshipSketch from "../assets/Chapter 2_Pantsula/Background images/Township_Sketch.jpg";
@@ -168,13 +169,7 @@ export default function IspotiIntro({ track, audioRef, children }) {
           <progress id="ispoti-bend-progress" max="100" value={bend} />
         </div>
         <div className="ispoti-shadow-label">ISPOTI BREAK-IN</div>
-        <button
-          className="ispoti-enter"
-          disabled={!copyReady || !ready}
-          onClick={() => setOpened(true)}
-        >
-          {!copyReady ? "Read to unlock" : ready ? "Enter Pantsula →" : "Break it in to enter"}
-        </button>
+        <RhythmAdvance disabled={!copyReady || !ready} onComplete={() => setOpened(true)} label="Enter Pantsula" />
         <p aria-live="polite">
           {ready
             ? "Your ispoti is ready. Step into the chapter."

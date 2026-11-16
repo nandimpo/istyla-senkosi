@@ -1,4 +1,6 @@
 import { useRef, useState } from "react";
+import StitchAdvance from "../StitchAdvance";
+import ViewportFit from "../ViewportFit";
 import StitchedNarrative from "../StitchedNarrative";
 import WardrobeThreads from "./WardrobeThreads";
 import suitBackground from "../../assets/Chapter 1_Swenka/Images/Page Backgrounds/Suit_Background.jpg";
@@ -32,7 +34,7 @@ function WardrobeGame({ portraitImage, onComplete }) {
   const lastDetail = placed[placed.length - 1];
   const narrative = lastDetail
     ? detailNarratives[lastDetail] + (ready ? " Piece by piece, I see the care behind the whole outfit. I think of Ree checking his clothes before leaving, and wish I had paid this much attention then." : "")
-    : "After hearing them speak, I look at the outfit differently. I follow the care in each choice: the hat, the sleeve, the shoes. Choose a detail from the spool, then tap its matching place on the photograph, or drag it there. Piece by piece, I want to understand how that care becomes pride.";
+    : "I look closer at the hat, sleeve and shoes. Choose a detail from the spool, then drag it to its matching place, or tap the detail and its place. Each choice helps me notice the care behind the outfit.";
   const finishReading = () => { copyReadyRef.current = true; setCopyReady(true); };
   const center = (element) => {
     const bounds = element?.getBoundingClientRect();
@@ -98,14 +100,14 @@ function WardrobeGame({ portraitImage, onComplete }) {
 
   return (
     <div className="game-stage game-stage--swenka" style={{ "--suit-background": `url("${suitBackground}")` }}>
-      <div className="game-copy">
+      <ViewportFit className="game-copy">
         <p className="tag">01 / SWENKA</p>
         <h1>Piece by piece,<br />it came together.</h1>
         <StitchedNarrative key={placed.join("-") || "intro"} onComplete={finishReading} className="game-copy__narrative" text={narrative} placement="inline" />
-        <strong role="status">{ready ? "THE OUTFIT IS WHOLE. I LOOK AT IT WITH NEW RESPECT." : copyReady ? "PULL A DETAIL FROM THE SPOOL. A MATCH CUTS THE THREAD; A RED THREAD ASKS ME TO TRY AGAIN." : placed.length ? "FOLLOW THE THREAD BEFORE CHOOSING ANOTHER DETAIL" : "READ TO UNLOCK THE OUTFIT"}</strong>
+        <strong role="status">{ready ? "THE OUTFIT IS WHOLE. I LOOK AT IT WITH NEW RESPECT." : copyReady ? "A MATCH CUTS THE THREAD. RED MEANS TRY AGAIN." : placed.length ? "FOLLOW THE THREAD BEFORE CHOOSING ANOTHER DETAIL" : "READ TO UNLOCK THE OUTFIT"}</strong>
         <i />
-        {ready && <button type="button" className="interaction-continue" disabled={!copyReady} onClick={() => { if (copyReady) onComplete(); }}>Carry this attention forward &rarr;</button>}
-      </div>
+        {ready && <StitchAdvance disabled={!copyReady} onComplete={onComplete} label="Carry this attention forward" />}
+      </ViewportFit>
       <div className="fashion-portrait" inert={!copyReady}>
         <div className="portrait-frame">
           <img src={portraitImage} alt="A man in a yellow hat and dark suit, mid dance move" loading="lazy" decoding="async" />

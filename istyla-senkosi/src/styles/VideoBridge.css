@@ -1,21 +1,8 @@
-.video-bridge { position:absolute; inset:0; z-index:20; display:grid; place-items:center; padding:8vw; background:#0d0d0d; animation:video-bridge-shade 6.5s linear both; }
-.video-bridge p { max-width:740px; margin:0; color:#f5ead7; text-align:center; font:400 clamp(24px,3.2vw,44px)/1.5 Georgia,serif; text-wrap:balance; animation:video-bridge-copy 6.5s linear both; }
-@keyframes video-bridge-shade { 0% { background:#0d0d0d00; } 15%,88% { background:#0d0d0d; } 100% { background:#0d0d0d00; } }
-@keyframes video-bridge-copy { 0%,5% { opacity:0; } 20%,85% { opacity:1; } 98%,100% { opacity:0; } }
-.video-bridge--calm,.video-bridge--calm p { animation:none; }
-
-/* Let moving footage dissolve fully before the reflection appears. */
-.video-bridge--outgoing { animation:video-outro-shade 9s linear both; }
-.video-bridge--outgoing p { animation:video-outro-copy 9s linear both; }
-@keyframes video-outro-shade {
-  0% { background:#0d0d0d00; }
-  33.333%,90% { background:#0d0d0d; }
-  100% { background:#0d0d0d00; }
-}
-@keyframes video-outro-copy {
-  0%,33.333% { opacity:0; }
-  46%,90% { opacity:1; }
-  100% { opacity:0; }
-}
-.video-bridge--outgoing.video-bridge--calm,
-.video-bridge--outgoing.video-bridge--calm p { animation:none; }
+.video-bridge { position:absolute; inset:0; z-index:20; display:grid; place-items:center; padding:8vw; background:#0d0d0d00; animation:bridge-shade-in var(--bridge-cover) ease both,bridge-shade-out var(--bridge-exit) ease var(--bridge-exit-at) forwards; }
+.video-bridge p { max-width:740px; margin:0; color:#f5ead7; text-align:center; font:400 clamp(24px,3.2vw,44px)/1.5 Georgia,serif; text-wrap:balance; opacity:0; animation:bridge-copy-in var(--bridge-reveal) ease var(--bridge-cover) both,bridge-copy-out var(--bridge-exit) ease var(--bridge-exit-at) forwards; }
+@keyframes bridge-shade-in { from { background:#0d0d0d00; } to { background:#0d0d0d; } }
+@keyframes bridge-shade-out { from { background:#0d0d0d; } to { background:#0d0d0d00; } }
+@keyframes bridge-copy-in { from { opacity:0; } to { opacity:1; } }
+@keyframes bridge-copy-out { from { opacity:1; } to { opacity:0; } }
+.video-bridge--calm { animation:none; background:#0d0d0d; }
+.video-bridge--calm p { animation:none; opacity:1; }

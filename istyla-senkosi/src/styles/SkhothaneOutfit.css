@@ -227,3 +227,5 @@ html[data-reduced-motion="true"] :is(.outfit-reveal,.outfit-reveal__piece,.outfi
 /* Textured paper for the assembled outfit, independent of its contents. */
 .outfit-reveal__sheet { background:transparent; isolation:isolate; }
 .outfit-reveal__sheet::before { content:""; position:absolute; inset:0; z-index:-1; background:url("../assets/Chapter%203_Skothane/Images/Background/Collage_Paper.jpg") center/170% 140% no-repeat; opacity:.9; }
+
+.outfit-reveal__sheet p { color:#fff0ce; text-shadow:0 1px 3px #281b13,0 0 7px #281b1399; }

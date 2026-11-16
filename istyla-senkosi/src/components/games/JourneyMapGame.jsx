@@ -5,6 +5,7 @@ import { MAP_VIEW, STOPS, advanceProgress, clampProgress, routePath, routePoint 
 import "../../styles/JourneyMapGame.css";
 import NarrativeText from "../NarrativeText";
 import SowetoArrivalClip from "./SowetoArrivalClip";
+import mapPhotoBackground from "../../assets/images/Chapter images/Map_Background.jpg";
 import silhouetteSketch from "../../assets/Introduction/Images/Sketch 1.jpg";
 import shoeSketch from "../../assets/Introduction/Images/Shoe_Sketch.jpg";
 import floralSketch from "../../assets/Introduction/Images/Sketch_2.jpg";
@@ -204,6 +205,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
               <svg className="journey-map-image" viewBox={mapView} aria-hidden="true"><image href={mapImage} width="1920" height="1280" /></svg>
               <div className="journey-map-light" aria-hidden="true" />
               <svg className="journey-route-layer" viewBox={mapView} aria-label="Illustrative route from Johannesburg North to Soweto">
+                <defs><pattern id="journey-photo-map-paper" patternUnits="userSpaceOnUse" x="-12" y="-16" width="24" height="35" viewBox="94 0 412 600" preserveAspectRatio="xMidYMid slice"><image href={mapPhotoBackground} width="600" height="600" /></pattern></defs>
                 <g className="journey-drafting" aria-hidden="true">
                   <path d="M820 960H980 M820 1100H980 M890 960V1100 M825 1005H980 M825 1045H980" />
                   <text x="821" y="964">N ↑</text><text x="945" y="1097">NOT TO SCALE</text>
@@ -211,7 +213,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
                 {Object.entries(MEMORY_GROUPS).map(([folder, group]) => <g key={folder} className={`journey-cluster-label journey-thread-${group.thread}`} transform={`translate(${spreadX(group.label[0])} ${group.label[1]})`}><path d="M0 -1H12" /><text x="15" y="0" transform="rotate(-3 15 0)">{group.name}</text><path className="journey-label-underline" d={`M15 2 Q25 3 ${folder === "Beginning" ? 34 : 43} 1.5`} /></g>)}
                 {MAP_MEMORIES.map((memory) => <path key={memory.id} className={`journey-reference-line journey-thread-${MEMORY_GROUPS[memory.folder].thread}`} d={`M${spreadX(memory.x)} ${memory.y} Q${spreadX((memory.x + 900) / 2)} ${memory.y + 12} ${routePoint([0, .5, 1][["Beginning", "Middle", "Soweto"].indexOf(memory.folder)]).x} ${routePoint([0, .5, 1][["Beginning", "Middle", "Soweto"].indexOf(memory.folder)]).y}`} />)}
                 {MAP_MEMORIES.map((memory) => <g key={memory.id} className={`journey-map-photo ${selectedMemory?.id === memory.id ? "selected" : ""}`} role="button" tabIndex={0} aria-label={`Open fashion memory: ${memory.title}, ${memory.reference}`} transform={`translate(${spreadX(memory.x)} ${memory.y}) rotate(${memory.tilt}) scale(${memory.scale})`} onClick={(event) => { event.stopPropagation(); setSelectedMemory(memory); }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.stopPropagation(); setSelectedMemory(memory); } }}>
-                  <rect className="journey-photo-paper" x="-12" y="-16" width="24" height="35" />
+                  <rect className="journey-photo-paper" style={{ fill: "url(#journey-photo-map-paper)" }} x="-12" y="-16" width="24" height="35" />
                   <path className="journey-photo-tape" d="M-5 -17 L5 -18 L6 -14 L-4 -13 Z" />
                   <image href={memory.src} x="-11" y="-15" width="22" height="29" preserveAspectRatio="xMidYMid meet" />
                   <text x="-10" y="17">{memory.reference} / {MEMORY_GROUPS[memory.folder].name}</text>

@@ -1,0 +1,11 @@
+import assert from "node:assert/strict";
+import { readingTiming } from "../src/utils/readingTiming.js";
+const short = readingTiming("Hearing their stories brought me back to the way my cousin wore his own style.", { outgoing:true });
+const long = readingTiming(Array(50).fill("word").join(" "), { outgoing:true });
+assert.ok(short.total < 8000, "a single sentence should not linger for fifteen seconds");
+assert.ok(long.hold > short.hold, "longer copy gets more reading time");
+assert.equal(short.cover,3000, "the video still gets its full three-second fade");
+assert.equal(short.exitAt,short.cover + short.reveal + short.hold);
+assert.equal(readingTiming("Short text", {calm:true}).cover,0);
+assert.ok(readingTiming("").total > 0);
+console.log(`Reading timing checks passed. Example sentence: ${(short.total / 1000).toFixed(1)} seconds.`);

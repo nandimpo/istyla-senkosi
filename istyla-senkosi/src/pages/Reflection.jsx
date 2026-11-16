@@ -4,7 +4,7 @@ import ChapterPlayer from "../components/ChapterPlayer";
 import MemoryStitchIntro from "../components/MemoryStitchIntro";
 import cousin4 from "../assets/images/Cousin/Cousin 4.png";
 import cousin2Old from "../assets/images/Cousin/Cousin_2_old.jpeg";
-import chapterImage from "../assets/Chapter 4_Reflection/Images/Cousin_Old_Photo.png";
+import chapterImage from "../assets/images/Cousin/Cousin 1.jpeg";
 import houseImage from "../assets/Additional Images/Street Visuals/Wattville/House.jpg";
 import streetImage from "../assets/Additional Images/Street Visuals/Wattville/Street sign.jpg";
 import buildingImage from "../assets/Additional Images/Street Visuals/Wattville/Building.jpg";
@@ -46,7 +46,20 @@ function Reflection() {
         <h3>Photographs &amp; voices</h3>
         <p>Family photographs of Ree appear alongside archival and contemporary fashion imagery, interviews and dance footage exploring Swenka, Pantsula and Skhothane.</p>
         <h3>Music</h3>
-        <ul><li>Hugh Masekela ? Stimela (The Coal Train)</li><li>Miriam Makeba ? Khawuleza; Nongqongqo (To Those We Love)</li><li>Kwesta featuring Wale ? Spirit</li></ul>
+        <ul>
+          <li>Hugh Masekela: Stimela (The Coal Train); Mamoriri</li>
+          <li>Miriam Makeba: Khawuleza (Live 1966); Nongqongqo (To Those We Love)</li>
+          <li>Dorothy Masuka: Magumede</li>
+          <li>Unomeva (Isileyi Sami)</li>
+          <li>TKZee: Dlala Mapantsula</li>
+          <li>Mshoza and Mzambiya: Kortes (Kasi Luv)</li>
+          <li>Ngeke Balunge (featuring Teargas, Brown Dash, Brickz, Skhokho and Madluphuthu)</li>
+          <li>Moonchild Sanelly: Yebo Teacher</li>
+          <li>HEAVY-K and Moonchild Sanelly: Yebo Mama</li>
+          <li>Y-Tjukuja (featuring Professor, Oskido and DJ Bucks)</li>
+          <li>Kwesta featuring Wale: Spirit</li>
+          <li>Ehlatini</li>
+        </ul>
         <p>Thank you to the people whose dress, movement and stories invite a closer look.</p>
         <button onClick={() => creditsRef.current.close()}>Back to the reflection</button>
       </dialog>

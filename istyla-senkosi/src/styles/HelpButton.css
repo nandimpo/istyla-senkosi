@@ -1,0 +1,12 @@
+.help-trigger { position:fixed; z-index:20; right:calc(7vw + 120px); bottom:34px; padding:8px 0; border:0; background:transparent; color:#f5f1e9; cursor:pointer; font:600 10px/1.4 Montserrat,sans-serif; letter-spacing:1.5px; }
+.help-trigger span { display:inline-grid; place-items:center; width:18px; height:18px; margin-left:5px; border:1px solid #d6b57488; border-radius:50%; color:#e0b66d; }
+.journey-help { box-sizing:border-box; width:min(520px,calc(100vw - 40px)); max-height:calc(100svh - 60px); padding:32px; border:1px solid #c8b39b66; background:#191813; color:#f5eedf; }
+.journey-help::backdrop { background:#080b08c9; }
+.journey-help__kicker { margin:0 0 12px; color:#d6a24a; font:700 10px Montserrat,sans-serif; letter-spacing:2px; }
+.journey-help h2 { margin:0 0 20px; font:800 42px/1 "Barlow Condensed",Impact,sans-serif; }
+.journey-help__instruction { margin:0 0 22px; font:400 15px/1.65 Montserrat,sans-serif; }
+.journey-help__navigation { border-top:1px solid #c8b39b44; padding-top:10px; color:#cfc2ac; font:400 12px/1.6 Montserrat,sans-serif; }
+.journey-help__navigation strong { display:block; color:#e0b66d; }
+.journey-help__close { margin-top:12px; padding:12px 16px; border:1px solid #c69c54; background:transparent; color:#f5eedf; cursor:pointer; font:600 12px Montserrat,sans-serif; }
+.help-trigger:focus-visible,.journey-help button:focus-visible { outline:2px solid #e0b66d; outline-offset:4px; }
+@media(max-width:650px) { .help-trigger { right:calc(7vw + 100px); } .journey-help { padding:24px; } }

@@ -83,3 +83,44 @@ html[data-reduced-motion="true"] .chapter-player .fashion-wall--scrapbook .scrap
 
 .scrapbook-footer { font-size:10px; line-height:1.5; }
 @media(max-width:700px) { .scrapbook-footer { font-size:8px; max-width:92%; } }
+
+/* Let Swenka's fashion sketches read as part of the collage, rather than tiny accents. */
+#swenka .fashion-wall--scrapbook .scrapbook-clipping--detail {
+  scale:1.55;
+  transform-origin:50% 90%;
+  z-index:24;
+}
+#swenka .fashion-wall--scrapbook .scrapbook-clipping--detail:nth-of-type(3) {
+  transform-origin:50% 10%;
+}
+#swenka .fashion-wall--scrapbook .scrapbook-clipping--detail:focus-within { z-index:100; }
+@media(hover:hover) {
+  #swenka .fashion-wall--scrapbook .scrapbook-clipping--detail:hover { z-index:100; }
+}
+
+/* One worn-paper backing for every framed scrapbook image across chapters. */
+#root .fashion-wall--scrapbook .scrapbook-clipping:not(.scrapbook-clipping--detail) {
+  background-color:#b7ad91;
+  background-image:url("../assets/images/Chapter images/Map_Background.jpg");
+  background-position:center;
+  background-size:146% 100%;
+  background-repeat:no-repeat;
+}
+#root .fashion-wall--scrapbook .scrapbook-clipping:not(.scrapbook-clipping--detail) .fashion-album__photo,
+#root .fashion-wall--scrapbook .scrapbook-clipping--article img,
+#root .fashion-wall--scrapbook .scrapbook-clipping--outfit img {
+  background:transparent;
+}
+
+/* Close the empty pocket inside the left-hand thread loop in Swenka. */
+#swenka .fashion-wall--scrapbook .scrapbook-clipping--detail:nth-of-type(4) {
+  left:12%;
+  top:47%;
+  width:22%;
+  height:46%;
+  scale:1.35;
+}
+#swenka .fashion-wall--scrapbook .scrapbook-clipping:nth-of-type(5) {
+  left:29%;
+  top:51%;
+}

@@ -1,3 +1,4 @@
+import RhythmAdvance from "../RhythmAdvance";
 import { useRef, useState } from "react";
 import converseImage from "../../assets/Additional Images/Shoes/Converse.jpg";
 import backImage from "../../assets/Chapter 2_Pantsula/Images/Textures/Shoes/Shoes_360/Back.jpg";
@@ -115,7 +116,7 @@ export default function ConverseLacing({ onComplete, onBack }) {
       {items.length > 0 && <div className="converse-custom__manage"><select aria-label="Your decorations" value={selected ?? ""} onChange={(event) => { const item = items.find((entry) => entry.id === Number(event.target.value)); if (item) { turnTo(item.view * 90); setSelected(item.id); setOriginal(false); } }}><option value="" disabled>Your decorations</option>{items.map((item, index) => <option key={item.id} value={item.id}>{index + 1}. {shoeViews[item.view].name} / {item.type}{item.text ? `: ${item.text}` : ""}</option>)}</select><button type="button" disabled={!active} onClick={() => removeItem(selected)}>Remove</button><button type="button" onClick={() => { setItems([]); setSelected(null); setNotice("All decorations removed. Choose a patch to start again."); }}>Clear all</button></div>}
       {active && <fieldset className="converse-patches__adjust"><legend>Selected: {active.type}</legend><label>Size<input type="range" min=".5" max="2" step=".1" value={active.size} onChange={(event) => updateItem(active.id, { size:Number(event.target.value) })}/></label><label>Angle<input type="range" min="-180" max="180" value={active.rotation} onChange={(event) => updateItem(active.id, { rotation:Number(event.target.value) })}/></label><button type="button" onClick={() => { setItems((previous) => previous.filter((item) => item.id !== active.id)); setSelected(null); }}>Remove decoration</button></fieldset>}
       <p role="status" className="converse-lacing__status">{notice}</p>
-      <button type="button" className="converse-lacing__watch" disabled={!ready} onClick={() => { if (ready) onComplete(); }}>Follow the rhythm</button>
+      <RhythmAdvance disabled={!ready} onComplete={onComplete} label="Follow the rhythm" />
     </div>
     <div className="converse-custom__preview">
       <div className="converse-editorial__board">

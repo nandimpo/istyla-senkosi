@@ -1,3 +1,4 @@
+import SpotlightAdvance from "../SpotlightAdvance";
 import { useEffect, useRef, useState } from "react";
 import CollageMarks from "../CollageMarks";
 import OutfitAmbience from "./OutfitAmbience";
@@ -115,7 +116,7 @@ export default function SkhothaneOutfit({ onBack, onComplete, audioRef }) {
             </div>)}
           </div>
           <p role="status">{ready ? "I have imagined a look, but I cannot decide its meaning for him. Now I want to hear from people who share his style." : `${groups.filter(({ id }) => selected[id]).length} of 3 pieces chosen. ${groups.filter(({ id }) => selected[id]).map(({ id }) => selected[id].name).join(", ") || "Start with a piece that catches your eye"}. You can change any choice before hearing their stories.`}</p>
-          <button type="button" className="skhothane-outfit__watch" disabled={!ready || revealing} onClick={() => { if (ready) setRevealing(true); }}>Hear their stories →</button>
+          <SpotlightAdvance disabled={!ready || revealing} onComplete={() => setRevealing(true)} label="Hear their stories" />
         </div>
       </>}
     </div>

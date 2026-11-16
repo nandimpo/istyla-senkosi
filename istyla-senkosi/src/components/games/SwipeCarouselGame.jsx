@@ -1,3 +1,4 @@
+import SpotlightAdvance from "../SpotlightAdvance";
 import { useRef, useState } from "react";
 import StitchedNarrative from "../StitchedNarrative";
 import OutfitAmbience from "./OutfitAmbience";
@@ -90,8 +91,8 @@ function SwipeCarouselGame({ images, onComplete, audioRef }) {
       <button type="button" disabled={!copyReady || current === 0} aria-label="Previous photograph" onClick={() => goTo(current - 1)}>&larr;</button>
       <span role="status">{current + 1} / {images.length}</span>
       <button type="button" disabled={!copyReady || current === images.length - 1} aria-label="Next photograph" onClick={() => goTo(current + 1)}>&rarr;</button>
-      {ready && current === images.length - 1 && <button type="button" disabled={!copyReady} className="curved-gallery__continue" onClick={() => { if (copyReady) onComplete(); }}>Carry these questions forward &rarr;</button>}
     </div>
+    {ready && current === images.length - 1 && <SpotlightAdvance key={current} detailImage={images[current]} disabled={!copyReady} label="Carry these questions forward" onComplete={onComplete} />}
     <p className="curved-gallery__hint" role="status">{copyReady ? "DRAG, SCROLL OR USE THE ARROWS TO EXPLORE" : "READ TO UNLOCK THE PHOTOGRAPHS"}</p>
   </section>;
 }

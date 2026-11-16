@@ -1,0 +1,39 @@
+.journey-guide { position:absolute; inset:0; z-index:3; display:grid; place-items:center; padding:76px 24px 86px; box-sizing:border-box; background:#11130fee; color:#f5eedf; }
+.journey-guide__sheet { width:min(800px,100%); }
+.journey-guide__kicker { margin:0 0 10px; color:#d6a24a; font:700 11px/1.3 Montserrat,sans-serif; letter-spacing:2px; }
+.journey-guide h1 { margin:0 0 16px; font:800 clamp(38px,4vw,62px)/1 "Barlow Condensed",Impact,sans-serif; outline:none; }
+.journey-guide__intro { max-width:680px; margin:0 0 24px; color:#d5c6ad; font:400 15px/1.6 Montserrat,sans-serif; }
+.journey-guide__steps { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+.journey-guide__steps > div { display:flex; gap:12px; }
+.journey-guide__steps > div > span { color:#d6a24a; font:400 23px/1 Georgia,serif; }
+.journey-guide h2 { margin:0 0 8px; font:600 15px/1.3 Montserrat,sans-serif; }
+.journey-guide__steps p { margin:0; font:400 13px/1.65 Montserrat,sans-serif; color:#d5c6ad; }
+.journey-guide__navigation { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; padding:20px 0; margin:24px 0 0; border-top:1px solid #c8b39b44; border-bottom:1px solid #c8b39b44; }
+.journey-guide dt { color:#e0b66d; font:700 11px/1.3 Montserrat,sans-serif; letter-spacing:1px; }
+.journey-guide dd { margin:7px 0 0; color:#d5c6ad; font:400 12px/1.5 Montserrat,sans-serif; }
+.journey-guide__footer { display:flex; align-items:center; justify-content:space-between; margin-top:22px; gap:20px; }
+#root .journey-guide button { cursor:pointer; font:600 13px/1.3 Montserrat,sans-serif; padding:13px 18px; border:1px solid #d6a24a; }
+#root .journey-guide__back { color:#d5c6ad; background:transparent; border-color:transparent; }
+#root .journey-guide__start { background:#d38912; color:#171611; }
+.journey-guide__start span { margin-left:20px; }
+.journey-guide button:focus-visible { outline:2px solid #fff0cb; outline-offset:4px; }
+@media(max-width:600px) {
+  .journey-guide { padding:65px 24px 78px; }
+  .journey-guide__steps { grid-template-columns:1fr; gap:15px; }
+  .journey-guide__intro { font-size:13px; line-height:1.5; margin-bottom:18px; }
+  .journey-guide__steps p { font-size:12px; line-height:1.5; }
+  .journey-guide h2 { font-size:13px; margin-bottom:5px; }
+  .journey-guide__navigation { gap:12px; padding:14px 0; margin-top:18px; }
+  .journey-guide dd { font-size:11px; }
+  .journey-guide dt { font-size:10px; }
+  .journey-guide__footer { margin-top:14px; }
+}
+@media(max-height:650px) and (min-width:601px) {
+  .journey-guide { padding-top:65px; padding-bottom:70px; }
+  .journey-guide h1 { font-size:38px; }
+  .journey-guide__intro { margin-bottom:14px; }
+  .journey-guide__navigation { margin-top:16px; padding:14px 0; }
+  .journey-guide__footer { margin-top:14px; }
+}
+.journey-guide__navigation { grid-template-columns:repeat(4,1fr); }
+@media(max-width:600px) { .journey-guide__navigation { grid-template-columns:repeat(2,1fr); } }

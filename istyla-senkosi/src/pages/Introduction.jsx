@@ -3,7 +3,7 @@ import ChapterPlayer from "../components/ChapterPlayer";
 import JourneyMapGame from "../components/games/JourneyMapGame";
 import johannesburgMap from "../assets/Chapter 1_Swenka/Images/Editorial/map.jpg";
 import johannesburgImage from "../assets/Additional Images/Street Visuals/Johannesburg/Johannesburg black and white.jpg";
-import reePhoto from "../assets/Chapter 4_Reflection/Images/Cousin_Old_Photo.png";
+import reePhoto from "../assets/images/Cousin/Cousin 1.jpeg";
 import chapterImage from "../assets/Introduction/Enviroment/Johannesburg home image 1.png";
 import backgroundTrack from "../assets/audio/New Music/Stimela (The Coal Train).mp3";
 import streetImage from "../assets/Additional Images/Street Visuals/Soweto/Spaza shop.jpg";

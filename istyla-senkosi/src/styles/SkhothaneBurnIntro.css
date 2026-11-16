@@ -64,3 +64,9 @@ html[data-reduced-motion="true"] .skhothane-burn-intro * { animation:none !impor
   .skhothane-burn-intro__stage { height:490px; }
   .skhothane-burn-intro__shirt { top:1%; left:-4%; width:108%; height:78%; }
 }
+
+/* Enlarge upward, keeping the shirt hem at the same distance from the flame. */
+.skhothane-burn-intro__shirt { top:-6%; height:100%; }
+@media(max-width:700px) {
+  .skhothane-burn-intro__shirt { top:-10%; left:-6%; width:112%; height:92%; }
+}

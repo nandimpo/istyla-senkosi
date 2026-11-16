@@ -250,3 +250,8 @@
 .journey-route-layer { user-select:none; -webkit-user-select:none; }
 .journey-stop-buttons button:disabled,.journey-continue:disabled,.journey-enter:disabled { opacity:.4; }
 .journey-drag-target[aria-disabled="true"] { pointer-events:none; }
+
+/* Keep the worn frame in its original proportions, cropping its white scan margins. */
+.journey-photo-card { background:#b6ad8f url("../assets/images/Chapter images/Map_Background.jpg") center/cover no-repeat; }
+.journey-photo-card::before { background-image:url("../assets/images/Chapter images/Map_Background.jpg"); background-position:center; background-size:cover; opacity:.85; mix-blend-mode:normal; transform:scale(1.48); }
+.journey-photo-card>div { background:#d8cfb5db; }

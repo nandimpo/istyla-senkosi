@@ -92,8 +92,8 @@ code {
 }
 
 @media(any-pointer:fine) {
-  :is(button:not(:disabled),a[href],summary,label[for],[role="button"]:not([aria-disabled="true"]),[draggable="true"]),
-  :is(button:not(:disabled),a[href],summary,label[for],[role="button"]:not([aria-disabled="true"]),[draggable="true"]) * {
+  :is(button:not(:disabled),a[href],summary,label[for],[role="button"]:not([aria-disabled="true"]),[role="slider"]:not([aria-disabled="true"]),.journey-route-grab,[draggable="true"]),
+  :is(button:not(:disabled),a[href],summary,label[for],[role="button"]:not([aria-disabled="true"]),[role="slider"]:not([aria-disabled="true"]),.journey-route-grab,[draggable="true"]) * {
     cursor:url("./assets/images/mouse-pointer-cursor.svg") 12 1, pointer !important;
   }
 }

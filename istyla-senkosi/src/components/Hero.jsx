@@ -1,3 +1,5 @@
+import { useState } from "react";
+import JourneyGuide from "./JourneyGuide";
 import { useNavigation } from "../context/NavigationContext";
 import collage1 from "../assets/Introduction/Images/Bafana Bafana.jpg";
 import collage2 from "../assets/Introduction/Images/Freestate fashion.jpg";
@@ -13,6 +15,7 @@ const collageImages = [collage1, collage2, collage3, collage4, collage5, collage
 
 function Hero() {
   const { restartJourney } = useNavigation();
+  const [showGuide, setShowGuide] = useState(false);
 
   return <main className="documentary" id="about">
     <div className="hero-collage" aria-hidden="true">
@@ -33,12 +36,12 @@ function Hero() {
       <div className="topbar-left" />
       <span>ISTYLA SENKOSI / 01</span>
     </header>
-    <section className="hero-content">
+    {showGuide ? <JourneyGuide onStart={restartJourney} onBack={() => setShowGuide(false)} /> : <section className="hero-content">
       <p className="hero-subtitle">Interactive Documentary</p>
       <h1 className="hero-title">I&apos;STYLA<br />SENKOSI</h1>
       <p className="hero-description">Past, Present and Future of Township Fashion</p>
-      <button className="hero-button" onClick={restartJourney}>Begin Journey <span>→</span></button>
-    </section>
+      <button className="hero-button" onClick={() => setShowGuide(true)}>Begin Journey <span>→</span></button>
+    </section>}
   </main>;
 }
 export default Hero;

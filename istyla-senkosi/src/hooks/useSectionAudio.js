@@ -1,3 +1,4 @@
+import { CHAPTER_FOLLOWUPS, nextQueueIndex } from "./chapterAudioQueue";
 import { useEffect } from "react";
 import { useNavigation } from "../context/NavigationContext";
 
@@ -53,7 +54,12 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
     const audio = audioRef.current;
     if (!audio) return undefined;
     audio.muted = !soundOn;
-    if (nextTrack) audio.loop = audio.dataset.followupTrack === nextTrack;
+    const playlist = CHAPTER_FOLLOWUPS[id]?.length ? CHAPTER_FOLLOWUPS[id] : nextTrack ? [nextTrack] : [];
+    if (playlist.length) audio.loop = false;
+    if (audio.dataset.queueSection !== id) {
+      audio.dataset.queueSection = id;
+      audio.dataset.followupIndex = "-1";
+    }
 
     if (currentSection !== id || fadeOut || (navigationLocked && !continueWhileLocked)) {
       fadeTo(audio, 0, { thenPause: true });
@@ -62,7 +68,7 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
 
     let disposed = false;
     let fadingTrackEnd = false;
-    const hasNextTrack = () => nextTrack && audio.dataset.followupTrack !== nextTrack;
+    const hasNextTrack = () => playlist.length > 0;
     const fadeTrackEnd = () => {
       const remaining = audio.duration - audio.currentTime;
       if (!hasNextTrack() || !Number.isFinite(remaining) || remaining > 4 || remaining <= 0) return false;
@@ -74,9 +80,11 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
     };
     const startNextTrack = () => {
       if (!hasNextTrack()) return;
-      audio.dataset.followupTrack = nextTrack;
-      audio.src = nextTrack;
-      audio.loop = true;
+      const savedIndex = Number(audio.dataset.followupIndex ?? -1);
+      const index = nextQueueIndex(Number.isInteger(savedIndex) ? savedIndex : -1, playlist.length);
+      audio.dataset.followupIndex = String(index);
+      audio.src = playlist[index];
+      audio.loop = false;
       audio.volume = 0;
       fadingTrackEnd = false;
       audio.load();

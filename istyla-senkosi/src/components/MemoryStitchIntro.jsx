@@ -1,5 +1,5 @@
 import { useEffect, useId, useState } from "react";
-import cousinImage from "../assets/Chapter 4_Reflection/Images/Cousin_Old_Photo.png";
+import cousinImage from "../assets/images/Cousin/Cousin 1.jpeg";
 import beigeThread from "../assets/Chapter 4_Reflection/Textures/Beige_Thread.jpg";
 import greenThread from "../assets/Chapter 4_Reflection/Textures/Green_Thread.png";
 import redThread from "../assets/Chapter 4_Reflection/Textures/Red_Thread.jpg";

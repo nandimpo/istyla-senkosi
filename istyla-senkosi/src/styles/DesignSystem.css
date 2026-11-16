@@ -227,10 +227,309 @@ html[data-reduced-motion="true"] #root .chapter-player__page { animation:none; }
 #root .ending-dialog p { margin:12px 0; }
 #root .ending-dialog ul { padding-left:20px; }
 #root .ending-dialog nav { display:grid; gap:12px; margin-bottom:24px; }
-#root .video-scene-notes { position:absolute; z-index:5; top:100px; left:var(--page-gutter); width:min(400px,calc(100% - 48px)); max-height:55svh; overflow:auto; padding:12px 16px; background:#171611ed; color:#fff0d6; font:400 16px/1.6 var(--font-body); }
-#root .video-scene-notes summary { cursor:pointer; font-weight:700; }
-#root .video-scene-notes p { margin:16px 0; }
-#root .video-scene-notes small { font-size:12px; color:#c8b39b; }
 #root .video-loading { position:absolute; z-index:5; top:50%; left:50%; transform:translate(-50%,-50%); padding:12px 18px; background:#171611ed; }
 #root .video-recovery { position:absolute; z-index:6; top:50%; left:50%; transform:translate(-50%,-50%); width:min(440px,85vw); padding:24px; background:#171611; color:#f5f1e9; }
 #root .video-recovery button { min-height:44px; padding:10px 16px; margin:16px 8px 0 0; }
+
+/* Compact activity copy has its own scale; the global story size must not enlarge it. */
+#root .game-copy .game-copy__narrative .stitched-narrative__copy {
+  font-size:clamp(13px,.9vw,16px);
+  line-height:1.55;
+}
+#root .game-copy.viewport-fit {
+  overflow:hidden;
+  min-height:0;
+  height:calc(100svh - 185px);
+  margin-top:90px;
+  padding-top:0;
+  padding-bottom:8px;
+}
+.viewport-fit__content { width:100%; display:flow-root; }
+#root .game-copy .game-copy__narrative { margin-top:16px; }
+#root .game-copy .stitched-narrative__thread-wrap { margin-top:8px; }
+#root .game-copy .stitch-advance { margin-top:12px; }
+@media(max-height:750px) {
+  #root .game-copy h1 { font-size:clamp(30px,3vw,44px); line-height:.95; }
+  #root .game-copy p.tag { margin-bottom:16px; }
+  #root .game-copy strong { margin-top:12px; }
+}
+
+@media(max-width:700px) {
+  #root .game-stage--swenka {
+    height:100svh;
+    box-sizing:border-box;
+    padding:80px 18px 78px;
+    grid-template-columns:minmax(0,1fr) minmax(110px,.65fr);
+    grid-template-rows:minmax(0,.9fr) minmax(0,1.4fr);
+    gap:14px;
+    overflow:hidden;
+  }
+  #root .game-stage--swenka .game-copy.viewport-fit { grid-column:1 / -1; grid-row:1; height:100%; margin:0; padding:0; }
+  #root .game-stage--swenka .game-copy h1 { font-size:30px; }
+  #root .game-stage--swenka .game-copy p.tag { margin-bottom:8px; }
+  #root .game-stage--swenka .fashion-portrait { grid-column:1; grid-row:2; height:100%; min-height:0; }
+  #root .game-stage--swenka .wardrobe { grid-column:2; grid-row:2; height:100%; padding:0; }
+  #root .game-stage--swenka .wardrobe-spool { height:100%; padding:24px 10%; gap:6px; }
+  #root .game-stage--swenka .wardrobe-spool-note { font-size:11px; }
+  #root .game-stage--pantsula { box-sizing:border-box; padding:82px 20px 78px; grid-template-rows:minmax(0,.85fr) minmax(0,1.15fr); gap:16px; overflow:hidden; }
+  #root .game-stage--pantsula .game-copy.viewport-fit { height:100%; margin:0; padding:0; }
+  #root .game-stage--pantsula .pantsula-image { height:100%; min-height:0; }
+}
+
+/* Align Swenka's reading panel with the scrapbook canvas below its masthead. */
+@media(min-width:701px) {
+  #root #swenka .chapter-player__page:has(.fashion-wall--scrapbook) .chapter-player__story {
+    top:23.4%;
+    bottom:auto;
+    left:6vw;
+    width:31%;
+  }
+  #root #swenka .chapter-player__page:has(.fashion-wall--scrapbook) .chapter-player__story .stitched-narrative__copy {
+    font-size:clamp(16px,1.1vw,19px);
+    line-height:1.6;
+  }
+}
+
+#root #swenka .chapter-player__visual--memory-photo .chapter-player__collage-backdrop {
+  opacity:.16;
+  filter:grayscale(1);
+  background-position:center;
+  background-size:cover;
+}
+#root #swenka .chapter-player__page:has(.chapter-player__visual--memory-photo)::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:linear-gradient(90deg,#171611b3,transparent 65%);
+}
+
+#root #pantsula .chapter-player__visual--memory-photo .chapter-player__collage-backdrop {
+  opacity:.16;
+  filter:grayscale(.65);
+  background-position:center;
+  background-size:cover;
+}
+#root #pantsula .chapter-player__visual--memory-photo > img.old-photo--square {
+  aspect-ratio:1247 / 1261;
+  mask-image:url("../assets/images/masks/old-photo-square.svg");
+  mask-size:100% 100%;
+  mask-repeat:no-repeat;
+}
+#root #pantsula .chapter-player__page:has(.chapter-player__visual--memory-photo)::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  background:linear-gradient(90deg,#171611b3,transparent 65%);
+}
+
+#root .memory-flipbook--photo-album img.old-photo--portrait,
+#root .memory-flipbook--photo-album img.old-photo--square {
+  object-fit:contain;
+  object-position:center;
+  mask-repeat:no-repeat;
+  mask-size:contain;
+  mask-position:center;
+  background:transparent;
+}
+#root .memory-flipbook--photo-album img.old-photo--portrait { mask-image:url("../assets/images/masks/old-photo-portrait.svg"); }
+#root .memory-flipbook--photo-album img.old-photo--square { mask-image:url("../assets/images/masks/old-photo-square.svg"); }
+
+/* Keep Pantsula's reflection and its next-step control in one measured flow. */
+@media(min-width:701px) {
+  #root #pantsula .chapter-player__page:has(.fashion-wall) .chapter-player__story--with-navigation {
+    top:23.4%;
+    bottom:110px;
+    width:31%;
+    overflow:hidden;
+  }
+}
+#root #pantsula .chapter-player__story--with-navigation .stitched-narrative__copy {
+  font-size:clamp(16px,1.1vw,19px);
+  line-height:1.55;
+}
+#root #pantsula .chapter-player__story--with-navigation .rhythm-advance {
+  position:relative;
+  inset:auto;
+  transform:none;
+  width:100%;
+  max-width:100%;
+  margin:24px auto 0;
+  padding-top:16px;
+  border-top:1px solid #c8b39b33;
+}
+@media(max-width:700px) {
+  #root #pantsula .chapter-player__page:has(.fashion-wall) .chapter-player__story--with-navigation { top:48%; bottom:90px; overflow:hidden; }
+  #root #pantsula .chapter-player__story--with-navigation .rhythm-advance { margin-top:16px; padding-top:12px; }
+}
+
+/* Skhothane's light sits after the full reflection, inside the fitted reading panel. */
+@media(min-width:701px) {
+  #root #skhothane .chapter-player__page:has(.fashion-wall) .chapter-player__story--with-navigation {
+    top:23.4%;
+    bottom:110px;
+    width:31%;
+    overflow:hidden;
+  }
+}
+#root #skhothane .chapter-player__story--with-navigation .stitched-narrative__copy {
+  font-size:clamp(16px,1.1vw,19px);
+  line-height:1.55;
+}
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance {
+  position:relative;
+  inset:auto;
+  transform:none;
+  width:100%;
+  max-width:100%;
+  margin:24px auto 0;
+  padding-top:16px;
+  border-top:1px solid #c8b39b33;
+}
+@media(max-width:700px) {
+  #root #skhothane .chapter-player__page:has(.fashion-wall) .chapter-player__story--with-navigation { top:48%; bottom:90px; overflow:hidden; }
+  #root #skhothane .chapter-player__story--with-navigation .spotlight-advance { margin-top:16px; padding-top:12px; }
+}
+
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  margin-top:22px;
+  padding-top:18px;
+}
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance button {
+  order:0;
+  width:60px;
+  height:60px;
+  margin:0;
+}
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance__title {
+  order:1;
+  margin:0;
+  font-size:21px;
+  line-height:1.3;
+}
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance__instruction { display:none; }
+
+/* Size the Skhothane reflection card to its content instead of stretching it. */
+@media(min-width:701px) {
+  #root #skhothane .chapter-player__page:has(.fashion-wall) .chapter-player__story--with-navigation {
+    bottom:auto;
+    height:max-content;
+    max-height:calc(76.6svh - 110px);
+    width:29%;
+    max-width:500px;
+    padding:18px 22px;
+  }
+}
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance {
+  margin-top:18px;
+  padding-top:14px;
+  gap:6px;
+}
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance button { width:52px; height:52px; }
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance__title { font-size:20px; }
+
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance {
+  margin-top:14px;
+  padding-top:8px;
+  gap:4px;
+}
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance button {
+  display:grid;
+  place-items:center;
+  align-self:center;
+  margin:0 auto;
+}
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance__title {
+  order:0;
+}
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance button {
+  order:1;
+}
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance button {
+  order:0;
+}
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance__title {
+  order:1;
+}
+/* Keep the narration shading from extending through the continuation control. */
+#root #skhothane .chapter-player__story--with-navigation .stitched-narrative::before {
+  display:none;
+}
+#root #skhothane .chapter-player__story--with-navigation .spotlight-advance {
+  padding-top:12px;
+  background:none;
+}
+/* Reflection photographs fill the viewport beneath the narration. */
+#root #reflection .chapter-player__visual--quiet-layout {
+  position:absolute;
+  inset:0;
+  padding:0;
+  display:block;
+}
+#root #reflection .chapter-player__visual--quiet-layout > img {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  max-width:none;
+  max-height:none;
+  object-fit:cover;
+  object-position:center;
+  opacity:.24;
+}
+#root #reflection .chapter-player__page:has(.chapter-player__visual--quiet-layout) {
+  display:block;
+  padding:0;
+  overflow:hidden;
+}
+#root #reflection .chapter-player__page:has(.chapter-player__visual--quiet-layout) .chapter-player__story {
+  position:absolute;
+  top:50%;
+  bottom:auto;
+  left:var(--page-gutter);
+  width:min(500px,calc(100% - 2 * var(--page-gutter)));
+  transform:translateY(-50%);
+}
+/* Keep the closing portrait and reflection balanced within one screen. */
+#root #reflection .final-frame {
+  box-sizing:border-box;
+  padding:90px var(--page-gutter) 100px;
+  gap:24px;
+  overflow:hidden;
+}
+#root #reflection .final-frame__meeting {
+  grid-template-columns:minmax(200px,360px) minmax(280px,520px);
+  max-width:1000px;
+  gap:clamp(32px,5vw,80px);
+  min-height:0;
+}
+#root #reflection .final-frame__meeting p {
+  font-size:clamp(15px,1.05vw,18px);
+  line-height:1.55;
+  margin:0 0 16px;
+}
+#root #reflection .final-frame__meeting h1 {
+  font-size:clamp(42px,4vw,64px);
+  margin:12px 0 20px;
+}
+#root #reflection .final-frame__meeting img {
+  max-height:min(52svh,480px);
+}
+#root #reflection .final-frame__actions { flex-shrink:0; margin:0; }
+#root #reflection .final-frame__actions button { padding:12px 18px; font-size:11px; }
+@media(max-width:700px) {
+  #root #reflection .final-frame { display:flex; padding:74px 24px 84px; gap:14px; }
+  #root #reflection .final-frame__meeting { grid-template-columns:1fr; gap:12px; }
+  #root #reflection .final-frame__meeting img { height:22svh; max-height:180px; }
+  #root #reflection .final-frame__meeting h1 { font-size:34px; margin:6px 0 10px; }
+  #root #reflection .final-frame__meeting p { font-size:13px; line-height:1.4; margin-bottom:10px; }
+  #root #reflection .final-frame__actions { gap:6px; }
+  #root #reflection .final-frame__actions button { min-width:0; padding:9px 10px; font-size:9px; }
+}

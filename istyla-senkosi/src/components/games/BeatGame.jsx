@@ -1,5 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "../../context/NavigationContext";
+import RhythmAdvance from "../RhythmAdvance";
+import ViewportFit from "../ViewportFit";
 import StitchedNarrative from "../StitchedNarrative";
 import "../../styles/ChapterGames.css";
 
@@ -19,15 +21,21 @@ function BeatGame({ sceneImages, onComplete }) {
   const [copyReady, setCopyReady] = useState(false);
   const [activeBeat, setActiveBeat] = useState(0);
   const [replayFrame, setReplayFrame] = useState(0);
-  const [paused, setPaused] = useState(true);
+  const [paused, setPaused] = useState(false);
+  const [hasPlayedCycle, setHasPlayedCycle] = useState(false);
   const audioContext = useRef(null);
   const ready = activeBeat === beats.length;
 
   useEffect(() => {
-    if (!ready || paused || !copyReady || reducedMotion) return undefined;
-    const timer = setInterval(() => setReplayFrame((frame) => (frame + 1) % sceneImages.length), 240);
+    if (!ready || paused || reducedMotion) return undefined;
+    let framesPlayed = 0;
+    const timer = setInterval(() => {
+      setReplayFrame((frame) => (frame + 1) % sceneImages.length);
+      framesPlayed += 1;
+      if (framesPlayed >= sceneImages.length) setHasPlayedCycle(true);
+    }, 240);
     return () => clearInterval(timer);
-  }, [ready, paused, copyReady, reducedMotion, sceneImages.length]);
+  }, [ready, paused, reducedMotion, sceneImages.length]);
 
   const displayedFrame = Math.min(sceneImages.length - 1, ready ? replayFrame : activeBeat);
 
@@ -61,14 +69,14 @@ function BeatGame({ sceneImages, onComplete }) {
 
   return (
     <div className="game-stage game-stage--pantsula">
-      <div className="game-copy">
+      <ViewportFit className="game-copy">
         <p className="tag">02 / PANTSULA</p>
         <h1>I tried to feel it,<br />not just watch it.</h1>
         <StitchedNarrative key={activeBeat} onComplete={() => setCopyReady(true)} className="game-copy__narrative" text={beatNarratives[activeBeat]} placement="inline" />
         <strong role="status">{copyReady ? currentScene : "READ TO UNLOCK THE BEATS"}</strong>
         <i />
-        {ready && <div className="beat-replay-controls"><button type="button" aria-pressed={paused} onClick={() => setPaused((value) => !value)}>{paused ? "Play animation" : "Pause animation"}</button><button type="button" disabled={!copyReady} onClick={() => { if (copyReady) onComplete(); }}>Continue the story →</button></div>}
-      </div>
+        {ready && <><div className="beat-replay-controls"><button type="button" aria-pressed={paused} onClick={() => setPaused((value) => !value)}>{paused ? "Play animation" : "Pause animation"}</button></div><RhythmAdvance disabled={!copyReady || (!reducedMotion && !hasPlayedCycle)} onComplete={onComplete} /></>}
+      </ViewportFit>
       <div className={`pantsula-image beat-scene-${activeBeat}`}>
         {sceneImages.map((src, index) => <img key={src} src={src} alt={index === displayedFrame ? (ready ? "The complete Pantsula dance sequence" : `Pantsula dance scene: ${activeBeat ? beats[activeBeat - 1] : "ready"}`) : ""} aria-hidden={index !== displayedFrame} style={{ display:index === displayedFrame ? "block" : "none" }} loading="eager" decoding="async" />)}
         <div className="beat-overlay"><span>{ready ? "COMPLETE SEQUENCE / LOOP" : `NEXT BEAT ${activeBeat + 1} / ${beats.length}`}</span></div>

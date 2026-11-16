@@ -21,7 +21,7 @@ function AlbumNote({ pageIndex, titles, notes, count = Infinity }) {
   </div>;
 }
 
-export default function MemoryFlipbook({ images, paused = false, photoAlbum = false, albumLabel = "My memory album", titles = albumTitles, notes = [], imagePositions = [], onWritingReady }) {
+export default function MemoryFlipbook({ images, paused = false, photoAlbum = false, albumLabel = "My memory album", titles = albumTitles, notes = [], imagePositions = [], photoMasks = [], onWritingReady }) {
   const { reducedMotion } = useNavigation();
   const [systemReducedMotion, setSystemReducedMotion] = useState(false);
   const quietMotion = reducedMotion || systemReducedMotion;
@@ -130,13 +130,13 @@ export default function MemoryFlipbook({ images, paused = false, photoAlbum = fa
       <div className="memory-flipbook__stack" aria-hidden="true" />
       <div className="memory-flipbook__page">
         {photoAlbum && <AlbumNote pageIndex={page.current} titles={titles} notes={notes} count={count} />}
-        <img src={images[page.current]} style={{ objectPosition: imagePositions[page.current] || "center top" }} alt={`${albumLabel}, photograph ${page.current + 1} of ${images.length}`} decoding="async" />
+        <img className={photoMasks[page.current] ? `old-photo--${photoMasks[page.current]}` : undefined} src={images[page.current]} style={{ objectPosition: imagePositions[page.current] || "center top" }} alt={`${albumLabel}, photograph ${page.current + 1} of ${images.length}`} decoding="async" />
       </div>
       {page.previous !== null && !paused && !quietMotion && (
         <div key={page.turn} className={`memory-flipbook__turning memory-flipbook__turning--${page.direction > 0 ? "forward" : "back"}`} aria-hidden="true">
           <div className="memory-flipbook__front">
           {photoAlbum && <AlbumNote pageIndex={page.previous} titles={titles} notes={notes} />}
-          <img src={images[page.previous]} style={{ objectPosition: imagePositions[page.previous] || "center top" }} alt="" />
+          <img className={photoMasks[page.previous] ? `old-photo--${photoMasks[page.previous]}` : undefined} src={images[page.previous]} style={{ objectPosition: imagePositions[page.previous] || "center top" }} alt="" />
           </div>
           <span className="memory-flipbook__paper-back" />
         </div>

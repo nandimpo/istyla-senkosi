@@ -6,7 +6,8 @@ import UnzipIntro from "../components/UnzipIntro";
 import WardrobeGame from "../components/games/WardrobeGame";
 import interviewVideo from "../assets/edited-clips/swenka-intro.mp4";
 import interviewVideoTwo from "../assets/edited-clips/swenka-interview.mp4";
-import reePhoto from "../assets/Chapter 4_Reflection/Images/Cousin_Old_Photo.png";
+import blackLabelBackground from "../assets/Chapter 3_Skothane/Images/Historical/Black label.jpg";
+import reePhoto from "../assets/images/Cousin/Cousin 1.jpeg";
 import editorial4 from "../assets/Chapter 1_Swenka/Images/Editorial/Man with pinstripe jacket.jpg";
 import editorial5 from "../assets/Chapter 1_Swenka/Images/Editorial/Inkabi nation.jpg";
 import xhosaMen from "../assets/Chapter 1_Swenka/Images/Editorial/Xhosa men.jpg";
@@ -96,14 +97,6 @@ function Swenka() {
             caption: "WATCH THE FULL EXPLAINER",
           },
           {
-            label: "WHAT FELT FAMILIAR",
-            storyRole: "memory",
-            image: reePhoto,
-            kind: "memory-photo", layout: "quiet",
-            alt: "The same old photograph of Ree, recalled after Swenka",
-            text: "I return to the same photograph of Ree. After watching the care these men take, I find myself looking more closely at his choices. I remember him checking every detail before he stepped outside. I never asked which details mattered most to him. Swenka gives me a new way to look; it cannot answer for him.",
-          },
-          {
             label: "WHAT I KEEP",
             storyRole: "reflection",
             collage: scrapbookImages,
@@ -113,7 +106,16 @@ function Swenka() {
             kind: "fashion-wall",
             backgroundImage: collageBackground,
             textStyle: "float",
-            text: "Swenka has taught me to look at the care behind an outfit. A suit, a hat, a polished shoe can carry pride and dignity. I think of Ree taking time to get ready, and feel a new respect for those choices. I carry that attention with me as I turn towards Pantsula.",
+            text: "Swenka has taught me to look at the care behind an outfit. A suit, a hat, a polished shoe can carry pride and dignity. I think of Ree taking time to get ready, and feel a new respect for those choices. Before moving on, I return to the photograph that brought me here.",
+          },
+          {
+            label: "WHAT FELT FAMILIAR",
+            storyRole: "memory",
+            image: reePhoto,
+            backgroundImage: blackLabelBackground,
+            kind: "memory-photo", layout: "quiet",
+            alt: "The same old photograph of Ree, recalled after Swenka",
+            text: "I return to the same photograph of Ree. After watching the care these men take, I find myself looking more closely at his choices. I remember him checking every detail before he stepped outside. I never asked which details mattered most to him. Swenka gives me a new way to look; it cannot answer for him. I carry that attention into Pantsula, where I want to explore how clothes move with music and people.",
             caption: "UP NEXT: PANTSULA",
             nextChapter: "pantsula",
             nextChapterLabel: "Explore Pantsula next",

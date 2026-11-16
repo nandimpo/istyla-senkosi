@@ -1,0 +1,24 @@
+.rhythm-advance { position:absolute; z-index:8; left:50%; bottom:78px; transform:translateX(-50%); width:min(290px,calc(100vw - 48px)); text-align:center; color:#e3dfc5; }
+.rhythm-advance__title { margin:0; font:400 21px/1.2 var(--handwriting); text-shadow:0 1px 5px #000; }
+#root .rhythm-advance button { display:flex; align-items:center; justify-content:center; gap:17px; min-height:64px; width:124px; margin:4px auto; padding:5px 14px; border:0; background:transparent; border-radius:0; touch-action:manipulation; }
+.rhythm-advance__foot { width:22px; height:48px; fill:#63714c44; stroke:#c9d0ab; stroke-width:1; transform:rotate(-12deg) translateY(3px); transition:fill .18s,filter .18s; }
+.rhythm-advance__foot.is-right { transform:rotate(12deg) translateY(-3px); }
+.rhythm-advance__tread { fill:none; stroke:#171c12; opacity:.6; }
+.rhythm-advance__foot.is-lit { fill:#c4d292; filter:drop-shadow(0 0 5px #a4bd7c88); }
+.rhythm-advance.is-ready .rhythm-advance__foot.is-next { animation:pantsula-step-invitation 1.8s ease-in-out infinite; }
+.rhythm-advance__instruction { display:block; font:500 10px/1.5 var(--font-body); color:#dbdec4; text-shadow:0 1px 4px #000; }
+.rhythm-advance button:disabled { opacity:.5; }
+.rhythm-advance:has(.is-lit) button:disabled { opacity:1; }
+@keyframes pantsula-step-invitation { 0%,100% { opacity:.55; } 50% { opacity:1; fill:#a4b77877; } }
+@media(min-width:701px) { #pantsula:has(.fashion-wall--scrapbook) > .rhythm-advance { left:21.5vw; bottom:96px; } }
+@media(max-width:700px) { .rhythm-advance { bottom:70px; } #pantsula .chapter-player__story { bottom:240px; } #root #pantsula .chapter-player__page:has(.chapter-player__visual--quiet-layout) { padding-bottom:245px; } }
+@media(prefers-reduced-motion:reduce) { .rhythm-advance.is-ready .rhythm-advance__foot.is-next { animation:none; } }
+html[data-reduced-motion="true"] .rhythm-advance.is-ready .rhythm-advance__foot.is-next { animation:none; }
+
+.game-copy .rhythm-advance,.converse-lacing__copy .rhythm-advance { position:relative; left:auto; bottom:auto; transform:none; margin-top:16px; max-width:100%; }
+.ispoti-controls .rhythm-advance { position:relative; left:auto; bottom:auto; transform:none; grid-column:1/-1; justify-self:center; display:grid; grid-template-columns:1fr 80px; align-items:center; width:100%; margin:0; color:#29301e; }
+#root .ispoti-controls .rhythm-advance button { grid-column:2; grid-row:1/3; width:78px; min-height:44px; height:50px; margin:0; gap:10px; }
+.ispoti-controls .rhythm-advance__title { font-size:19px; text-shadow:none; }
+.ispoti-controls .rhythm-advance__instruction { color:#29301e; text-shadow:none; font-size:9px; }
+.ispoti-controls .rhythm-advance__foot { width:17px; height:35px; stroke:#4e5b34; }
+.ispoti-controls .rhythm-advance__foot.is-lit { fill:#4e5b34; }
