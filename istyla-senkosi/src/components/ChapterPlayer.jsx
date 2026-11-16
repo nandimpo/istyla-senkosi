@@ -271,7 +271,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   );
   const calm = () => reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   useEffect(() => () => clearTimeout(transitionTimer.current), []);
-  const { autoplayBlocked, resumeAudio } = useSectionAudio({ id, audioRef, soundOn, nextTrack, volumeScale: videoBridge ? 0.25 : currentFrame?.video && !shoeLocked && !lacesLocked && !outfitLocked && id !== "introduction" ? 0.12 : id === "introduction" && pageIndex === gamePageIndex ? 0.9 : (hasGamePage && pageIndex === gamePageIndex) || shoeLocked || lacesLocked || outfitLocked ? 0.6 : 1, duckMusic: Boolean(currentFrame?.video && videoStarted && !videoBridge && !outfitLocked && id !== "introduction"), continueWhileLocked: id === "introduction", fadeOut: exiting });
+  const { autoplayBlocked, playbackReady, resumeAudio } = useSectionAudio({ fadeInMs: id === "introduction" ? 150 : undefined, id, audioRef, soundOn, nextTrack, volumeScale: videoBridge ? 0.25 : currentFrame?.video && !shoeLocked && !lacesLocked && !outfitLocked && id !== "introduction" ? 0.12 : id === "introduction" && pageIndex === gamePageIndex ? 0.9 : (hasGamePage && pageIndex === gamePageIndex) || shoeLocked || lacesLocked || outfitLocked ? 0.6 : 1, duckMusic: Boolean(currentFrame?.video && videoStarted && !videoBridge && !outfitLocked && id !== "introduction"), continueWhileLocked: id === "introduction", fadeOut: exiting });
 
   useEffect(() => {
     if (!exiting || !(reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches) || completedRef.current) return;
@@ -555,7 +555,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
             <small>{chapter}</small>
             <h2>{title}</h2>
             <p>{subtitle}</p>
-            {context && <div className="chapter-player__title-context"><StitchedNarrative key={context} text={context} animation="float" placement="inline" highlightedPhrases={["my cousin", "Soweto"]} onComplete={() => finishText("context")} /></div>}
+            {context && (id !== "introduction" || !soundOn || playbackReady) && <div className="chapter-player__title-context"><StitchedNarrative key={context} text={context} animation="float" placement="inline" highlightedPhrases={["my cousin", "Soweto"]} onComplete={() => finishText("context")} /></div>}
             <i />
           </div>
         ) : isGamePage ? (

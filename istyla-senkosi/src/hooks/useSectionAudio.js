@@ -46,9 +46,10 @@ function fadeTo(audio, target, { thenPause = false, duration = FADE_MS } = {}) {
   audio._fadeRaf = requestAnimationFrame(step);
 }
 
-export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volumeScale = 1, continueWhileLocked = false, fadeOut = false, nextTrack }) {
+export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volumeScale = 1, continueWhileLocked = false, fadeOut = false, nextTrack, fadeInMs = FADE_MS }) {
   const { currentSection, volume, navigationLocked } = useNavigation();
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const [playbackReady, setPlaybackReady] = useState(false);
   const resumeRef = useRef(() => {});
   const transitionSilenced = useRef(false);
   const targetVolume = volume * (duckMusic ? 0 : volumeScale);
@@ -128,6 +129,7 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
     const playbackStarted = () => {
       if (disposed) return;
       setAutoplayBlocked(false);
+      setPlaybackReady(true);
     };
     let fadingTrackEnd = false;
     const hasNextTrack = () => playlist.length > 0;
@@ -169,7 +171,7 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
         audio.volume = 0;
         audio.play().then(playbackStarted).catch(playbackFailed);
       }
-      if (!fadeTrackEnd()) fadeTo(audio, targetVolume);
+      if (!fadeTrackEnd()) fadeTo(audio, targetVolume, { duration: fadeInMs });
     };
     const prepareForVideo = (event) => {
       // Keep a quiet musical bed while the user decides when to press Play.
@@ -193,6 +195,8 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
     window.addEventListener("touchstart", retry, { passive: true, capture: true });
     window.addEventListener("click", retry, true);
     audio.addEventListener("canplay", retry);
+    const allowSilentFallback = () => setPlaybackReady(true);
+    audio.addEventListener("error", allowSilentFallback);
     window.addEventListener("pageshow", retry);
     const fadeForTransition = () => {
       transitionSilenced.current = true;
@@ -208,6 +212,7 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
       resumeRef.current = () => {};
       window.removeEventListener("click", retry, true);
       audio.removeEventListener("canplay", retry);
+      audio.removeEventListener("error", allowSilentFallback);
       window.removeEventListener("pageshow", retry);
       audio.removeEventListener("timeupdate", fadeTrackEnd);
       audio.removeEventListener("ended", startNextTrack);
@@ -218,6 +223,6 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
       window.removeEventListener("istyla:fade-section-audio", fadeForTransition);
       cancelFade(audio);
     };
-  }, [currentSection, id, soundOn, audioRef, targetVolume, navigationLocked, continueWhileLocked, fadeOut, nextTrack, duckMusic, volume]);
-  return { autoplayBlocked, resumeAudio: () => resumeRef.current() };
+  }, [currentSection, id, soundOn, audioRef, targetVolume, navigationLocked, continueWhileLocked, fadeOut, nextTrack, duckMusic, volume, fadeInMs]);
+  return { autoplayBlocked, playbackReady, resumeAudio: () => resumeRef.current() };
 }
