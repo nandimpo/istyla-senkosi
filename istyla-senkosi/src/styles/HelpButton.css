@@ -10,3 +10,11 @@
 .journey-help__close { margin-top:12px; padding:12px 16px; border:1px solid #c69c54; background:transparent; color:#f5eedf; cursor:pointer; font:600 12px Montserrat,sans-serif; }
 .help-trigger:focus-visible,.journey-help button:focus-visible { outline:2px solid #e0b66d; outline-offset:4px; }
 @media(max-width:650px) { .help-trigger { right:calc(7vw + 100px); } .journey-help { padding:24px; } }
+/* Explicit placement overrides the site's dialog reset. */
+.journey-help[open] {
+  position:fixed;
+  inset:0;
+  margin:auto;
+  height:max-content;
+  overflow-y:auto;
+}

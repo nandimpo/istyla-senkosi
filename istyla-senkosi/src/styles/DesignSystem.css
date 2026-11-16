@@ -4,7 +4,7 @@
   --font-body: Montserrat, Arial, sans-serif;
   --page-gutter: clamp(24px, 7vw, 112px);
   --copy-width: 500px;
-  --body-size: clamp(17px, 1.35vw, 21px);
+  --body-size: clamp(16px, 1.2vw, 19px);
   --caption-size: 11px;
   --control-size: 11px;
   --space-1: 8px;

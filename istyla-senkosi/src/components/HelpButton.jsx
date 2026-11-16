@@ -23,7 +23,11 @@ function currentHelp(section) {
   }
   if (visible("video")) return "Watch this film; the story continues when it finishes. A Skip button becomes available on supported clips. Use Sound or Menu to adjust the audio.";
   const prompt = visible('[class*="__instruction"], [class*="__hint"]');
-  if (prompt?.textContent.trim()) return `On this page: ${prompt.textContent.trim()} Follow the prompt and complete the activity before continuing.`;
+  if (prompt?.textContent.trim()) {
+    const instruction = prompt.textContent.trim();
+    if (/scroll down/i.test(instruction)) return "Let the words finish, then scroll down to continue. Use your mouse wheel, a two-finger scroll on your trackpad, or swipe up on a touch screen.";
+    return `On this page: ${instruction}. Follow this prompt to continue.`;
+  }
   return "Let the words finish, then follow the instruction on the page. Some pages continue with a scroll; others ask you to drag, tap or hold to unlock the next page. Complete the activity first if a control is dimmed.";
 }
 
@@ -35,7 +39,11 @@ export default function HelpButton() {
   const close = () => { dialog.current.close(); trigger.current?.focus(); };
   return <>
     <button className="help-trigger" ref={trigger} aria-haspopup="dialog" onClick={() => { setMessage(currentHelp(currentSection)); dialog.current.showModal(); }}>HELP <span aria-hidden="true">?</span></button>
-    <dialog className="journey-help" ref={dialog} aria-labelledby="journey-help-title" onCancel={close} onWheel={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
+    <dialog className="journey-help" ref={dialog} aria-labelledby="journey-help-title" onCancel={close} onClick={(event) => {
+      if (event.target !== event.currentTarget) return;
+      const bounds = event.currentTarget.getBoundingClientRect();
+      if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) close();
+    }} onWheel={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
       <p className="journey-help__kicker">A LITTLE GUIDANCE</p>
       <h2 id="journey-help-title">Your next step.</h2>
       <p className="journey-help__instruction">{message}</p>

@@ -37,3 +37,5 @@
 }
 .journey-guide__navigation { grid-template-columns:repeat(4,1fr); }
 @media(max-width:600px) { .journey-guide__navigation { grid-template-columns:repeat(2,1fr); } }
+.journey-guide__listening { margin:-10px 0 22px; padding-left:12px; border-left:1px solid #d6a24a; color:#e0b66d; font:400 12px/1.5 Montserrat,sans-serif; }
+@media(max-width:600px) { .journey-guide__listening { margin:-6px 0 16px; font-size:11px; } }
