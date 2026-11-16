@@ -533,3 +533,26 @@ html[data-reduced-motion="true"] #root .chapter-player__page { animation:none; }
   #root #reflection .final-frame__actions { gap:6px; }
   #root #reflection .final-frame__actions button { min-width:0; padding:9px 10px; font-size:9px; }
 }
+#root #introduction .chapter-player__visual--memory-photo > img.old-photo--square {
+  aspect-ratio:1247 / 1261;
+  mask-image:url("../assets/images/masks/old-photo-square.svg");
+  mask-size:100% 100%;
+  mask-repeat:no-repeat;
+}
+/* Let the Pantsula reflection card end with its content. */
+@media(min-width:701px) {
+  #root #pantsula .chapter-player__page:has(.fashion-wall) .chapter-player__story--with-navigation {
+    bottom:auto;
+    height:max-content;
+    max-height:calc(76.6svh - 110px);
+    width:29%;
+    max-width:500px;
+    padding:18px 22px;
+  }
+}
+#root #pantsula .chapter-player__story--with-navigation .rhythm-advance {
+  margin-top:18px;
+  padding-top:12px;
+}
+#root #pantsula .chapter-player__story--with-navigation .rhythm-advance__title { font-size:22px; }
+#root #pantsula .chapter-player__story--with-navigation .rhythm-advance button { min-height:54px; margin:4px auto; }

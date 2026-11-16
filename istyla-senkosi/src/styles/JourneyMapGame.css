@@ -255,3 +255,123 @@
 .journey-photo-card { background:#b6ad8f url("../assets/images/Chapter images/Map_Background.jpg") center/cover no-repeat; }
 .journey-photo-card::before { background-image:url("../assets/images/Chapter images/Map_Background.jpg"); background-position:center; background-size:cover; opacity:.85; mix-blend-mode:normal; transform:scale(1.48); }
 .journey-photo-card>div { background:#d8cfb5db; }
+/* Larger lettering on the atlas, independent of the surrounding body copy. */
+.journey-cluster-label text { font-size:8.5px; }
+.journey-fashion-sketch text { font-size:8px; }
+.journey-map-stop text { font-size:5.5px; }
+.journey-map-photo text { font-size:1.7px; }
+.journey-map-caption { font-size:11px; }
+.journey-map-caption em { font-size:16px; }
+/* One instruction beside the story, with destination controls directly below the atlas. */
+.journey-map-guidance { margin:0 0 22px; }
+.journey-map-guidance > span { color:#d6a65f; font:600 9px/1.4 Montserrat,sans-serif; letter-spacing:1.5px; }
+.journey-map-guidance p { margin:8px 0 0; color:#c9bba3; font:400 12px/1.6 Montserrat,sans-serif; }
+.journey-story-card .journey-continue { margin-top:20px; }
+@media(min-width:1000px) {
+  .journey-stage { grid-template-rows:auto minmax(0,1fr) auto; gap:24px 3.5vw; }
+  .journey-heading>p:last-child { margin-top:16px; line-height:1.6; }
+  .journey-story-column { padding-top:0; }
+  .journey-controls { display:block; }
+  .journey-stop-buttons { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:18px; }
+  .journey-stop-buttons button { padding:10px 0; min-height:56px; }
+  .journey-story-card { padding-top:0; }
+  .journey-story-body { flex:0 0 auto; }
+  .journey-story-card .journey-continue { position:static; margin-top:18px; }
+  .journey-memory-divider { margin-bottom:14px; }
+  .journey-story-card h2 { margin:18px 0 12px; }
+  .journey-card-close { top:0; }
+}
+/* Captions occupy their own open atlas positions rather than crossing the artwork. */
+.journey-sketch-caption { pointer-events:none; }
+.journey-sketch-caption text { fill:#fff0ce; font:400 9px var(--handwriting); paint-order:stroke; stroke:#171611; stroke-width:.6; stroke-linejoin:round; }
+/* Reserve real space for the narrative before revealing the arrival action. */
+.journey-story-column .journey-story-card { flex:0 0 auto; min-height:max-content; }
+.journey-story-column .journey-story-body { flex:none; overflow:visible; }
+.journey-story-column .journey-enter { position:static; margin-top:22px; flex:0 0 auto; }
+@media(min-width:1000px) {
+  .journey-story-column { overflow-y:auto; }
+}
+/* Keep the arrival action fully visible, with the atlas guidance beside its controls. */
+.journey-controls .journey-map-guidance { margin:0 0 12px; }
+.journey-controls .journey-map-guidance > span { display:none; }
+.journey-controls .journey-map-guidance p { margin:0; font-size:12px; line-height:1.5; }
+#root .journey-story-column .journey-enter {
+  min-height:64px;
+  height:auto;
+  margin-top:16px;
+  padding:14px 18px;
+  font:700 clamp(26px,2vw,34px)/1.1 'Barlow Condensed',Impact,sans-serif;
+  box-shadow:none;
+}
+@media(min-width:1000px) {
+  .journey-story-column { display:flex; flex-direction:column; overflow:hidden; }
+  .journey-story-column .journey-story-card { flex:1 1 auto; min-height:0; overflow-y:auto; }
+  .journey-story-column .journey-enter { flex:0 0 auto; }
+  .journey-story-column .journey-story-body>p { font-size:clamp(14px,1vw,16px); line-height:1.6; }
+  .journey-story-card h2 { font-size:clamp(27px,2.2vw,36px); }
+}
+.journey-map-stop text { font-size:8px; stroke-width:1.2; }
+.journey-continue:not(:disabled) { animation:journey-continue-pulse 2.4s ease-in-out infinite; }
+.journey-continue:not(:disabled) > span { display:inline-block; animation:journey-arrow-nudge 1.8s ease-in-out infinite; }
+.journey-scroll-prompt { position:absolute; bottom:60px; left:50%; transform:translateX(-50%); margin:0; color:#e5c58c; text-align:center; font:600 10px/1.5 Montserrat,sans-serif; letter-spacing:1.4px; text-transform:uppercase; pointer-events:none; animation:journey-continue-pulse 2.4s ease-in-out infinite; }
+.journey-scroll-prompt span { display:block; font-size:18px; }
+@keyframes journey-continue-pulse { 0%,100% { opacity:.65; } 50% { opacity:1; text-shadow:0 0 10px #e5bd6570; } }
+@keyframes journey-arrow-nudge { 0%,100% { transform:translateX(0); } 50% { transform:translateX(5px); } }
+html[data-reduced-motion="true"] .journey-continue,html[data-reduced-motion="true"] .journey-continue > span,html[data-reduced-motion="true"] .journey-scroll-prompt { animation:none; }
+@media(prefers-reduced-motion:reduce) { .journey-continue,.journey-continue > span,.journey-scroll-prompt { animation:none!important; } }
+.journey-controls .journey-map-guidance p { font-weight:700; }
+.journey-story-card .journey-continue {
+  justify-content:flex-start;
+  align-items:center;
+  gap:14px;
+}
+.journey-story-card .journey-continue > span { flex:0 0 auto; }
+#root .journey-story-column .journey-enter {
+  min-height:52px;
+  padding:10px 16px;
+  font-size:clamp(23px,1.7vw,29px);
+}
+#root .journey-story-column .journey-enter > span:last-child { font-size:28px; }
+.journey-stop-buttons button {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.journey-stop-buttons button > span {
+  display:inline;
+  margin:0;
+  flex:0 0 auto;
+}
+/* A faint, full map beneath the atlas rather than a magnified crop. */
+.journey-camera > img.journey-map-image {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  opacity:.09;
+  filter:grayscale(1) sepia(.35);
+  mask-image:none;
+  pointer-events:none;
+}
+.journey-stage::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background-image:var(--journey-map-background);
+  background-position:center;
+  background-size:cover;
+  opacity:.045;
+  filter:grayscale(1) sepia(.25);
+  pointer-events:none;
+}
+.journey-camera > img.journey-map-image { opacity:.045; }
+/* A fine atlas frame distinguishes the interactive map from the page backdrop. */
+#root .journey-stage .journey-viewport {
+  border:1px solid #c8b39b66;
+  box-shadow:0 8px 28px #0005,inset 0 0 24px #0002;
+  background-color:#181713;
+}
+.journey-stage::before { opacity:.015; }

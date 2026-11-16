@@ -1,3 +1,4 @@
+import ViewportFit from "../ViewportFit";
 import RhythmAdvance from "../RhythmAdvance";
 import { useRef, useState } from "react";
 import converseImage from "../../assets/Additional Images/Shoes/Converse.jpg";
@@ -46,7 +47,7 @@ export default function ConverseLacing({ onComplete, onBack }) {
   };
   const [zoom, setZoom] = useState(false);
   const [original, setOriginal] = useState(false);
-  const [notice, setNotice] = useState("Choose a patch, then drag it onto either shoe.");
+  const [notice, setNotice] = useState("");
   const svgRef = useRef(null);
   const drag = useRef(null);
   const serial = useRef(0);
@@ -106,18 +107,17 @@ export default function ConverseLacing({ onComplete, onBack }) {
   const dragHandlers = { onPointerMove:moveDrag, onPointerUp:endDrag, onPointerCancel:() => { drag.current = null; setPreview(null); }, onLostPointerCapture:() => { drag.current = null; setPreview(null); } };
   const patchButton = (type, text = "") => <button type="button" key={type} className={`converse-patches__piece ${type === "Initials" ? "converse-patches__initials-piece" : ""}`} aria-label={type === "Initials" ? (text.trim() ? `Drag ${text} onto a shoe, or click then tap a shoe` : "Enter your initials to create a draggable patch") : type} disabled={type === "Initials" && !text.trim()} aria-pressed={tool?.type === type} onPointerDown={(event) => beginDrag(event, { type, text })} {...dragHandlers} onClick={() => { if (suppressClick.current) { suppressClick.current = false; return; } setTool({ type, text }); setOriginal(false); }}><svg viewBox="-28 -28 56 56" aria-hidden="true"><Decoration type={type} text={text}/></svg><span>{type === "Initials" ? (text.trim() ? "Drag onto shoe ↗" : "Type initials first") : type}</span></button>;
   return <section className="converse-lacing converse-custom" style={{ "--converse-background": `url("${converseBackground}")` }} aria-labelledby="custom-title" onClick={stop} onPointerDown={stop} onKeyDown={stop} onWheel={stop}>
-    <div className="converse-lacing__copy">
+    <ViewportFit className="converse-lacing__copy">
       <button className="converse-lacing__back" onClick={onBack}>Back to the story</button>
       <small>02 / PANTSULA / MAKE IT YOURS</small><h2 id="custom-title">Your shoes.<br/>Your signature.</h2>
       <p>My cousin made every outfit his own. Before I follow the dancers, I want to put something of myself into these shoes.</p>
       <fieldset><legend>01 / The patch library</legend><div className="converse-custom__choices converse-patches">{types.map((type) => patchButton(type))}</div></fieldset>
       <div className="converse-custom__signature"><label className="converse-custom__initials">Your initials<input value={initials} maxLength={4} placeholder="JM" onChange={(event) => setInitials(event.target.value.toUpperCase())}/></label><div className="converse-custom__choices converse-patches">{patchButton("Initials", initials)}</div></div>
-      <p className="converse-custom__help">Drag a patch onto a shoe, or select one and tap to place. Select a decoration to edit. Keyboard: focus the shoe and press Enter to place.</p>
+      <p className="converse-custom__help" role="status">{notice || "Drag a patch onto either shoe, or select it then tap to place. Tap a decoration to edit."} <span>Keyboard: focus the shoe and press Enter to place.</span></p>
       {items.length > 0 && <div className="converse-custom__manage"><select aria-label="Your decorations" value={selected ?? ""} onChange={(event) => { const item = items.find((entry) => entry.id === Number(event.target.value)); if (item) { turnTo(item.view * 90); setSelected(item.id); setOriginal(false); } }}><option value="" disabled>Your decorations</option>{items.map((item, index) => <option key={item.id} value={item.id}>{index + 1}. {shoeViews[item.view].name} / {item.type}{item.text ? `: ${item.text}` : ""}</option>)}</select><button type="button" disabled={!active} onClick={() => removeItem(selected)}>Remove</button><button type="button" onClick={() => { setItems([]); setSelected(null); setNotice("All decorations removed. Choose a patch to start again."); }}>Clear all</button></div>}
       {active && <fieldset className="converse-patches__adjust"><legend>Selected: {active.type}</legend><label>Size<input type="range" min=".5" max="2" step=".1" value={active.size} onChange={(event) => updateItem(active.id, { size:Number(event.target.value) })}/></label><label>Angle<input type="range" min="-180" max="180" value={active.rotation} onChange={(event) => updateItem(active.id, { rotation:Number(event.target.value) })}/></label><button type="button" onClick={() => { setItems((previous) => previous.filter((item) => item.id !== active.id)); setSelected(null); }}>Remove decoration</button></fieldset>}
-      <p role="status" className="converse-lacing__status">{notice}</p>
       <RhythmAdvance disabled={!ready} onComplete={onComplete} label="Follow the rhythm" />
-    </div>
+    </ViewportFit>
     <div className="converse-custom__preview">
       <div className="converse-editorial__board">
       <aside className="converse-editorial__note converse-editorial__note--top"><span>FIELD NOTE / 01</span><p>A familiar silhouette.<br/>A signature only you can leave.</p><b aria-hidden="true">↘</b></aside>
@@ -130,10 +130,8 @@ export default function ConverseLacing({ onComplete, onBack }) {
         {preview && <g transform={`translate(${preview.x} ${preview.y})`} opacity=".65" pointerEvents="none"><Decoration type={preview.type} text={preview.text}/></g>}
       </svg></div>
       <aside className="converse-editorial__note converse-editorial__note--bottom"><span>MAKE IT PERSONAL / 02</span><p>Patch the canvas. Sign your initials. Let the details tell your story.</p><b aria-hidden="true">↖</b></aside>
-      <div className="converse-editorial__spec"><span>HIGH TOP / CANVAS</span><span>DESIGNED BY YOU</span><strong>02</strong></div>
       </div>
-      <p className="converse-custom__hint">Drag a patch onto either shoe — every detail is yours.</p>
-      <label className="converse-custom__rotation">Turn shoe<input aria-label="Turn shoe through front, outer side, back and inner side" type="range" min="0" max="360" step="90" value={angle} onChange={(event) => turnTo(Number(event.target.value))}/><output>{view.name}</output></label>
+      <label className="converse-custom__rotation">Turn shoe<input aria-label="Turn shoe through front, outer side, back and inner side" type="range" min="0" max="360" step="1" value={angle} aria-valuetext={view.name} onPointerDown={(event) => event.stopPropagation()} onPointerMove={(event) => event.stopPropagation()} onPointerUp={(event) => event.stopPropagation()} onChange={(event) => turnTo(Number(event.target.value))}/><output>{view.name}</output></label>
       <div className="converse-custom__choices converse-custom__view-controls">{shoeViews.map((entry, index) => <button type="button" key={entry.name} aria-pressed={viewIndex === index} onClick={() => turnTo(index * 90)}>{entry.name}</button>)}<button type="button" aria-pressed={zoom} onClick={() => setZoom(!zoom)}>Zoom detail</button><button type="button" aria-pressed={original} onClick={() => setOriginal(!original)}>{original ? "Show my design" : "Compare original"}</button><button type="button" onClick={() => { turnTo(0); setZoom(false); }}>Reset view</button></div>
     </div>
   </section>;

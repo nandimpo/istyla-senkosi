@@ -9,7 +9,10 @@ const TOUCH_SCROLL_THRESHOLD = 40;
 export function useClickGesture({ onAdvance }) {
   return {
     handlers: {
-      onClick: () => onAdvance(),
+      onClick: (event) => {
+        if (event.target.closest("button, a, input, select, textarea, [role='slider']") || window.getSelection()?.toString()) return;
+        onAdvance();
+      },
     },
   };
 }
@@ -19,6 +22,7 @@ export function useSwipeGesture({ onAdvance, onRetreat }) {
   const startX = useRef(null);
 
   const onPointerDown = (event) => {
+    if (event.pointerType === "mouse" || event.target.closest("button, a, input, select, textarea, .stitched-narrative")) return;
     startX.current = event.clientX;
     event.currentTarget.setPointerCapture(event.pointerId);
   };
@@ -54,7 +58,7 @@ export function useDragGesture({ onAdvance, onRetreat, enabled = true, canStart 
   const startY = useRef(null);
 
   const onPointerDown = (event) => {
-    if (!enabled || !canStart() || startY.current !== null || event.isPrimary === false || event.button !== 0 || event.target.closest("button, a, input, select, textarea")) return;
+    if (event.pointerType === "mouse" || event.target.closest(".stitched-narrative, [role='slider']") || !enabled || !canStart() || startY.current !== null || event.isPrimary === false || event.button !== 0 || event.target.closest("button, a, input, select, textarea")) return;
     startY.current = event.clientY;
     setDragging(true);
     event.currentTarget.setPointerCapture(event.pointerId);

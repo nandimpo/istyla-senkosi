@@ -10,7 +10,7 @@ function Footprint({ lit, next, right }) {
     <path className="rhythm-advance__tread" d="M6 15L23 12M6 23L23 20M8 31L22 28M11 50L19 48" />
   </svg>;
 }
-export default function RhythmAdvance({ disabled = false, onComplete, label = "Continue the story" }) {
+export default function RhythmAdvance({ disabled = false, onComplete, label = "Continue the story", disabledMessage = "Let the words unfold...", disabledInstruction = "Two taps unlock the next page" }) {
   const { soundOn, volume, reducedMotion } = useNavigation();
   const [steps, setSteps] = useState(0);
   const count = useRef(0);
@@ -48,11 +48,11 @@ export default function RhythmAdvance({ disabled = false, onComplete, label = "C
   };
   const stop = (event) => event.stopPropagation();
   return <nav className={`rhythm-advance ${!disabled && steps < 2 ? "is-ready" : ""}`} aria-label="Tap into the rhythm" onClick={stop} onPointerDown={stop} onWheel={stop} onKeyDown={stop}>
-    <p className="rhythm-advance__title" role="status">{disabled ? "Let the words unfold..." : steps === 2 ? "Two steps forward." : "Tap into the rhythm"}</p>
+    <p className="rhythm-advance__title" role="status">{disabled ? disabledMessage : steps === 2 ? "Two steps forward." : "Tap into the rhythm"}</p>
     <button type="button" disabled={disabled || steps === 2} aria-label={`${label}. ${steps === 0 ? "Tap twice" : "One more tap"}. Enter or Space also works.`} onKeyDown={(event) => { if (event.repeat) event.preventDefault(); }} onClick={tap}>
       <Footprint lit={steps >= 1} next={!disabled && steps === 0} />
       <Footprint right lit={steps >= 2} next={!disabled && steps === 1} />
     </button>
-    <span className="rhythm-advance__instruction">{steps === 2 ? "Moving with the rhythm" : disabled ? "Two taps unlock the next page" : steps === 1 ? "One more step ? tap again" : "Two steps forward. Tap twice to continue."}</span>
+    <span className="rhythm-advance__instruction">{steps === 2 ? "Moving with the rhythm" : disabled ? disabledInstruction : steps === 1 ? "One more step ? tap again" : "Two steps forward. Tap twice to continue."}</span>
   </nav>;
 }

@@ -55,8 +55,8 @@ function Swenka() {
         id="swenka"
         chapter="01 / SWENKA"
         title="Precision. Discipline. Respect."
-        subtitle="More than style. It’s about how you carry yourself."
-        context="To understand Ree and his Skhothane fashion, I’m looking back at township style. Swenka is where I begin. Watching these men dress with care and carry themselves with pride, I remember my cousin getting ready. I used to see only his finished outfit. Now I’m beginning to ask what dressing up meant to him."
+        subtitle="Looking back at the roots of township style."
+        context="I keep coming back to Ree getting ready. I noticed the finished outfit, but rarely thought about the care behind it. To understand his Skhothane style, I need to begin further back, with Swenka, one of the roots of township fashion. I watch these men and wonder what I missed in my own cousin."
         interaction="scroll"
         exitTransition="fade"
         titleImage={chapterImage}
@@ -70,8 +70,8 @@ function Swenka() {
             storyRole: "voices",
             video: interviewVideo,
             videoOutro:
-              "Hearing them speak made me notice the care in getting dressed. I want to look at the hat, the sleeve and the shoes, one detail at a time.",
-            videoBridge: "To understand Swenka, I had to hear it from them.",
+              "Listening to them, I think of the questions I never asked Ree. I cannot hear his answers now, but I can learn to notice the care in a hat, a sleeve, a pair of shoes.",
+            videoBridge: "Before I can look at Ree's style differently, I need to look at what came before it. My search begins with Swenka, and the men who give these clothes meaning.",
             playToEnd: true,
             skipAfter: 10,
             caption: "WATCH THE FULL VIDEO",
@@ -81,16 +81,16 @@ function Swenka() {
             storyRole: "observe",
             collage: [editorial5, editorial4, xhosaMen],
             motion: "gallery",
-            text: "The suits, the detail... nothing feels accidental. I begin to see dressing with care as an expression of pride and self-respect. I admire the dignity in how these men present themselves.",
+            text: "I used to look at Ree's outfit and make up my mind. Here, I find myself slowing down: a neat cuff, a polished shoe, the way a man stands. Swenka brings me back to the care at the roots of township style. I wish I had noticed that care in Ree sooner.",
           },
           {
             label: "PREPARATION, IN THEIR WORDS",
             storyRole: "voices",
             video: interviewVideoTwo,
             videoOutro:
-              "This desire to look good despite hardship reminded me of my cousin.",
+              "Their pride in getting dressed stays with me. Ree's clothes looked different, but I remember the time he took over them. Perhaps that was where I should have begun: with his care, before my judgement.",
             videoBridge:
-              "After looking at the details myself, I wanted to hear what that preparation meant to them.",
+              "As I polish the shoes, I think of Ree checking his outfit before leaving. I never asked why those details mattered. I listen to these men, hoping to understand the tradition of care that came before his style.",
             shoeShine: true,
             playToEnd: true,
             skipAfter: 38,
@@ -106,7 +106,7 @@ function Swenka() {
             kind: "fashion-wall",
             backgroundImage: collageBackground,
             textStyle: "float",
-            text: "Swenka has taught me to look at the care behind an outfit. A suit, a hat, a polished shoe can carry pride and dignity. I think of Ree taking time to get ready, and feel a new respect for those choices. Before moving on, I return to the photograph that brought me here.",
+            text: "I began with Ree's clothes. Swenka takes me further back, to the pride and care behind township style. These suits are not his outfits, yet they make me look at his choices with more respect. I turn back to his photograph, noticing more than I did before.",
           },
           {
             label: "WHAT FELT FAMILIAR",
@@ -115,7 +115,7 @@ function Swenka() {
             backgroundImage: blackLabelBackground,
             kind: "memory-photo", layout: "quiet",
             alt: "The same old photograph of Ree, recalled after Swenka",
-            text: "I return to the same photograph of Ree. After watching the care these men take, I find myself looking more closely at his choices. I remember him checking every detail before he stepped outside. I never asked which details mattered most to him. Swenka gives me a new way to look; it cannot answer for him. I carry that attention into Pantsula, where I want to explore how clothes move with music and people.",
+            text: "I look at Ree again. The photograph is familiar; the questions are changing. What did he notice as he got ready? What did I miss? Swenka has helped me look at the care behind his style. Next, I turn to Pantsula, to follow the clothes into movement.",
             caption: "UP NEXT: PANTSULA",
             nextChapter: "pantsula",
             nextChapterLabel: "Explore Pantsula next",

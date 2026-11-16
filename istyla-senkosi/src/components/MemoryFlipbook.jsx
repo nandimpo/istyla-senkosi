@@ -43,7 +43,7 @@ export default function MemoryFlipbook({ images, paused = false, photoAlbum = fa
   const readyCallback = useRef(onWritingReady);
   useEffect(() => { readyCallback.current = onWritingReady; });
   useEffect(() => {
-    if (writingReady && !paused) completedPages.current.add(currentPage);
+    if (!paused) completedPages.current.add(currentPage);
     readyCallback.current?.(writingReady, completedPages.current.size === images.length);
   }, [writingReady, currentPage, paused, images.length]);
   useEffect(() => {
@@ -77,7 +77,7 @@ export default function MemoryFlipbook({ images, paused = false, photoAlbum = fa
   }, [images, currentPage, paused]);
 
   const flip = (direction) => {
-    if (paused || !writingReady || busy.current || images.length < 2) return;
+    if (paused || busy.current || images.length < 2) return;
     const target = photoAlbum ? Math.max(0, Math.min(images.length - 1, currentPage + direction)) : (currentPage + direction + images.length) % images.length;
     if (target === currentPage) return;
     busy.current = true;
@@ -142,11 +142,11 @@ export default function MemoryFlipbook({ images, paused = false, photoAlbum = fa
         </div>
       )}
       <div className="memory-flipbook__controls" onPointerDown={(event) => event.stopPropagation()} onPointerUp={(event) => event.stopPropagation()}>
-        <button type="button" disabled={!writingReady || paused || (photoAlbum && currentPage === 0)} onClick={(event) => { event.stopPropagation(); flip(-1); }} aria-label="Previous photograph">←</button>
+        <button type="button" disabled={paused || (photoAlbum && currentPage === 0)} onClick={(event) => { event.stopPropagation(); flip(-1); }} aria-label="Previous photograph">←</button>
         <span aria-live="polite">{String(page.current + 1).padStart(2, "0")} / {String(images.length).padStart(2, "0")}</span>
-        <button type="button" disabled={!writingReady || paused || (photoAlbum && currentPage === images.length - 1)} onClick={(event) => { event.stopPropagation(); flip(1); }} aria-label="Next photograph">→</button>
+        <button type="button" disabled={paused || (photoAlbum && currentPage === images.length - 1)} onClick={(event) => { event.stopPropagation(); flip(1); }} aria-label="Next photograph">→</button>
       </div>
-      <p className="memory-flipbook__hint">{!writingReady ? "LET THE WORDS FINISH BEFORE TURNING THE PAGE" : photoAlbum ? "VIEW EVERY PHOTO TO CONTINUE ? DRAG OR TAP TO TURN THE PAGE" : "DRAG OR TAP TO TURN A MEMORY"}</p>
+      <p className="memory-flipbook__hint">{photoAlbum ? "View every photo to continue. Drag or use the arrows to turn the page." : "Drag or tap to turn a memory."}</p>
     </div>
   );
 }

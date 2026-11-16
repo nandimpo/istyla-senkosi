@@ -50,8 +50,8 @@ function Pantsula() {
       id="pantsula"
       chapter="02 / PANTSULA"
       title="Movement. Rhythm. Community."
-      subtitle="This is how the streets speak."
-      context="I’m still thinking about my cousin as I watch the dancers. With Swenka, I noticed the care in standing still. Here, I notice the care in every step. I want to try, instead of watching from a distance again."
+      subtitle="An earlier influence. A step towards understanding Skhothane."
+      context="After Swenka, I keep thinking about the time Ree took to get dressed. But a photograph holds him still. Pantsula, an earlier influence on Skhothane, asks me to look at clothes in motion. To understand more of his world, I need to follow the music, the steps and the people around them."
       accent="olive"
       interaction="click"
       exitTransition="fade"
@@ -61,21 +61,16 @@ function Pantsula() {
       track={backgroundTrack}
       sharedAudioRef={audioRef}
       frames={[
-        { label: "THE STREET MOVES", storyRole: "voices", video: entryVideo, videoNotes: [
-          { start: 2, end: 9, text: "The matching colours make the group feel connected before I follow the steps." },
-          { start: 12, end: 19, text: "I follow the hands and feet, trying to find the shared rhythm." },
-          { start: 23, end: 30, text: "A step forward, a shift of weight. The clothes move with the dancers." },
-          { start: 35, end: 43, text: "They make room for individual movement inside the group." },
-        ], videoOutro: "I see how the shoes, clothes and movements work together. Now I want to try following that rhythm, one step at a time.", videoBridge: "My shoes now carried a little of me. Before trying the steps, I wanted to watch Pantsula in motion and find where my own rhythm might fit.", laceGate: true, playToEnd: true, skipAfter: 35, caption: "PANTSULA IN MOTION / SKIP AVAILABLE AFTER 35 SECONDS" },
-        { label: "BETWEEN THE STEPS", storyRole: "observe", collage: [marketImage, seatedPortrait], motion: "crossfade", galleryStyle: "crossfade", text: "I watch the shoes, the clothes and the way the dancers answer one another. The music gives their movements a shared pulse. Trying the rhythm, I begin to feel the energy of being part of something together." },
+        { label: "THE STREET MOVES", storyRole: "voices", video: entryVideo, videoOutro: "Watching Pantsula, I realise how much of Ree's world I have been searching for in a still photograph. This earlier influence on Skhothane gives me somewhere to begin. I want to try the steps myself.", videoBridge: "Putting something of myself into these shoes makes me think of Ree's choices. Pantsula came before his Skhothane style and helped shape it. I watch the dancers, looking for what a still photograph cannot show me.", laceGate: true, playToEnd: true, skipAfter: 35, caption: "PANTSULA IN MOTION / SKIP AVAILABLE AFTER 35 SECONDS" },
+        { label: "BETWEEN THE STEPS", storyRole: "observe", collage: [marketImage, seatedPortrait], motion: "crossfade", galleryStyle: "crossfade", text: "I watch the dancers answer one another, then try to find the beat myself. The clothes are only part of what I see. There is confidence, company, a way of being noticed. I wonder what these things meant in Ree's Skhothane world, and why I never thought to ask." },
         { label: "LOOKING CLOSER", storyRole: "voices", video: secondVideo, videoNotes: [
           { start: 2, end: 8, text: "The white hats and gloves make each movement stand out." },
           { start: 10, end: 17, text: "I follow their feet, trying to catch the rhythm of each step." },
           { start: 19, end: 26, text: "They move together, then give each other room to shine." },
           { start: 28, end: 35, text: "The people watching are part of this moment too." },
-        ], videoOutro: "I returned to the rhythm with a little more patience. I thought of my cousin, and how much I still wanted to learn about the world he loved.", videoBridge: "I was beginning to find the rhythm, but there was still so much I had missed. I stayed a little longer, looking beyond the steps and thinking about what had drawn my cousin to Pantsula.", playToEnd: true, skipAfter: 15, caption: "PANTSULA / A CLOSER LOOK" },
-        { label: "THE RHYTHM STAYS", storyRole: "reflection", collage: finaleCollage, backgroundImage: collageBackground, collageLabel: "Pantsula finale collage", kind: "fashion-wall", scrapbookChapter: "02 / PANTSULA", scrapbookSlots: finaleSlots, scrapbookNotes: finaleNotes, clippingKinds: finaleKinds, galleryStyle: "crossfade", textStyle: "float", text: "After trying the steps, I hear the rhythm differently. The shoes and clothes belong to a moving scene of music, dancers and people watching together. For a moment, I feel less like someone looking in from outside. I think of Ree and wonder where he found that feeling of belonging." },
-        { label: "TRYING TO KEEP TIME", storyRole: "memory", image: cousinPhoto, backgroundImage: collageBackground, kind: "memory-photo", photoMask: "square", layout: "quiet", alt: "An old photograph of Ree from the family Cousin collection", text: "The clothes were only part of it. Trying the steps made me notice the music, the movement and the way people respond to one another. For a moment, I imagine telling Ree about that feeling of belonging, then remember that I cannot. I carry that feeling with me as I turn to Skhothane and the style Ree loved.", caption: "UP NEXT: SKHOTHANE", nextChapter: "skhothane", nextChapterLabel: "Explore Skhothane next" },
+        ], videoOutro: "I used to judge Ree by what I could see. Watching these dancers, I notice how much happens between people. There's a response, a shared rhythm, a moment of recognition. I want to carry that attention into Skhothane.", videoBridge: "Before turning to Skhothane, I watch how the Pantsula dancers make room for one another. I think of Ree, and the world I only saw from outside.", playToEnd: true, skipAfter: 15, caption: "PANTSULA / A CLOSER LOOK" },
+        { label: "THE RHYTHM STAYS", storyRole: "reflection", collage: finaleCollage, backgroundImage: collageBackground, collageLabel: "Pantsula finale collage", kind: "fashion-wall", scrapbookChapter: "02 / PANTSULA", scrapbookSlots: finaleSlots, scrapbookNotes: finaleNotes, clippingKinds: finaleKinds, galleryStyle: "crossfade", textStyle: "float", text: "For a moment, I want to stop watching from a distance and really look at what I have gathered about Amapantsula. Pantsula brings me closer to the movement and shared performance that helped shape Skhothane, closer to Ree. I wish I could tell him what I am noticing, and ask what belonging felt like to him." },
+        { label: "TRYING TO KEEP TIME", storyRole: "memory", image: cousinPhoto, backgroundImage: collageBackground, kind: "memory-photo", photoMask: "square", layout: "quiet", alt: "An old photograph of Ree from the family Cousin collection", text: "I come back to Ree's photograph with the rhythm still in my mind. Pantsula has helped me look beyond an outfit to movement, performance and belonging. Now I turn to Skhothane, the style he loved. I wish he were here to take me into that world himself.", caption: "UP NEXT: SKHOTHANE", nextChapter: "skhothane", nextChapterLabel: "Explore Skhothane next" },
       ]}
       gamePosition="afterFirstFrame"
       gamePage={(onComplete) => <BeatGame sceneImages={sceneImages} onComplete={onComplete} />}

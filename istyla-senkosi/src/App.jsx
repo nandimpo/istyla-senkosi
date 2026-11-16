@@ -7,6 +7,7 @@ import HomeLink from "./components/HomeLink";
 import { NavigationProvider } from "./context/NavigationContext";
 
 import "./styles/DesignSystem.css";
+import "./styles/Responsive.css";
 
 function App() {
   return <NavigationProvider><Routes>

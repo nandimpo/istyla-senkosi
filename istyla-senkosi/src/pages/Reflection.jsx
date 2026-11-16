@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { useNavigation } from "../context/NavigationContext";
+import ViewportFit from "../components/ViewportFit";
 import ChapterPlayer from "../components/ChapterPlayer";
 import MemoryStitchIntro from "../components/MemoryStitchIntro";
 import cousin4 from "../assets/images/Cousin/Cousin 4.png";
@@ -21,13 +22,14 @@ function Reflection() {
 
   const finalPage = (
     <section className="final-frame" aria-label="End of story">
+      <ViewportFit className="final-frame__fit">
       <div className="final-frame__meeting">
         <img className="old-photo--portrait" src={chapterImage} alt="An old photograph of my cousin" />
         <div>
           <small>MY MEMORY</small>
           <h1>There he is.</h1>
           <p>You meet my cousin here, in the photographs I kept. He died before this journey began. I remember him stepping out in colour, asking me to really look.</p>
-          <p>Ree was a Skhothane. This journey has helped me appreciate the care and joy in the way he dressed. I cannot ask him what it all meant to him, but I can remember him with a deeper appreciation of what mattered to him. I return to the photograph I began with. The image has not changed, but the way I look at it has. I see more of the person I love.</p>
+          <p>Ree was a Skhothane. This journey has helped me appreciate the care and joy in the way he dressed. I cannot ask him what it all meant to him, but I appreciate him and style so much more. I return to the photograph I began with. The image has not changed, but the way I look at it has. I see more of the person I love. From Jama with love.</p>
         </div>
       </div>
       <div className="final-frame__actions">
@@ -35,9 +37,10 @@ function Reflection() {
         <button onClick={() => chaptersRef.current.showModal()}>EXPLORE CHAPTERS <span>→</span></button>
         <button onClick={() => creditsRef.current.showModal()}>CREDITS <span>+</span></button>
       </div>
+      </ViewportFit>
       <dialog ref={chaptersRef} className="ending-dialog" aria-labelledby="ending-chapters-title" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
         <h2 id="ending-chapters-title">Explore the chapters</h2>
-        <nav aria-label="Choose a chapter">{[["Introduction", "introduction"], ["Swenka", "swenka"], ["Pantsula", "pantsula"], ["Skhothane", "skhothane"], ["Reflection", "reflection"]].map(([label, id]) => <button key={id} onClick={() => { chaptersRef.current.close(); goTo(id, { intro: true }); }}>{label}</button>)}</nav>
+        <nav aria-label="Choose a chapter">{[["Introduction", "introduction"], ["Swenka", "swenka"], ["Pantsula", "pantsula"], ["Skhothane", "skhothane"], ["Reflection", "reflection"]].map(([label, id]) => <button key={id} onClick={() => { chaptersRef.current.close(); goTo(id); }}>{label}</button>)}</nav>
         <button onClick={() => chaptersRef.current.close()}>Back to the reflection</button>
       </dialog>
       <dialog ref={creditsRef} className="ending-dialog" aria-labelledby="ending-credits-title" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
@@ -73,7 +76,7 @@ function Reflection() {
       chapter="04 / REFLECTION"
       title="Memory. Identity. Future."
       subtitle="Where do I belong in all of this?"
-      context="I set out from Johannesburg North with memories of my cousin and questions I can no longer ask him. In Soweto, every style has made me look again. One last memory is waiting for me."
+      context="I started from Joburg North with memories of my cousin and questions I can no longer ask him. In Soweto, every style has made me look again. One last memory is waiting for me."
       accent="beige"
       interaction="scroll"
       exitTransition="fade"
@@ -86,7 +89,7 @@ function Reflection() {
       frames={[
         { label: "AFTER THE NOISE", image: streetImage, text: "I thought this story was far from my life. My cousin was a connection I had overlooked while he was here.", kind: "quiet", layout: "quiet", storyRole: "reflection" },
         { label: "WHAT CHANGED", image: buildingImage, text: "Swenka helped me recognise pride and dignity. Pantsula let me feel the energy of moving together. Skhothane asked me to look beyond appearances. Each chapter changed how I looked at Ree.", kind: "quiet", layout: "quiet", storyRole: "reflection" },
-        { label: "WHAT I CAN CARRY", image: houseImage, text: "I can remember Ree with a deeper appreciation of what mattered to him: the care he put into his clothes, the joy he showed and the way he wanted to be seen. I still have questions, but I carry his memory with more tenderness now.", kind: "quiet", layout: "quiet", storyRole: "reflection" },
+        { label: "WHAT I CAN CARRY", image: houseImage, text: "I can remember Ree with a deeper appreciation of what mattered to him. The care he put into his clothes, the joy he showed and the way he wanted to be seen. I still have questions, but I carry his memory with more gently now.", kind: "quiet", layout: "quiet", storyRole: "reflection" },
         { label: "THERE HE IS", collage: cousinPhotos, photoMasks: ["portrait", "square"], text: "These are the photographs I kept of him. Come closer. I want you to meet the cousin I have been remembering." },
       ]}
       onComplete={() => completeChapter("reflection")}

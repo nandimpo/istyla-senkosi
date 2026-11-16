@@ -111,7 +111,7 @@ function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging
   };
   return (
     <>
-      <div inert={!visualOnly && !interactionsReady} className={`chapter-player__visual ${frame.layout === "quiet" ? "chapter-player__visual--quiet-layout" : ""} ${frame.motion ? `chapter-player__visual--${frame.motion}` : ""} ${frame.kind ? `chapter-player__visual--${frame.kind}` : ""}`}>
+      <div inert={!visualOnly && !interactionsReady && frame.kind !== "memory-album"} className={`chapter-player__visual ${frame.layout === "quiet" ? "chapter-player__visual--quiet-layout" : ""} ${frame.motion ? `chapter-player__visual--${frame.motion}` : ""} ${frame.kind ? `chapter-player__visual--${frame.kind}` : ""}`}>
         {frame.backgroundImage && <div className="chapter-player__collage-backdrop" style={{ backgroundImage: `url("${frame.backgroundImage}")` }} aria-hidden="true" />}
         {frame.kind === "fashion-wall" ? (
           <FashionAlbum images={frame.collage} label={frame.collageLabel || "My Swenka scrapbook"} scrapbook chapter={frame.scrapbookChapter} clippingKinds={frame.clippingKinds} customSlots={frame.scrapbookSlots} notes={frame.scrapbookNotes} visualOnly={visualOnly}/>
@@ -194,7 +194,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const finishText = (kind) => setFinishedText((done) => done[kind] ? done : { ...done, [kind]: true });
   const [exiting, setExiting] = useState(false);
   const pendingChapter = useRef(null);
-  const { soundOn, setSoundOn, reducedMotion, goTo, goBackChapter } = useNavigation();
+  const { soundOn, setSoundOn, reducedMotion, goTo, goBackChapter, markChapterComplete } = useNavigation();
   useContinuousZoom(titlePhotoRef, (id === "introduction" || id === "swenka" || id === "pantsula") && pageIndex === 0, pageIndex);
   const [galleryIndex, setGalleryIndex] = useSessionState(`${id}:gallery`, 0, (value) => Number.isInteger(value) && value >= 0 && value < Math.max(1, ...frames.map((frame) => frame.collage?.length || 0)));
   const [frameTransition, setFrameTransition] = useState(null);
@@ -236,9 +236,9 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   useEffect(() => {
     if (!exiting || !(reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches) || completedRef.current) return;
     completedRef.current = true;
-    if (pendingChapter.current) goTo(pendingChapter.current, { intro:true });
+    if (pendingChapter.current) goTo(pendingChapter.current, { completedChapter: id });
     else onComplete();
-  }, [exiting, reducedMotion, onComplete, goTo]);
+  }, [exiting, reducedMotion, onComplete, goTo, id]);
 
   const seekTrackToStart = () => {
     if (trackStart && audioRef.current) audioRef.current.currentTime = trackStart;
@@ -391,8 +391,8 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   }, [pageIndex, shoeLocked, videoStarted]);
 
   const clickGesture = useClickGesture({ onAdvance: guardedAdvance });
-  const swipeGesture = useSwipeGesture({ onAdvance: guardedAdvance, onRetreat: guardedRetreat });
-  const dragGesture = useDragGesture({ onAdvance: guardedAdvance, onRetreat: guardedRetreat, enabled: !sewingLocked && !timerLocked && !shoeLocked && !lacesLocked && !outfitLocked && !exiting && !threadLeaving && !frameTransition && !videoBridge, canStart: () => !lockedRef.current });
+  const swipeGesture = useSwipeGesture({ onAdvance: guardedAdvance, onRetreat: () => {} });
+  const dragGesture = useDragGesture({ onAdvance: guardedAdvance, onRetreat: () => {}, enabled: !sewingLocked && !timerLocked && !shoeLocked && !lacesLocked && !outfitLocked && !exiting && !threadLeaving && !frameTransition && !videoBridge, canStart: () => !lockedRef.current });
   const scrollGesture = useScrollGesture({ onAdvance: guardedAdvance, onRetreat: guardedRetreat });
   const gesture = interaction === "drag" ? dragGesture : interaction === "swipe" ? swipeGesture : interaction === "scroll" ? scrollGesture : clickGesture;
 
@@ -411,7 +411,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
     if (event.target !== event.currentTarget) return;
     if (completedRef.current) return;
     completedRef.current = true;
-    if (pendingChapter.current) goTo(pendingChapter.current, { intro:true });
+    if (pendingChapter.current) goTo(pendingChapter.current, { completedChapter: id });
     else onComplete();
   };
   const leaveForChapter = (chapterId) => {
@@ -427,6 +427,9 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const isTitleCard = pageIndex === 0;
   const isGamePage = hasGamePage && pageIndex === gamePageIndex;
   const isFinalPage = Boolean(finalPage) && pageIndex === totalPages - 1;
+  useEffect(() => {
+    if (isFinalPage) markChapterComplete(id);
+  }, [isFinalPage, id, markChapterComplete]);
   const isLastFrame = pageIndex === framesEnd;
   const inlineContinuation = ["pantsula", "skhothane"].includes(id) && currentFrame?.kind === "fashion-wall";
   const continuationControl = customAdvancePage && !shoeLocked && !lacesLocked && !outfitLocked && <PageAdvance key={`${pageIndex}:${galleryIndex}`} disabled={sewingLocked || albumWritingLocked || gallerySettling || exiting || threadLeaving || Boolean(frameTransition) || Boolean(videoBridge)} label={currentFrame?.nextChapter ? currentFrame.nextChapterLabel || "Continue to the next chapter" : currentFrame?.motion === "gallery" && galleryIndex < currentFrame.collage.length - 1 ? "Look at the next photograph" : "Continue the story"} onComplete={() => { if (currentFrame?.nextChapter) leaveForChapter(currentFrame.nextChapter); else guardedAdvance(true); }} />;

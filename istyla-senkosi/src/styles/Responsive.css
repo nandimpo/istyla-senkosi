@@ -1,0 +1,67 @@
+/* Device-independent viewport and input sizing, loaded after chapter rules. */
+:root { --safe-bottom:env(safe-area-inset-bottom,0px); }
+html,body,#root { max-width:100%; }
+#root .journey-guide__sheet { height:100%; min-height:0; display:flex; align-items:center; }
+#root .journey-guide__sheet > .viewport-fit__content { width:100%; }
+#root .final-frame__fit { width:min(1000px,100%); height:100%; min-height:0; }
+#root .final-frame__fit > .viewport-fit__content { display:flex; flex-direction:column; align-items:center; gap:24px; }
+#root .help-trigger { bottom:var(--control-bottom); min-height:44px; }
+#root .journey-help { overscroll-behavior:contain; }
+@media(min-width:701px) and (max-width:1100px) {
+  :root { --page-gutter:clamp(28px,5vw,55px); --copy-width:460px; --body-size:clamp(15px,1.65vw,18px); }
+  #root .chapter-player__title-card h2 { font-size:clamp(42px,7vw,74px); }
+  #root .chapter-player__title-context { max-width:56vw; }
+  #root .chapter-player__page:has(.fashion-wall) .chapter-player__story { padding:16px; }
+  #root .chapter-player__page:has(.fashion-wall) .stitched-narrative__copy { font-size:15px; line-height:1.45; }
+  #root .final-frame__meeting { grid-template-columns:minmax(180px, .8fr) minmax(280px,1.2fr); gap:32px; }
+}
+@media(max-width:700px) {
+  :root { --page-gutter:24px; --control-top:12px; --control-bottom:calc(12px + var(--safe-bottom)); --body-size:15px; }
+  #root .chapter-player__title-card { box-sizing:border-box; padding:78px 24px 120px; }
+  #root .chapter-player__title-card h2 { font-size:clamp(36px,9vw,58px); }
+  #root .chapter-player__title-context { max-width:100%; }
+  #root .chapter-player__title-context .stitched-narrative__copy { font-size:clamp(13px,3.6vw,15px); line-height:1.5; }
+  #root .chapter-player__title-card h3 { font-size:14px; }
+  #root .chapter-player__sound,#root .intro-ambient-sound { min-width:94px; min-height:42px; padding:10px 12px; font-size:10px; }
+  #root .help-trigger { right:calc(24px + 88px); }
+  #root .menu-trigger { right:24px; }
+  #root .chapters-trigger { left:24px; }
+  #root .journey-guide { padding:72px 24px 80px; }
+  #root .final-frame { padding:72px 24px 84px; }
+  #root .final-frame__fit > .viewport-fit__content { gap:14px; }
+  #root .chapter-player__page:has(.chapter-player__visual--quiet-layout):not(:has(.chapter-player__visual--quiet)) {
+    box-sizing:border-box; height:100svh; gap:14px; padding:70px 24px 160px; overflow:hidden;
+  }
+  #root .chapter-player__visual--quiet-layout:not(.chapter-player__visual--quiet) { flex:0 0 27svh; min-height:0; }
+  #root .chapter-player__visual--quiet-layout:not(.chapter-player__visual--quiet) > img { height:27svh; max-height:27svh; }
+  #root .chapter-player__story--memory .stitched-narrative__copy { font-size:clamp(12px,3.5vw,15px); line-height:1.45; }
+}
+@media(max-height:600px) and (orientation:landscape) {
+  :root { --control-top:8px; --control-bottom:8px; --body-size:14px; }
+  #root .chapter-player__title-card { box-sizing:border-box; padding:65px var(--page-gutter) 80px; }
+  #root .chapter-player__title-card h2 { font-size:clamp(32px,6vw,56px); }
+  #root .chapter-player__title-context .stitched-narrative__copy { font-size:13px; line-height:1.4; }
+  #root .chapter-player__title-card .chapter-player__title-context { margin-top:12px; max-width:65vw; }
+  #root .chapter-player__title-card h3 { font-size:13px; margin-block:12px; }
+  #root .journey-guide { padding:60px 24px 65px; }
+  #root .journey-guide__steps { grid-template-columns:1fr 1fr; }
+  #root .journey-guide__navigation { grid-template-columns:repeat(4,1fr); }
+  #root .final-frame { padding:60px 24px 70px; }
+  #root .final-frame__meeting { grid-template-columns:minmax(130px,.7fr) minmax(260px,1.3fr); gap:24px; }
+  #root .final-frame__meeting img { height:48svh; max-height:48svh; }
+  #root .final-frame__meeting p { font-size:12px; line-height:1.4; }
+  #root .final-frame__meeting h1 { font-size:32px; margin:8px 0 12px; }
+}
+@media(min-width:1600px) {
+  :root { --page-gutter:clamp(112px,7vw,190px); }
+  #root .journey-guide__sheet { width:min(900px,100%); }
+}
+@media(pointer:coarse) {
+  #root .help-trigger,#root .menu-trigger,#root .chapters-trigger { min-height:44px; }
+  #root .journey-help__close { min-height:44px; }
+}
+/* Scale from the top edge so short screens never crop the guide heading. */
+#root .journey-guide__sheet { display:block; }
+@media(max-height:600px) and (orientation:landscape) {
+  #root .journey-guide__steps { grid-template-columns:repeat(3,minmax(0,1fr)); }
+}

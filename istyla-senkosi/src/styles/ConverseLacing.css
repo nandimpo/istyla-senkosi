@@ -174,3 +174,129 @@
 .converse-custom__rotation output { min-width:70px; }
 .converse-custom__view-controls { gap:6px; }
 .converse-custom__preview > .converse-custom__view-controls button { padding:5px 8px; }
+/* Leave a clear gap beneath the fixed Sound control. */
+#root .converse-custom {
+  padding-top:calc(var(--control-top,24px) + 76px);
+}
+#root .converse-custom__rotation input[type="range"] {
+  position:relative;
+  z-index:3;
+  min-height:36px;
+  cursor:grab;
+  touch-action:none;
+  pointer-events:auto;
+}
+#root .converse-custom__rotation input[type="range"]:active { cursor:grabbing; }
+#root .converse-custom__rotation input[type="range"]::-webkit-slider-thumb { cursor:grab; width:24px; height:24px; }
+#root .converse-custom__rotation input[type="range"]::-moz-range-thumb { cursor:grab; width:24px; height:24px; }
+@media(min-width:701px) {
+  #root .converse-custom__preview { grid-template-rows:minmax(0,1fr) 22px 40px auto; }
+}
+/* Keep the shoe-tap continuation clear of the fixed chapter navigation. */
+#root .converse-lacing__copy > .rhythm-advance {
+  margin-bottom:40px;
+}
+@media(max-width:700px) {
+  #root .converse-lacing__copy > .rhythm-advance { margin-bottom:56px; }
+}
+@media(min-width:701px) {
+  #root .converse-custom__preview { grid-template-rows:minmax(0,1fr) 40px auto; }
+}
+#root .converse-custom .converse-patches__piece,
+#root .converse-custom .converse-custom__initials input {
+  border-width:2px;
+  border-color:#c1b58b;
+}
+#root .converse-custom .converse-patches__piece:disabled { border-color:#a69e7b77; }
+/* Fit the entire editor, including its continuation, above the global footer. */
+#root .converse-custom .converse-lacing__copy.viewport-fit {
+  height:100%; min-height:0; overflow:hidden; display:block;
+}
+#root .converse-lacing__copy > .viewport-fit__content {
+  display:flex; flex-direction:column; gap:12px;
+}
+#root .converse-lacing__copy > .viewport-fit__content > h2 { margin:0; }
+#root .converse-lacing__copy > .viewport-fit__content > p { margin:0; font-size:14px; line-height:1.5; }
+#root .converse-lacing__copy > .viewport-fit__content > fieldset { margin:4px 0; }
+#root .converse-lacing__copy > .viewport-fit__content > .rhythm-advance {
+  position:relative; inset:auto; transform:none;
+  width:100%; margin:4px 0 0; padding:12px 0 0;
+  border-top:1px solid #c8b39b44;
+  display:grid; grid-template-columns:minmax(0,1fr) 100px;
+  grid-template-rows:auto auto; align-items:center; gap:4px 16px;
+  text-align:left;
+}
+#root .converse-lacing__copy .rhythm-advance__title { grid-column:1; grid-row:1; font-size:23px; }
+#root .converse-lacing__copy .rhythm-advance__instruction { grid-column:1; grid-row:2; font-size:11px; }
+#root .converse-lacing__copy .rhythm-advance button { grid-column:2; grid-row:1/3; width:100px; margin:0; min-height:58px; }
+#root .converse-custom .converse-patches__adjust { gap:12px; }
+@media(max-width:700px) {
+  #root .converse-custom .converse-lacing__copy.viewport-fit { height:calc(48svh - 65px); }
+}
+/* Group the footprints with their copy and reserve a clear footer band. */
+#root .converse-custom { padding-bottom:120px; }
+#root .converse-lacing__copy > .viewport-fit__content > .rhythm-advance {
+  grid-template-columns:88px minmax(0,1fr);
+  width:min(380px,100%);
+  align-self:center;
+  gap:4px 14px;
+  padding-top:14px;
+  margin:6px auto 0;
+  text-align:left;
+}
+#root .converse-lacing__copy .rhythm-advance button {
+  grid-column:1;
+  grid-row:1/3;
+  width:88px;
+  height:64px;
+  margin:0;
+}
+#root .converse-lacing__copy .rhythm-advance__title { grid-column:2; grid-row:1; font-size:23px; }
+#root .converse-lacing__copy .rhythm-advance__instruction { grid-column:2; grid-row:2; line-height:1.5; }
+/* Use tighter spacing, rather than small type, to keep the editor readable. */
+#root .converse-lacing__copy > .viewport-fit__content { gap:8px; }
+#root .converse-lacing__copy > .viewport-fit__content > h2 {
+  font-size:clamp(40px,3.4vw,54px);
+  line-height:1;
+}
+#root .converse-lacing__copy > .viewport-fit__content > p { font-size:16px; line-height:1.45; }
+#root .converse-custom .converse-custom__help { font-size:15px!important; line-height:1.45; }
+#root .converse-custom .converse-lacing__copy .converse-lacing__back { padding-bottom:4px; font-size:13px; }
+#root .converse-custom .converse-lacing__copy legend { font-size:11px; margin-bottom:6px; }
+#root .converse-custom .converse-lacing__copy fieldset { padding-top:8px; margin:2px 0; }
+#root .converse-custom .converse-patches__piece span { font-size:11px; }
+#root .converse-custom .converse-custom__initials { font-size:14px; }
+#root .converse-custom .converse-custom__manage select,
+#root .converse-custom .converse-custom__manage button { font-size:13px; padding:7px 9px; }
+#root .converse-custom .converse-patches__adjust label { font-size:13px; }
+#root .converse-lacing__copy .rhythm-advance__title { font-size:26px; }
+#root .converse-lacing__copy .rhythm-advance__instruction { font-size:13px; }
+#root .converse-custom__rotation { font-size:13px; }
+#root .converse-custom__preview > .converse-custom__view-controls button {
+  font-size:11px;
+  min-height:38px;
+  padding:8px 12px;
+}
+#root .converse-lacing__copy > .viewport-fit__content { gap:12px; }
+#root .converse-lacing__copy > .viewport-fit__content > .rhythm-advance {
+  margin-top:12px;
+  padding-top:18px;
+}
+@media(any-pointer:fine) {
+  #root .converse-custom__rotation input[type="range"],
+  #root .converse-custom__rotation input[type="range"]:active {
+    cursor:url("../assets/images/mouse-pointer-cursor.svg") 12 1, ew-resize!important;
+  }
+  #root .converse-custom__rotation input[type="range"]::-webkit-slider-thumb {
+    cursor:url("../assets/images/mouse-pointer-cursor.svg") 12 1, ew-resize!important;
+  }
+  #root .converse-custom__rotation input[type="range"]::-moz-range-thumb {
+    cursor:url("../assets/images/mouse-pointer-cursor.svg") 12 1, ew-resize!important;
+  }
+}
+#root .converse-custom { padding-bottom:95px; }
+#root .converse-lacing__copy > .viewport-fit__content { gap:16px; }
+#root .converse-lacing__copy > .viewport-fit__content > .rhythm-advance {
+  margin-top:18px;
+  padding-top:20px;
+}

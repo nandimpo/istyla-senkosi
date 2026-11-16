@@ -33,8 +33,8 @@ function WardrobeGame({ portraitImage, onComplete }) {
   const ready = placed.length === elements.length;
   const lastDetail = placed[placed.length - 1];
   const narrative = lastDetail
-    ? detailNarratives[lastDetail] + (ready ? " Piece by piece, I see the care behind the whole outfit. I think of Ree checking his clothes before leaving, and wish I had paid this much attention then." : "")
-    : "I look closer at the hat, sleeve and shoes. Choose a detail from the spool, then drag it to its matching place, or tap the detail and its place. Each choice helps me notice the care behind the outfit.";
+    ? detailNarratives[lastDetail] + (ready ? " Piece by piece, I begin to see the care behind the outfit. Looking back at Swenka makes me think of Ree getting ready. I wish I had looked this closely then." : "")
+    : "I used to see Ree’s finished outfit. Here, I try to look at the choices that make a look come together. Choose the hat, sleeve or shoes from the spool, then drag it to its matching place, or tap both. I begin with the details I once passed over.";
   const finishReading = () => { copyReadyRef.current = true; setCopyReady(true); };
   const center = (element) => {
     const bounds = element?.getBoundingClientRect();

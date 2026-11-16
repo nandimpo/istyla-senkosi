@@ -32,3 +32,7 @@ html[data-reduced-motion="true"] .soweto-arrival.is-leaving { animation:none; }
 .soweto-arrival .video-bridge--calm,.soweto-arrival .video-bridge--calm p { animation:none; }
 
 .soweto-arrival .soweto-arrival__note { z-index:4; top:100px; bottom:auto; }
+.soweto-arrival-copy > p:not(:first-child) {
+  font-size:clamp(15px,1.15vw,18px);
+  line-height:1.65;
+}

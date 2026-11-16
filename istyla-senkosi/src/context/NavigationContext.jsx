@@ -43,6 +43,7 @@ export function NavigationProvider({ children }) {
   const [currentSection, setCurrentSection] = useSessionState("section", "about", (value) => ORDER.includes(value));
   // Track journey progress separately from free chapter access.
   const [unlockedIndex, setUnlockedIndex] = useState(1);
+  const [completedChapters, setCompletedChapters] = useSessionState("completed-chapters", [], (value) => Array.isArray(value) && value.every((id) => ORDER.includes(id)));
 
   useEffect(() => {
     document.body.dataset.activeSection = currentSection;
@@ -64,18 +65,22 @@ export function NavigationProvider({ children }) {
     setCurrentSection(previous);
   }, [currentSection, setCurrentSection]);
 
-  const goTo = useCallback((id, { intro = false } = {}) => {
+  const goTo = useCallback((id, { completedChapter } = {}) => {
     if (!isUnlocked(id)) return;
-    if (intro) {
-      // Explicit menu visits start at the title; reload still restores saved progress.
+    if (completedChapters.includes(id)) {
       try {
         sessionStorage.setItem(`istyla:${id}:page`, "0");
         sessionStorage.setItem(`istyla:${id}:gallery`, "0");
-      } catch { /* Navigation still works without storage. */ }
+        if (id === "introduction") sessionStorage.setItem("istyla:map:progress", "0");
+      } catch { /* Navigation remains available without storage. */ }
       setChapterVisit((visit) => visit + 1);
     }
+    setCompletedChapters((previous) => {
+      const next = previous.filter((chapter) => chapter !== id);
+      return completedChapter && !next.includes(completedChapter) ? [...next, completedChapter] : next;
+    });
     setCurrentSection(id);
-  }, [isUnlocked, setCurrentSection]);
+  }, [isUnlocked, setCurrentSection, completedChapters, setCompletedChapters]);
 
   const restartJourney = useCallback(() => {
     // Only this explicit action clears progress. Reloads continue using the saved page.
@@ -85,9 +90,14 @@ export function NavigationProvider({ children }) {
     } catch { /* A fresh chapter still mounts when storage is unavailable. */ }
     setNavigationLocked(false);
     setUnlockedIndex(1);
+    setCompletedChapters([]);
     setChapterVisit((visit) => visit + 1);
     setCurrentSection("introduction");
-  }, [setCurrentSection]);
+  }, [setCurrentSection, setCompletedChapters]);
+
+  const markChapterComplete = useCallback((id) => {
+    setCompletedChapters((previous) => previous.includes(id) ? previous : [...previous, id]);
+  }, [setCompletedChapters]);
 
   const completeChapter = useCallback((id) => {
     if (navigationLocked) return;
@@ -96,13 +106,12 @@ export function NavigationProvider({ children }) {
     const nextIndex = index + 1;
     setUnlockedIndex((current) => Math.max(current, nextIndex));
     const nextId = ORDER[nextIndex];
-    if (nextId) {
-      setCurrentSection(nextId);
-    }
-  }, [navigationLocked, setCurrentSection]);
+    if (nextId) goTo(nextId, { completedChapter: id });
+    else setCompletedChapters((previous) => previous.includes(id) ? previous : [...previous, id]);
+  }, [navigationLocked, goTo, setCompletedChapters]);
 
   return (
-    <NavigationContext.Provider value={{ currentSection, chapterVisit, unlockedIndex, goTo, goBackChapter, restartJourney, completeChapter, isUnlocked, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion, navigationLocked, setNavigationLocked }}>
+    <NavigationContext.Provider value={{ currentSection, chapterVisit, unlockedIndex, goTo, goBackChapter, restartJourney, completeChapter, markChapterComplete, isUnlocked, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion, navigationLocked, setNavigationLocked }}>
       {children}
     </NavigationContext.Provider>
   );

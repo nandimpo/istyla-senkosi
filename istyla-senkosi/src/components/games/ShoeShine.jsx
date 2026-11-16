@@ -13,7 +13,7 @@ export default function ShoeShine({ onComplete }) {
     if (next === 100) onComplete();
   };
   return <div className="shoe-shine" style={{ "--shine": shine / 100 }} onPointerDown={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
-    <div className="shoe-shine__copy"><small>SWENKA / THE PREPARATION</small><h2>See where they start.</h2><p>Every detail begins with care. Rub the shoes to shine them and reveal their story.</p></div>
+    <div className="shoe-shine__copy"><small>SWENKA / THE PREPARATION</small><h2>See where they start.</h2><p>Swenka brings me back to the care behind township style. Rub the shoes to shine them, then hear what that preparation means.</p></div>
     <button className="shoe-shine__shoe" aria-label="Shine the shoes. Rub across them, or press Enter or Space repeatedly."
       onPointerDown={(event) => { event.stopPropagation(); if (event.button !== 0) return; event.currentTarget.setPointerCapture(event.pointerId); last.current = { x: event.clientX, y: event.clientY }; }}
       onPointerMove={(event) => {

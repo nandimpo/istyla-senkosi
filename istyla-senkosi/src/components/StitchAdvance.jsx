@@ -27,20 +27,21 @@ export default function StitchAdvance({ disabled = false, onComplete, label = "C
         event.stopPropagation();
         if (disabled || done.current || event.button !== 0) return;
         const bounds = event.currentTarget.getBoundingClientRect();
-        if (event.clientX - bounds.left > bounds.width * .3) return;
         event.preventDefault();
         setInteracted(true);
         event.currentTarget.setPointerCapture(event.pointerId);
-        drag.current = { x: event.clientX, width: bounds.width - 30 };
+        event.currentTarget.focus();
+        drag.current = { x: event.clientX, width: Math.max(48, bounds.right - event.clientX - 18) };
       }}
       onPointerMove={(event) => {
+        event.stopPropagation();
         if (!drag.current || disabled) return;
         event.preventDefault();
         const value = Math.max(0, Math.min(1, (event.clientX - drag.current.x) / drag.current.width));
         setProgress(value);
-        if (value >= .92) { drag.current = null; finish(); }
+        if (value >= .85) { drag.current = null; finish(); }
       }}
-      onPointerUp={(event) => { drag.current = null; if (!done.current) setProgress(0); if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }}
+      onPointerUp={(event) => { event.stopPropagation(); drag.current = null; if (!done.current) setProgress(0); if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }}
       onPointerCancel={() => { drag.current = null; if (!done.current) setProgress(0); }}
       onLostPointerCapture={() => { drag.current = null; }}
       onKeyDown={(event) => { event.stopPropagation(); if (["Enter", " ", "ArrowRight", "End"].includes(event.key)) { event.preventDefault(); finish(); } }}>

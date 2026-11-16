@@ -15,7 +15,7 @@ function ChapterNav() {
   const { goTo, isUnlocked } = useNavigation();
   const go = (id) => () => {
     setOpen(false);
-    goTo(id, { intro: true });
+    goTo(id);
   };
   return <>
     <button className="chapters-trigger" onClick={() => setOpen(true)}>CHAPTERS <span>+</span></button>

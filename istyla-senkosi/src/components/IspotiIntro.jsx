@@ -54,14 +54,15 @@ export default function IspotiIntro({ track, audioRef, children }) {
     >
       <IntroAmbientAudio id="pantsula" track={track} sharedAudioRef={audioRef} />
       <div className="ispoti-copy">
-        <small><NarrativeText onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="02 / PANTSULA · INTO MY AMAPANTSULA JOURNEY" delay={150} /></small>
+        <small><NarrativeText onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="02 / PANTSULA · INTO MY AMAPANTSULA JOURNEY" delay={0} speed={0.48} /></small>
         <h1>
-          <NarrativeText onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="Make it" delay={900} />
-          <em><NarrativeText onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="your own." delay={1800} /></em>
+          <NarrativeText onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="Make it" delay={100} speed={0.48} />
+          <em><NarrativeText onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="your own." delay={250} speed={0.48} /></em>
         </h1>
-        <p><NarrativeText onComplete={() => setFinishedCopy((done) => done[3] ? done : { ...done, [3]: true })} text="I remember the care my cousin took with every detail. Now it’s my turn to try." delay={3000} /></p>
-        <p><NarrativeText onComplete={() => setFinishedCopy((done) => done[4] ? done : { ...done, [4]: true })} text="I shape my ispoti by rubbing the crown and pulling the brim upward." delay={5000} /></p>
+        <p><NarrativeText onComplete={() => setFinishedCopy((done) => done[3] ? done : { ...done, [3]: true })} text="I remember the care my cousin took with every detail. Now it’s my turn to try." delay={500} speed={0.48} /></p>
+        <p><NarrativeText onComplete={() => setFinishedCopy((done) => done[4] ? done : { ...done, [4]: true })} text="I shape my ispoti by rubbing the crown and pulling the brim upward. Ispoti that he loved to wear." delay={900} speed={0.48} /></p>
       </div>
+      <div className="ispoti-station">
       <div className="ispoti-workbench" inert={!copyReady}>
         <svg
           className="ispoti-hat"
@@ -169,12 +170,13 @@ export default function IspotiIntro({ track, audioRef, children }) {
           <progress id="ispoti-bend-progress" max="100" value={bend} />
         </div>
         <div className="ispoti-shadow-label">ISPOTI BREAK-IN</div>
-        <RhythmAdvance disabled={!copyReady || !ready} onComplete={() => setOpened(true)} label="Enter Pantsula" />
+        <RhythmAdvance disabledMessage={copyReady ? "Shape your ispoti first" : "Let the words unfold..."} disabledInstruction="Rub the crown, then pull the brim upward." disabled={!copyReady || !ready} onComplete={() => setOpened(true)} label="Enter Pantsula" />
         <p aria-live="polite">
           {ready
             ? "Your ispoti is ready. Step into the chapter."
             : "Use your mouse or touch. Keyboard: Tab to the hat, then Enter or Space."}
         </p>
+      </div>
       </div>
     </section>}
     </>
