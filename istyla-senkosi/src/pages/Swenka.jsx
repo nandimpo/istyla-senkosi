@@ -73,7 +73,7 @@ function Swenka() {
               "Listening to them, I think of the questions I never asked Ree. I cannot hear his answers now, but I can learn to notice the care in a hat, a sleeve, a pair of shoes.",
             videoBridge: "Before I can look at Ree's style differently, I need to look at what came before it. My search begins with Swenka, and the men who give these clothes meaning.",
             playToEnd: true,
-            skipAfter: 10,
+            skipAfter: 15,
             caption: "WATCH THE FULL VIDEO",
           },
           {
@@ -81,6 +81,7 @@ function Swenka() {
             storyRole: "observe",
             collage: [editorial5, editorial4, xhosaMen],
             motion: "gallery",
+            galleryNavigation: "page",
             text: "I used to look at Ree's outfit and make up my mind. Here, I find myself slowing down: a neat cuff, a polished shoe, the way a man stands. Swenka brings me back to the care at the roots of township style. I wish I had noticed that care in Ree sooner.",
           },
           {

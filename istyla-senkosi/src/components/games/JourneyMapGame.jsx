@@ -215,6 +215,14 @@ function JourneyMapGame({ mapImage, onComplete }) {
     setClosedStop(null);
     sliderRef.current?.focus();
   };
+  const guidance = (!started || textReady) && <div className="journey-map-guidance" id="journey-instruction" aria-live="polite">
+    <span>YOUR NEXT STEP</span>
+    <p>{!started
+      ? "Start at Home. Click the glowing Home circle on the map, or the Home button below it."
+      : ready
+        ? "Tap the photographs on the map to look closer. When you are ready, choose Enter Soweto below."
+        : `Tap the photographs on the map to look closer. Then choose Continue to ${STOPS[Math.min(2, activeIndex + 1)].title} below.`}</p>
+  </div>;
   if (showArrivalClip) return <SowetoArrivalClip onComplete={onComplete} onBack={() => { setShowArrivalClip(false); setEntering(false); }} />;
 
   return (
@@ -246,7 +254,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
                   <path d="M820 960H980 M820 1100H980 M890 960V1100 M825 1005H980 M825 1045H980" />
                   <text x="821" y="964">N ↑</text><text x="945" y="1097">NOT TO SCALE</text>
                 </g>
-                {Object.entries(MEMORY_GROUPS).map(([folder, group]) => <g key={folder} className={`journey-cluster-label journey-thread-${group.thread}`} transform={`translate(${spreadX(group.label[0])} ${group.label[1]})`}><path d="M0 -1H12" /><text x="15" y="0" transform="rotate(-3 15 0)">{group.name}</text><path className="journey-label-underline" d={`M15 2 Q25 3 ${folder === "Beginning" ? 34 : 43} 1.5`} /></g>)}
+                {Object.entries(MEMORY_GROUPS).filter(([folder]) => ["Beginning", "Middle", "Soweto"].indexOf(folder) <= revealedStop).map(([folder, group]) => <g key={folder} className={`journey-cluster-label journey-thread-${group.thread}`} transform={`translate(${spreadX(group.label[0])} ${group.label[1]})`}><path d="M0 -1H12" /><text x="15" y="0" transform="rotate(-3 15 0)">{group.name}</text><path className="journey-label-underline" d={`M15 2 Q25 3 ${folder === "Beginning" ? 34 : 43} 1.5`} /></g>)}
                 {revealedStop >= 0 && <g className="journey-thought" transform={`translate(${spreadX(878)} 951) scale(1.15)`} aria-label="My thought: The care in a collar, the way a jacket sits. Is this how Ree wanted to be seen?">
                   <path d="M0 1 Q48 -3 100 0 L99 38 L30 38 L24 44 L25 38 L0 39 Z" />
                   <text x="4" y="9"><tspan x="4">the care in a collar...</tspan><tspan x="4" dy="8">the way a jacket sits.</tspan><tspan x="4" dy="9">Is this how Ree wanted</tspan><tspan x="4" dy="8">to be seen?</tspan></text>
@@ -336,17 +344,15 @@ function JourneyMapGame({ mapImage, onComplete }) {
             </article>}
           </div>
           <div className="journey-controls">
-            <div className="journey-map-guidance" id="journey-instruction"><span>HOW TO EXPLORE</span><p>Start at Home, then move to Memory and Soweto. Tap the photos as they appear.</p></div>
             
             <div className="journey-stop-buttons" aria-label="Journey stops">
               {STOPS.map((stop, index) => <button key={stop.id} disabled={entering || (started ? !textReady || index > activeIndex + 1 : index !== 0)} className={!started && index === 0 ? "journey-home-invitation" : undefined} aria-current={index === activeIndex ? "step" : undefined} onClick={() => selectStop(index)}><span>0{index + 1}</span>{["Home", "Memory", "Soweto"][index]}{!started && index === 0 && <small>Click to begin ?</small>}</button>)}
             </div>
-            <small className="journey-map-note">Home, memory, then Soweto. Tap the next pin or use the destination buttons. Each stop changes what I notice.</small>
           </div>
         </div>
         <aside className="journey-story-column" aria-label="Journey memories">
           <hr className="journey-memory-divider" />
-          {!started ? <div className="journey-story-card"><h2>Begin at Home</h2><p>Click the glowing Home circle on the map to begin. My photographs and threads will appear from there.</p></div> : cardOpen ? <article className="journey-story-card" key={activeStop.id} aria-labelledby={`story-${activeStop.id}`}>
+          {!started ? <div className="journey-story-card"><h2>Begin at Home</h2><p>The journey unfolds one stop at a time: Home, Memory, then Soweto. My photographs and threads appear as you go.</p>{guidance}</div> : cardOpen ? <article className="journey-story-card" key={activeStop.id} aria-labelledby={`story-${activeStop.id}`}>
             <div className="journey-story-body">
             <span className="journey-story-number">0{activeIndex + 1}</span>
             <h2 id={`story-${activeStop.id}`}>{activeStop.title}</h2>
@@ -362,7 +368,8 @@ function JourneyMapGame({ mapImage, onComplete }) {
               {activeStop.media.audio && <audio src={activeStop.media.audio} controls preload="none" aria-label={`${activeStop.title} memory recording`} />}
             </div>}
             </div>
-            {!ready && <button className="journey-continue" onClick={continueJourney} disabled={entering || !textReady}>Continue to {STOPS[Math.min(2, activeIndex + 1)].title} <span aria-hidden="true">&rarr;</span></button>}
+            {guidance}
+            {!ready && textReady && <button className="journey-continue" onClick={continueJourney} disabled={entering || !textReady}>Continue to {STOPS[Math.min(2, activeIndex + 1)].title} <span aria-hidden="true">&rarr;</span></button>}
           </article> : <button className="journey-reopen" onClick={() => { textReadyRef.current = false; setTextReady(false); setClosedStop(null); }} disabled={entering || !textReady}>Read this memory</button>}
           {ready && textReady && <button className="journey-enter" onClick={() => { setNavigationLocked(true); setEntering(true); }} disabled={entering || !textReady}><span>{entering ? "Entering Soweto..." : "Enter Soweto"}</span><span aria-hidden="true">&rarr;</span></button>}
         </aside>

@@ -56,6 +56,7 @@
 
 .stitch-advance__instruction { display:block; margin-top:4px; color:#d9c8a9; font:500 10px/1.4 var(--font-body); letter-spacing:.3px; text-shadow:0 1px 4px #000; }
 .stitch-advance.is-inviting p { animation:stitch-invitation-pulse 2.8s ease-in-out infinite; }
+.stitch-advance.is-inviting .stitch-advance__needle { animation:stitch-needle-nudge 2s ease-in-out infinite; }
 @keyframes stitch-invitation-pulse {
   0%,100% { opacity:.65; }
   50% { opacity:1; text-shadow:0 1px 4px #000,0 0 10px #e8c58280; }

@@ -99,7 +99,7 @@ function WardrobeGame({ portraitImage, onComplete }) {
 
 
   return (
-    <div className="game-stage game-stage--swenka" style={{ "--suit-background": `url("${suitBackground}")` }}>
+    <div className="game-stage game-stage--swenka" data-reading={placed.length === 0 && !copyReady} style={{ "--suit-background": `url("${suitBackground}")` }}>
       <ViewportFit className="game-copy">
         <p className="tag">01 / SWENKA</p>
         <h1>Piece by piece,<br />it came together.</h1>

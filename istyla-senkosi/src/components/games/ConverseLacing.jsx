@@ -29,7 +29,7 @@ function insideOutline({ x,y }, outline) {
   return inside;
 }
 function Decoration({ type, text }) {
-  if (type === "Initials") return <text textAnchor="middle" dominantBaseline="central" fill="#f4d598" stroke="#18291f" strokeWidth="1" paintOrder="stroke" fontSize="25" fontWeight="800" fontFamily="Arial,sans-serif">{text}</text>;
+  if (type === "Initials") return <text textAnchor="middle" dominantBaseline="central" fill="#8b2942" stroke="#f7e9e4" strokeWidth=".75" paintOrder="stroke" fontSize="25" fontWeight="800" fontFamily="Arial,sans-serif">{text}</text>;
   const size = type === "Bows" ? 70 : 44;
   return <image href={patchTextures[type]} x={-size / 2} y={-size / 2} width={size} height={size} preserveAspectRatio="xMidYMid slice"/>;
 }

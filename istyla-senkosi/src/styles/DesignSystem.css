@@ -556,3 +556,17 @@ html[data-reduced-motion="true"] #root .chapter-player__page { animation:none; }
 }
 #root #pantsula .chapter-player__story--with-navigation .rhythm-advance__title { font-size:22px; }
 #root #pantsula .chapter-player__story--with-navigation .rhythm-advance button { min-height:54px; margin:4px auto; }
+
+/* Continuation sits outside the collage story card; never clip it at the card edge. */
+#root :is(#pantsula,#skhothane) .chapter-player__page:has(.fashion-wall) .chapter-player__story--with-navigation {
+  overflow:visible;
+  height:max-content;
+  bottom:auto;
+  max-height:none;
+}
+#root #pantsula .collage-story-continuation > .rhythm-advance {
+  width:min(290px,100%);
+  margin:0 auto;
+  padding-top:0;
+  border-top:0;
+}

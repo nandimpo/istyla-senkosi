@@ -66,12 +66,21 @@ export function NavigationProvider({ children }) {
     setCurrentSection(previous);
   }, [currentSection, setCurrentSection]);
 
-  const goTo = useCallback((id, { completedChapter } = {}) => {
+  const goTo = useCallback((id, { completedChapter, page, intro = false } = {}) => {
     if (!isUnlocked(id)) return;
-    if (completedChapters.includes(id)) {
+    if (Number.isInteger(page) && page >= 0) {
+      try {
+        sessionStorage.setItem(`istyla:${id}:page`, JSON.stringify(page));
+        sessionStorage.setItem(`istyla:${id}:gallery`, "0");
+        sessionStorage.setItem(`istyla:${id}:skip-intro`, JSON.stringify(!intro));
+      } catch { /* Keep chapter navigation available when storage is unavailable. */ }
+      setNavigationLocked(false);
+      setChapterVisit((visit) => visit + 1);
+    } else if (completedChapters.includes(id)) {
       try {
         sessionStorage.setItem(`istyla:${id}:page`, "0");
         sessionStorage.setItem(`istyla:${id}:gallery`, "0");
+        sessionStorage.removeItem(`istyla:${id}:skip-intro`);
         if (id === "introduction") sessionStorage.setItem("istyla:map:progress", "0");
       } catch { /* Navigation remains available without storage. */ }
       setChapterVisit((visit) => visit + 1);

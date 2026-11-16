@@ -1,12 +1,13 @@
 import { useNavigation } from "../context/NavigationContext";
 import Hero from "../components/Hero";
 import ChapterLoading from "../components/ChapterLoading";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import { loadSwenka } from "../utils/preloadSwenka";
 import { reverseScroll } from "../utils/reverseScroll";
 
 const CHAPTERS = {
   introduction: lazy(() => import("./Introduction")),
-  swenka: lazy(() => import("./Swenka")),
+  swenka: lazy(loadSwenka),
   pantsula: lazy(() => import("./Pantsula")),
   skhothane: lazy(() => import("./Skhothane")),
   reflection: lazy(() => import("./Reflection")),
@@ -14,6 +15,9 @@ const CHAPTERS = {
 
 function Experience() {
   const { currentSection, chapterVisit, goBackChapter } = useNavigation();
+  useEffect(() => {
+    if (currentSection === "introduction") loadSwenka().catch(() => {});
+  }, [currentSection]);
 
   if (currentSection === "about") return <Hero />;
   const Chapter = CHAPTERS[currentSection];

@@ -304,3 +304,64 @@ html[data-reduced-motion="true"] .fashion-wall figure { animation:none!important
 /* Begin every collage with a clear canvas before the first paper arrives. */
 #root .fashion-wall--empty :is(.scrapbook-masthead,.scrapbook-footer,.scrapbook-canvas) { visibility:hidden; }
 #root .chapter-player__visual:has(.fashion-wall--empty) > .chapter-player__collage-backdrop { visibility:hidden; }
+
+/* Read the story, see the collage instruction, then continue beneath the canvas. */
+#root .chapter-player__story .collage-story-instruction {
+  margin:22px 0 0; padding:14px 0 0; border-top:1px solid #d5be9055;
+  color:#e4c38a; font:700 11px/1.7 Montserrat,Arial,sans-serif; letter-spacing:.7px;
+  animation:collage-instruction-in .4s ease-out both;
+}
+#root .scrapbook-continuation {
+  position:absolute; left:0; right:0; top:96%;
+  display:flex; align-items:center; justify-content:center;
+}
+#root .scrapbook-continuation > :is(.stitch-advance,.rhythm-advance,.spotlight-advance) {
+  position:relative; inset:auto; transform:none; margin:0; width:min(280px,90%);
+}
+@keyframes collage-instruction-in { from { opacity:0; } to { opacity:1; } }
+@media(prefers-reduced-motion:reduce) { #root .collage-story-instruction { animation:none; } }
+
+#root .chapter-player__story:has(.collage-story-continuation) { overflow:visible; }
+#root .collage-story-continuation {
+  position:absolute;
+  top:calc(100% + 48px);
+  left:0;
+  margin:0;
+  width:100%;
+}
+#root .collage-story-continuation > :is(.stitch-advance,.rhythm-advance,.spotlight-advance) {
+  position:relative; inset:auto; transform:none; width:min(280px,100%); margin:0 auto;
+}
+
+/* Give handwritten collage notes a more readable scale. */
+#root .scrapbook-scribble { font-size:clamp(14px,1.3vw,24px); }
+@media(max-width:700px) { #root .scrapbook-scribble { font-size:12px; } }
+
+.scrapbook-sketches { position:absolute; inset:0; z-index:25; pointer-events:none; mix-blend-mode:screen; }
+#root #skhothane .scrapbook-sketches > img.scrapbook-sketch { position:absolute; object-fit:contain; object-position:center; opacity:.7; max-width:16%; max-height:28%; }
+#root #skhothane .scrapbook-sketches > .scrapbook-sketch--jewellery { left:31%; top:35%; width:8%; height:15%; transform:rotate(-12deg); }
+#root #skhothane .scrapbook-sketches > .scrapbook-sketch--backpack { left:29%; bottom:3%; width:12%; height:25%; transform:rotate(-9deg); }
+#root #skhothane .scrapbook-sketches > .scrapbook-sketch--loafers { right:0; top:43%; width:12%; height:23%; transform:rotate(12deg); }
+.fashion-wall--assembling .scrapbook-sketches.is-placed { animation:scrapbook-write 1s ease-out both; }
+
+#root #skhothane .fashion-wall--scrapbook .scrapbook-clipping--sketch {
+  padding:0; background:transparent; box-shadow:none; mix-blend-mode:screen;
+}
+#root #skhothane .scrapbook-clipping--sketch::before,
+#root #skhothane .scrapbook-clipping--sketch::after { display:none; }
+#root #skhothane .scrapbook-clipping--sketch .fashion-album__photo { background:transparent; }
+#root #skhothane .scrapbook-clipping--sketch img { object-fit:contain; }
+
+#root #skhothane .scrapbook-clipping--sketch:nth-of-type(10) { scale:1.2; }
+#root #skhothane .scrapbook-clipping--sketch:nth-of-type(12) { scale:1.2; }
+
+/* Give the three sketches separate pockets around the photographs. */
+#root #skhothane .scrapbook-clipping--sketch:nth-of-type(10) {
+  left:84%; top:32%; width:15%; height:32%; scale:1;
+}
+#root #skhothane .scrapbook-clipping--sketch:nth-of-type(11) {
+  left:31%; top:35%; width:13%; height:22%; scale:1;
+}
+#root #skhothane .scrapbook-clipping--sketch:nth-of-type(12) {
+  left:27%; top:68%; width:14%; height:28%; scale:1;
+}

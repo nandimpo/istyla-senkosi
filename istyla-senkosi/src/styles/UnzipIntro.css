@@ -18,6 +18,7 @@
 .unzip-seam--1 .unzip-seam-teeth,.unzip-seam--1 .unzip-seam-glint { stroke-dashoffset:3.5; }
 .unzip-copy { position:absolute; top:34%; left:8%; max-width:34%; transition:opacity .3s; }
 .unzip-copy p { font:500 12px/1.7 Montserrat,Arial,sans-serif; }
+.unzip-copy p:last-child { font-size:clamp(17px,1.2vw,21px); line-height:1.6; }
 .unzip-copy p:first-child { color:#d38912; font-weight:700; letter-spacing:2px; }
 .unzip-copy h1 { margin:20px 0; font:800 clamp(32px,5vw,72px)/.95 "Barlow Condensed",Impact,sans-serif; text-transform:uppercase; }
 .unzip-pull { position:absolute; top:calc(2% + var(--zip-progress) * 86% - 14px); left:50%; transform:translateX(-50%); width:60px; height:92px; border:0; background:transparent; touch-action:none; padding:0; filter:drop-shadow(0 5px 5px #0009); transition:opacity .3s; }

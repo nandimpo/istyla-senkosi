@@ -47,7 +47,7 @@ export default function HelpButton() {
       <p className="journey-help__kicker">A LITTLE GUIDANCE</p>
       <h2 id="journey-help-title">Your next step.</h2>
       <p className="journey-help__instruction">{message}</p>
-      <div className="journey-help__navigation"><p><strong>Go back</strong> Scroll up to revisit the previous page.</p><p><strong>Find your way</strong> Chapters chooses a chapter. Home returns to the opening. Menu adjusts sound and motion.</p></div>
+      <div className="journey-help__navigation"><p><strong>Go back</strong> Scroll up twice, with a brief pause between scrolls, to revisit the previous page.</p><p><strong>Find your way</strong> Chapters chooses a chapter. Home returns to the opening. Menu adjusts sound and motion.</p></div>
       <button className="journey-help__close" onClick={close}>Got it, back to the story</button>
     </dialog>
   </>;

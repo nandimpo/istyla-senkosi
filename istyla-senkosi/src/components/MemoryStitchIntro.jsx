@@ -60,6 +60,7 @@ export default function MemoryStitchIntro({ track, audioRef, children }) {
   const [drawing, setDrawing] = useState(false);
   const [opened, setOpened] = useState(() => {
     try {
+      if (sessionStorage.getItem("istyla:reflection:skip-intro") === "true") return true;
       const savedPage = JSON.parse(sessionStorage.getItem("istyla:reflection:page"));
       return Number.isInteger(savedPage) && savedPage > 0;
     } catch { return false; }
@@ -78,7 +79,7 @@ export default function MemoryStitchIntro({ track, audioRef, children }) {
 
   return <>
     {track && <audio ref={audioRef} src={track} loop preload="metadata" aria-hidden="true" />}
-    {opened ? children : <section className={`memory-stitch ${complete ? "is-complete" : ""}`} style={{ "--piece-gap":`${9 * remaining}px` }} onPointerUp={() => setDrawing(false)} onPointerCancel={() => setDrawing(false)}>
+    {opened ? children : <section className={`memory-stitch ${complete ? "is-complete" : ""}`} data-reading={!copyReady} style={{ "--piece-gap":`${9 * remaining}px` }} onPointerUp={() => setDrawing(false)} onPointerCancel={() => setDrawing(false)}>
     <IntroAmbientAudio id="reflection" track={track} sharedAudioRef={audioRef} />
     <div className="memory-stitch__copy">
       <small><NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="04 / REFLECTION · MY JOURNEY" delay={150} /></small>

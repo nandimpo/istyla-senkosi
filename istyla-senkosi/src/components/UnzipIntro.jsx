@@ -15,6 +15,7 @@ export default function UnzipIntro({ image, track, nextTrack, audioRef, children
   const copyReady = Object.keys(finishedCopy).length === 3;
   const [opened, setOpened] = useState(() => {
     try {
+      if (sessionStorage.getItem("istyla:swenka:skip-intro") === "true") return true;
       const savedPage = JSON.parse(sessionStorage.getItem("istyla:swenka:page"));
       return Number.isInteger(savedPage) && savedPage > 0;
     } catch { return false; }

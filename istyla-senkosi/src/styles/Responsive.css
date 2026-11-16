@@ -1,5 +1,15 @@
 /* Device-independent viewport and input sizing, loaded after chapter rules. */
 :root { --safe-bottom:env(safe-area-inset-bottom,0px); }
+/* Reserve each control's space while the story is being revealed. */
+#root .unzip-intro.is-reading :is(.unzip-pull,.unzip-open),
+#root .ispoti-intro[data-reading="true"] :is(.ispoti-target,.ispoti-controls),
+#root .skhothane-burn-intro[data-reading="true"] :is(.skhothane-burn-intro__instruction,.skhothane-burn-intro__match),
+#root .memory-stitch[data-reading="true"] :is(.memory-stitch__instruction,.memory-stitch__seams,.memory-stitch__copy strong),
+#root .game-stage[data-reading="true"] .game-copy :is(strong,i),
+#root .game-stage--swenka[data-reading="true"] :is(.wardrobe,.puzzle-zone),
+#root .game-stage--pantsula[data-reading="true"] :is(.beat-map,.beat-overlay) {
+  visibility:hidden;
+}
 #root #reflection .final-frame__meeting .final-frame__signature {
   align-self:flex-end;
   margin:12px 0 0;

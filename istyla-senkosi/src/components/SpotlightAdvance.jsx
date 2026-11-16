@@ -40,9 +40,9 @@ export default function SpotlightAdvance({ disabled = false, onComplete, label =
     frame.current = requestAnimationFrame(tick);
   };
   const stop = (event) => event.stopPropagation();
-  return <nav className={`spotlight-advance ${!disabled && !finished.current ? "is-ready" : ""} ${progress > 0 ? "is-holding" : ""} ${finished.current ? "is-complete" : ""}`} aria-label="Step into the spotlight" onPointerDown={stop} onClick={stop} onKeyDown={stop} onWheel={stop}>
-    <p className="spotlight-advance__title" role="status">{disabled ? "Let the words unfold..." : finished.current ? "A closer look. A new perspective." : "Hold to look closer"}</p>
-    <button type="button" disabled={disabled || finished.current} aria-label={`${label}. Press and hold with your mouse, trackpad or finger, or hold Space or Enter.`}
+  return <nav style={{ visibility: disabled ? "hidden" : "visible" }} aria-hidden={disabled || undefined} className={`spotlight-advance ${!disabled && progress < 1 ? "is-ready" : ""} ${progress > 0 ? "is-holding" : ""} ${(progress === 1) ? "is-complete" : ""}`} aria-label="Step into the spotlight" onPointerDown={stop} onClick={stop} onKeyDown={stop} onWheel={stop}>
+    <p className="spotlight-advance__title" role="status">{disabled ? "Let the words unfold..." : (progress === 1) ? "A closer look. A new perspective." : "Hold to look closer"}</p>
+    <button type="button" disabled={disabled || (progress === 1)} aria-label={`${label}. Press and hold with your mouse, trackpad or finger, or hold Space or Enter.`}
       onPointerDown={(event) => { event.stopPropagation(); if (event.button !== 0 || disabled) return; event.preventDefault(); event.currentTarget.focus(); event.currentTarget.setPointerCapture(event.pointerId); begin(); }}
       onPointerUp={(event) => { cancel(); if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }}
       onPointerCancel={cancel} onLostPointerCapture={cancel} onBlur={cancel}
@@ -54,6 +54,6 @@ export default function SpotlightAdvance({ disabled = false, onComplete, label =
       </span>
       <svg className="spotlight-advance__ring" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="29"/><circle className="spotlight-advance__fill" cx="32" cy="32" r="29" pathLength="100" style={{ strokeDashoffset:100 - progress * 100 }}/></svg>
     </button>
-    <span className="spotlight-advance__instruction">{finished.current ? "Looking beyond first impressions" : progress > 0 ? "Keep holding..." : "Press and hold for a moment"}</span>
+    <span className="spotlight-advance__instruction">{(progress === 1) ? "Looking beyond first impressions" : progress > 0 ? "Keep holding..." : "Press and hold for a moment"}</span>
   </nav>;
 }

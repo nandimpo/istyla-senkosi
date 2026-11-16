@@ -1,3 +1,3 @@
 .chapter-loading { position:fixed; inset:0; z-index:100; display:grid; place-items:center; padding:24px; background:#171714; color:#f5eddf; }
-.chapter-loading p { max-width:640px; margin:0; text-align:center; text-wrap:balance; font:500 clamp(18px,2vw,26px)/1.5 Montserrat,Arial,sans-serif; }
+.chapter-loading p { max-width:720px; margin:0; text-align:center; text-wrap:balance; font:500 clamp(24px,2.5vw,36px)/1.5 Montserrat,Arial,sans-serif; }
 .video-bridge__loading { position:absolute; bottom:10vh; left:24px; right:24px; color:#d6ba86; text-align:center; font:500 14px/1.5 Montserrat,Arial,sans-serif; }

@@ -95,3 +95,21 @@ html[data-reduced-motion="true"] .spotlight-advance.is-ready button { animation:
 @media(prefers-reduced-motion:reduce) {
   .spotlight-advance.is-ready button { animation:none; }
 }
+
+/* A stronger gold halo on the completed outfit's shoe control. */
+#root .skhothane-outfit__result .spotlight-advance.is-ready button {
+  box-shadow:0 0 0 2px #ffe0a6,0 0 22px #efb94dcc,0 0 42px #e5a33a88;
+  animation:outfit-shoe-glow 2s ease-in-out infinite;
+}
+#root .skhothane-outfit__result .spotlight-advance.is-ready .spotlight-advance__icon {
+  stroke:#ffe0a6;
+  filter:drop-shadow(0 0 5px #ffd078);
+}
+@keyframes outfit-shoe-glow {
+  0%,100% { box-shadow:0 0 0 2px #ffe0a6cc,0 0 20px #efb94daa,0 0 36px #e5a33a66; }
+  50% { box-shadow:0 0 0 3px #ffe9bd,0 0 30px #efb94dee,0 0 52px #e5a33aaa; }
+}
+html[data-reduced-motion="true"] #root .skhothane-outfit__result .spotlight-advance.is-ready button { animation:none; }
+@media(prefers-reduced-motion:reduce) {
+  #root .skhothane-outfit__result .spotlight-advance.is-ready button { animation:none; }
+}

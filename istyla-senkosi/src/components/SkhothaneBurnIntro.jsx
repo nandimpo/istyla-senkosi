@@ -18,6 +18,7 @@ export default function SkhothaneBurnIntro({ track, audioRef, children }) {
   const { reducedMotion } = useNavigation();
   const [opened, setOpened] = useState(() => {
     try {
+      if (sessionStorage.getItem("istyla:skhothane:skip-intro") === "true") return true;
       const savedPage = JSON.parse(sessionStorage.getItem("istyla:skhothane:page"));
       return Number.isInteger(savedPage) && savedPage > 0;
     } catch { return false; }
@@ -86,14 +87,14 @@ export default function SkhothaneBurnIntro({ track, audioRef, children }) {
   const mask = burning ? `radial-gradient(circle at 50% 57%, transparent ${burnRadius}%, #000 ${Math.min(100, burnRadius + 9)}%)` : undefined;
   return <>
     {track && <audio ref={audioRef} src={track} loop preload="metadata" aria-hidden="true" />}
-    {opened ? children : <section className={`skhothane-burn-intro ${burning ? "is-burning" : ""}`} aria-label="Set the Skhothane shirt alight to reveal the chapter">
+    {opened ? children : <section className={`skhothane-burn-intro ${burning ? "is-burning" : ""}`} data-reading={!copyReady} aria-label="Set the Skhothane shirt alight to reveal the chapter">
     <IntroAmbientAudio id="skhothane" track={track} sharedAudioRef={audioRef} />
     <div className="skhothane-burn-intro__background" style={{ "--skhothane-background":`url("${skhothaneBackground}")` }} aria-hidden="true" />
     <OutfitAmbience audioRef={audioRef} />
     <div className="skhothane-burn-intro__copy">
       <small><NarrativeText maxDuration={2500} rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="03 / SKHOTHANE · MY JOURNEY" delay={0} /></small>
       <h1><NarrativeText maxDuration={2500} rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="A look made to be seen." delay={100} /></h1>
-      <p><NarrativeText maxDuration={2500} rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="I set this shirt alight like a true Skhothane to enter a world of colour, performance and memories I am still trying to understand." delay={250} /></p>
+      <p><NarrativeText maxDuration={2500} rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="As the shirt burns away, I step into a world of colour, performance and self-expression. I want to look beyond the spectacle and understand what Skhothane meant to Ree." delay={250} /></p>
       <p className="skhothane-burn-intro__instruction" role="status">{copyReady ? notice : "Read to unlock the match."}</p>
     </div>
     <div className="skhothane-burn-intro__stage">

@@ -24,7 +24,7 @@ const fullScrapbookSlots = [
   [27,69,18,26,2], [46,43,17,22,-3], [74,61,18,24,2],
 ];
 
-export default function FashionAlbum({ images, label, crossfade, visualOnly, scrapbook = false, chapter = "STYLE", clippingKinds = [], customSlots, notes = [], audioRef, onAssemblyReady }) {
+export default function FashionAlbum({ images, label, crossfade, visualOnly, scrapbook = false, chapter = "STYLE", clippingKinds = [], customSlots, notes = [], audioRef, onAssemblyReady, continuationControl }) {
   const [selected, setSelected] = useState(null);
   const dialogRef = useRef(null);
   const touch = useRef(null);
@@ -39,17 +39,17 @@ export default function FashionAlbum({ images, label, crossfade, visualOnly, scr
     { text:"look at the combinations!", x:38, y:44, tilt:3 },
     { text:"his joy, in every detail", x:55, y:92, tilt:-3 },
   ] : [];
-  const [assetsReady, setAssetsReady] = useState(false);
+  const [readyImages, setReadyImages] = useState(null);
+  const assetsReady = readyImages === images;
   const readyCallback = useRef(onAssemblyReady);
   useEffect(() => { readyCallback.current = onAssemblyReady; }, [onAssemblyReady]);
   useEffect(() => {
     let cancelled = false;
-    setAssetsReady(false);
     Promise.allSettled(images.map((src) => {
       const image = new Image();
       image.src = src;
       return image.decode();
-    })).then(() => { if (!cancelled) setAssetsReady(true); });
+    })).then(() => { if (!cancelled) setReadyImages(images); });
     return () => { cancelled = true; };
   }, [images]);
   const { reducedMotion } = useNavigation();
@@ -69,7 +69,8 @@ export default function FashionAlbum({ images, label, crossfade, visualOnly, scr
   const move = (direction) => setSelected((index) => (index + direction + images.length) % images.length);
   return <>
     <div className={`fashion-wall fashion-wall--assembling ${empty ? "fashion-wall--empty" : ""} ${scrapbook ? "fashion-wall--scrapbook" : ""} ${crossfade ? "fashion-wall--crossfade" : ""} ${images.length <= 16 ? "fashion-wall--compact" : ""}`} style={{ "--assembly-end": "0ms" }} aria-label={label} onPointerDown={stop} onClick={stop} onKeyDown={stop} onWheel={stop}>
-      {scrapbook && <><header className="scrapbook-masthead" aria-label={`${chapter} scrapbook`}><h3>Still here.<br /><em>Still him.</em></h3><small>What stays with me</small></header><span className="scrapbook-note" style={{ visibility: assembly.decorated ? "visible" : "hidden" }}>the past, in the present ↗</span><span className="scrapbook-footer">COLLECTED, NOT FORGOTTEN / HOVER TO LOOK CLOSER · TAP TO OPEN</span></>}
+      {scrapbook && <><header className="scrapbook-masthead" aria-label={`${chapter} scrapbook`}><h3>Still here.<br /><em>Still him.</em></h3><small>What stays with me</small></header><span className="scrapbook-note" style={{ visibility: assembly.decorated ? "visible" : "hidden" }}>the past, in the present ↗</span></>}
+      {scrapbook && <div className="scrapbook-continuation">{continuationControl}</div>}
       <div className="scrapbook-canvas">
       {scrapbook && <>
         <div className="scrapbook-mixed-papers" aria-hidden="true">{[0,1,2].map((index) => <span key={index} style={{ visibility: index < assembly.papers ? "visible" : "hidden", animationDelay: "0ms", animationName: index < assembly.papers ? "scrapbook-paper" : "none" }} />)}</div>

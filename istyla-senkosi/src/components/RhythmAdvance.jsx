@@ -47,7 +47,7 @@ export default function RhythmAdvance({ disabled = false, onComplete, label = "C
     if (next === 2) timer.current = setTimeout(() => callback.current?.(), reducedMotion ? 180 : 450);
   };
   const stop = (event) => event.stopPropagation();
-  return <nav className={`rhythm-advance ${!disabled && steps < 2 ? "is-ready" : ""}`} aria-label="Tap into the rhythm" onClick={stop} onPointerDown={stop} onWheel={stop} onKeyDown={stop}>
+  return <nav style={{ visibility: disabled ? "hidden" : "visible" }} aria-hidden={disabled || undefined} className={`rhythm-advance ${!disabled && steps < 2 ? "is-ready" : ""}`} aria-label="Tap into the rhythm" onClick={stop} onPointerDown={stop} onWheel={stop} onKeyDown={stop}>
     <p className="rhythm-advance__title" role="status">{disabled ? disabledMessage : steps === 2 ? "Two steps forward." : "Tap into the rhythm"}</p>
     <button type="button" disabled={disabled || steps === 2} aria-label={`${label}. ${steps === 0 ? "Tap twice" : "One more tap"}. Enter or Space also works.`} onKeyDown={(event) => { if (event.repeat) event.preventDefault(); }} onClick={tap}>
       <Footprint lit={steps >= 1} next={!disabled && steps === 0} />

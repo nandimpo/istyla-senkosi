@@ -13,6 +13,7 @@ export default function IspotiIntro({ track, audioRef, children }) {
   const [bend, setBend] = useState(0);
   const [opened, setOpened] = useState(() => {
     try {
+      if (sessionStorage.getItem("istyla:pantsula:skip-intro") === "true") return true;
       const savedPage = JSON.parse(
         sessionStorage.getItem("istyla:pantsula:page"),
       );
@@ -48,7 +49,7 @@ export default function IspotiIntro({ track, audioRef, children }) {
     <>
     {track && <audio ref={audioRef} src={track} loop preload="metadata" aria-hidden="true" />}
     {opened ? children : <section
-      className="ispoti-intro"
+      className="ispoti-intro" data-reading={!copyReady}
       aria-label="Break in your ispoti to enter Pantsula"
       style={{ "--wear": wear / 100, "--bend": bend / 100, "--township-sketch": `url("${townshipSketch}")` }}
     >

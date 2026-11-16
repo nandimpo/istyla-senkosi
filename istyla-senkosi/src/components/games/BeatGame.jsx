@@ -47,7 +47,7 @@ function BeatGame({ sceneImages, onComplete }) {
   const currentScene = activeBeat === 0 ? "TAP THE FIRST BEAT" : activeBeat === beats.length ? "FIVE MOVEMENTS, ONE SHARED RHYTHM" : `${activeBeat} OF ${beats.length} MOVEMENTS FOUND. NEXT: ${beats[activeBeat]}`;
 
   return (
-    <div className="game-stage game-stage--pantsula" style={{ "--pantsula-background": `url("${pantsulaBackground}")` }}>
+    <div className="game-stage game-stage--pantsula" data-reading={activeBeat === 0 && !copyReady} style={{ "--pantsula-background": `url("${pantsulaBackground}")` }}>
       <ViewportFit className="game-copy">
         <p className="tag">02 / PANTSULA</p>
         <h1>I tried to feel it,<br />not just watch it.</h1>
