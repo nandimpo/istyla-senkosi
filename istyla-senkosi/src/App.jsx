@@ -5,6 +5,8 @@ import MenuNav from "./components/MenuNav";
 import HomeLink from "./components/HomeLink";
 import { NavigationProvider } from "./context/NavigationContext";
 
+import "./styles/DesignSystem.css";
+
 function App() {
   return <NavigationProvider><Routes>
     <Route path="/" element={<Experience />} />

@@ -162,14 +162,14 @@
 .journey-map-photo{filter:drop-shadow(.5px 1.2px 1px #0009)}
 .journey-thought{pointer-events:none}
 .journey-thought>path{fill:#27251ff2;stroke:#d2b57c;stroke-width:.3;stroke-dasharray:5 .6}
-.journey-thought text{fill:#f0dbb0;font:400 3.4px var(--handwriting)}
+.journey-thought text{fill:#f0dbb0;font:400 5.6px var(--handwriting)}
 .journey-thought-memory>path{stroke:#b7bcd5;fill:#23242bf2}
 .journey-thought-memory text{fill:#d7dbee}
 .journey-thought-soweto>path{stroke:#c78370;fill:#30241ff2}
 .journey-thought-soweto text{fill:#e8c1ad}
 .journey-fashion-sketch{pointer-events:none;color:#d3cbb7;opacity:.85}
 .journey-fashion-sketch path,.journey-fashion-sketch circle{fill:none;stroke:currentColor;stroke-width:.3;stroke-linecap:round;stroke-linejoin:round}
-.journey-fashion-sketch text{fill:currentColor;font:400 2.4px var(--handwriting)}
+.journey-fashion-sketch text{fill:#fff0ce;font:400 7px var(--handwriting);paint-order:stroke;stroke:#171611;stroke-width:.45;stroke-linejoin:round}
 .journey-sketch-image{mix-blend-mode:screen}
 .journey-fashion-sketch:has(.journey-sketch-image){opacity:1}
 .journey-drafting{opacity:.4}
@@ -235,3 +235,18 @@
 @keyframes journey-onward-nudge{0%,100%{transform:translateY(-3px)}50%{transform:translateY(4px)}}
 .journey-calm .journey-onward-arrow{animation:none}
 @media(min-width:1000px) and (max-height:800px){.journey-enter,.journey-onward{min-height:82px;margin-top:12px;padding:14px 18px}}
+
+.journey-memory-divider { width:100%; margin:0 0 20px; border:0; border-top:1px solid #c8b39b40; }
+
+.journey-story-column,.journey-story-column .journey-story-card { border-top:0; }
+
+.journey-route-grab { fill:none; stroke:transparent; stroke-width:20; pointer-events:stroke; touch-action:none; cursor:grab; }
+.journey-route-grab:active { cursor:grabbing; }
+.journey-route-glow,.journey-route-lit { pointer-events:none; }
+.journey-drag-target { stroke:transparent; }
+.journey-drag-target:hover { stroke:#f1d5a566; }
+
+.journey-reading-status { display:block; margin-top:16px; color:#c8b39b; font:400 12px/1.6 var(--font-body); }
+.journey-route-layer { user-select:none; -webkit-user-select:none; }
+.journey-stop-buttons button:disabled,.journey-continue:disabled,.journey-enter:disabled { opacity:.4; }
+.journey-drag-target[aria-disabled="true"] { pointer-events:none; }

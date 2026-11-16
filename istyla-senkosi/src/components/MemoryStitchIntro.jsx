@@ -1,5 +1,8 @@
-import { useEffect, useState } from "react";
-import cousinImage from "../assets/images/Cousin/Cousin 1.jpeg";
+import { useEffect, useId, useState } from "react";
+import cousinImage from "../assets/Chapter 4_Reflection/Images/Cousin_Old_Photo.png";
+import beigeThread from "../assets/Chapter 4_Reflection/Textures/Beige_Thread.jpg";
+import greenThread from "../assets/Chapter 4_Reflection/Textures/Green_Thread.png";
+import redThread from "../assets/Chapter 4_Reflection/Textures/Red_Thread.jpg";
 import NarrativeText from "./NarrativeText";
 import IntroAmbientAudio from "./IntroAmbientAudio";
 import "../styles/MemoryStitchIntro.css";
@@ -20,7 +23,35 @@ const fragments = [
   [0, 1, -16, 1, 1.4], [1, 1, 14, 7, -1.8],
   [0, 2, -9, 15, -1.2], [1, 2, 15, 12, 2.3],
 ];
-const threadColours = ["#d62e3b", "#e8d6b2", "#1c8e87", "#ef9e91", "#183d80", "#cf2633", "#f0dcc3"];
+const threadAssets = [redThread, beigeThread, greenThread, beigeThread, redThread, greenThread, beigeThread];
+function ImageThread({ vertical, src }) {
+  const id = useId();
+  const maskId = `${id}-crosses`;
+  const textureId = `${id}-texture`;
+  const colour = src === greenThread ? "#8ba52f" : src === beigeThread ? "#c6ac85" : "#b92d3c";
+  const shadow = src === greenThread ? "#465716" : src === beigeThread ? "#6a5439" : "#701a24";
+  const paths = [false, true].map((opposite) => Array.from({ length:21 }, (_, index) => {
+    const along = 4 + index * 14.6;
+    const across = (index % 2 === 0) !== opposite ? 3 : 29;
+    return `${index ? "L" : "M"}${along} ${across}`;
+  }).join(" "));
+  return <svg className="memory-stitch__asset-thread" viewBox={vertical ? "0 0 32 300" : "0 0 300 32"} preserveAspectRatio="none" aria-hidden="true">
+    <defs>
+      <pattern id={textureId} patternUnits="userSpaceOnUse" width="16" height="8"><image href={src} width="16" height="8" preserveAspectRatio="none" /></pattern>
+      <mask id={maskId} maskUnits="userSpaceOnUse" x="0" y="0" width="300" height="32">
+        {paths.map((d,index) => <path key={index} d={d} fill="none" stroke="white" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />)}
+      </mask>
+    </defs>
+    <g transform={vertical ? "translate(32 0) rotate(90)" : undefined}>
+      {paths.map((d,index) => <g key={index} fill="none" strokeLinecap="round" strokeLinejoin="round">
+        <path d={d} stroke={shadow} strokeWidth="3.5" />
+        <path d={d} stroke={colour} strokeWidth="2.6" />
+        <path d={d} stroke="#f5e2c3" strokeWidth=".45" strokeDasharray="1 2" opacity=".6" />
+      </g>)}
+      <rect width="300" height="32" fill={`url(#${textureId})`} mask={`url(#${maskId})`} opacity=".6" style={{ mixBlendMode:"screen" }} />
+    </g>
+  </svg>;
+}
 
 export default function MemoryStitchIntro({ track, audioRef, children }) {
   const [finishedCopy, setFinishedCopy] = useState({});
@@ -60,11 +91,10 @@ export default function MemoryStitchIntro({ track, audioRef, children }) {
         {fragments.map(([column, row, x, y, angle], index) => <div key={index} className="memory-stitch__fragment" style={{ backgroundImage:`url("${cousinImage}")`, backgroundPosition:`${column * 100}% ${row * 50}%`, "--piece-x":`${x * remaining}px`, "--piece-y":`${y * remaining}px`, "--piece-angle":`${angle * remaining}deg`, "--piece-delay":`${index * 55}ms` }} />)}
       </div>
       <div className="memory-stitch__seams" onPointerLeave={() => setDrawing(false)}>
-        {seams.map((seam, index) => <button disabled={!copyReady} key={seam.id} type="button" className={`memory-stitch__seam ${seam.className} ${stitched.has(seam.id) ? "is-done" : ""}`} aria-label={seam.label} aria-pressed={stitched.has(seam.id)} style={{ "--thread-colour":threadColours[index] }} onPointerDown={(event) => { event.preventDefault(); setDrawing(true); stitch(seam.id); }} onPointerEnter={() => { if (drawing) stitch(seam.id); }} onClick={() => stitch(seam.id)}><span>STITCH</span></button>)}
+        {seams.map((seam, index) => <button disabled={!copyReady} key={seam.id} type="button" className={`memory-stitch__seam ${seam.className} ${stitched.has(seam.id) ? "is-done" : ""}`} aria-label={seam.label} aria-pressed={stitched.has(seam.id)} onPointerDown={(event) => { event.preventDefault(); setDrawing(true); stitch(seam.id); }} onPointerEnter={() => { if (drawing) stitch(seam.id); }} onClick={() => stitch(seam.id)}><span>STITCH</span>{stitched.has(seam.id) && <ImageThread src={threadAssets[index]} vertical={seam.className.includes("vertical")} />}</button>)}
       </div>
-      <div className="memory-stitch__needle" aria-hidden="true" />
     </div>
-    <p className="memory-stitch__instruction">{copyReady ? "DRAG ACROSS THE SEAMS, OR SELECT EACH TEAR" : "READ TO UNLOCK THE STITCHING"}</p>
+    <p className="memory-stitch__instruction"><span className="memory-stitch__needle" aria-hidden="true" /><span>{copyReady ? "DRAG ACROSS THE SEAMS, OR SELECT EACH TEAR" : "READ TO UNLOCK THE STITCHING"}</span></p>
   </section>}
   </>;
 }

@@ -45,3 +45,31 @@
   .ispoti-workbench { top:350px; }
   .ispoti-controls { bottom:100px; }
 }
+
+.ispoti-copy h1 { line-height:.95; }
+.ispoti-copy h1 em { display:block; margin:0; }
+
+.ispoti-enter { justify-self:center; }
+@media(min-width:701px) {
+  .ispoti-controls { width:min(53%,calc((100svh - 320px) * 1.425)); right:7%; }
+}
+
+/* One shared centre line for the hat and every control beneath it. */
+.ispoti-target--crown { left:22%; }
+.ispoti-target--brim { left:10%; }
+.ispoti-controls { display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center; }
+.ispoti-controls>div { width:90%; }
+.ispoti-controls .ispoti-shadow-label { width:100%; }
+.ispoti-controls .ispoti-enter { width:90%; min-width:0; align-self:center; }
+.ispoti-controls>p { width:100%; }
+@media(min-width:701px) {
+  .ispoti-workbench,.ispoti-controls { width:min(53%,calc((100svh - 360px) * 1.425)); right:7%; }
+}
+@media(max-width:700px) {
+  .ispoti-workbench,.ispoti-controls { width:86%; right:7%; }
+}
+
+/* Keep the two progress indicators side by side on the shared centre line. */
+.ispoti-controls { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 26px; align-items:center; }
+.ispoti-controls>div { width:100%; }
+.ispoti-controls .ispoti-enter { justify-self:center; }

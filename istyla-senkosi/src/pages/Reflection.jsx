@@ -2,37 +2,54 @@ import { useRef } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import ChapterPlayer from "../components/ChapterPlayer";
 import MemoryStitchIntro from "../components/MemoryStitchIntro";
-import cousin1 from "../assets/images/Cousin/Cousin 1.jpeg";
-import cousin2 from "../assets/images/Cousin/Cousin 2.jpeg";
-import chapterImage from "../assets/images/Chapter images/reflection chapter intro.jpg";
+import cousin4 from "../assets/images/Cousin/Cousin 4.png";
+import cousin2Old from "../assets/images/Cousin/Cousin_2_old.jpeg";
+import chapterImage from "../assets/Chapter 4_Reflection/Images/Cousin_Old_Photo.png";
 import houseImage from "../assets/Additional Images/Street Visuals/Wattville/House.jpg";
 import streetImage from "../assets/Additional Images/Street Visuals/Wattville/Street sign.jpg";
 import buildingImage from "../assets/Additional Images/Street Visuals/Wattville/Building.jpg";
 import backgroundTrack from "../assets/audio/New Music/Kwesta - Spirit (Official Music Video) ft Wale ft. Wale _Conclusion.mp3";
 import "../styles/Reflection.css";
 
-const cousinPhotos = [cousin1, cousin2];
+const cousinPhotos = [cousin4, cousin2Old];
 
 function Reflection() {
   const audioRef = useRef(null);
-  const { completeChapter, goTo } = useNavigation();
+  const { completeChapter, goTo, restartJourney } = useNavigation();
+  const creditsRef = useRef(null);
+  const chaptersRef = useRef(null);
 
   const finalPage = (
     <section className="final-frame" aria-label="End of story">
       <div className="final-frame__meeting">
-        <img src={cousin1} alt="My cousin, remembered in his Skhothane style" />
+        <img className="old-photo--portrait" src={chapterImage} alt="An old photograph of my cousin" />
         <div>
           <small>MY MEMORY</small>
           <h1>There he is.</h1>
           <p>You meet my cousin here, in the photographs I kept. He died before this journey began. I remember him stepping out in colour, asking me to really look.</p>
-          <p>Now I understand what I missed: my cousin was a Skhothane. I cannot ask him what it meant to him, but I can remember him without reducing his style to showing off.</p>
+          <p>Ree was a Skhothane. This journey has helped me appreciate the care and joy in the way he dressed. I cannot ask him what it all meant to him, but I can remember him with a deeper appreciation of what mattered to him. I return to the photograph I began with. The image has not changed, but the way I look at it has. I see more of the person I love.</p>
         </div>
       </div>
       <div className="final-frame__actions">
-        <button onClick={() => goTo("about")}>REPLAY JOURNEY <span>↑</span></button>
-        <button onClick={() => goTo("swenka")}>EXPLORE CHAPTERS <span>→</span></button>
-        <button onClick={() => goTo("about")}>CREDITS <span>+</span></button>
+        <button onClick={restartJourney}>REPLAY JOURNEY <span>↑</span></button>
+        <button onClick={() => chaptersRef.current.showModal()}>EXPLORE CHAPTERS <span>→</span></button>
+        <button onClick={() => creditsRef.current.showModal()}>CREDITS <span>+</span></button>
       </div>
+      <dialog ref={chaptersRef} className="ending-dialog" aria-labelledby="ending-chapters-title" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
+        <h2 id="ending-chapters-title">Explore the chapters</h2>
+        <nav aria-label="Choose a chapter">{[["Introduction", "introduction"], ["Swenka", "swenka"], ["Pantsula", "pantsula"], ["Skhothane", "skhothane"], ["Reflection", "reflection"]].map(([label, id]) => <button key={id} onClick={() => { chaptersRef.current.close(); goTo(id, { intro: true }); }}>{label}</button>)}</nav>
+        <button onClick={() => chaptersRef.current.close()}>Back to the reflection</button>
+      </dialog>
+      <dialog ref={creditsRef} className="ending-dialog" aria-labelledby="ending-credits-title" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
+        <h2 id="ending-credits-title">Credits &amp; acknowledgements</h2>
+        <p>A personal journey through township fashion, told from Jama's perspective in memory of Ree.</p>
+        <h3>Photographs &amp; voices</h3>
+        <p>Family photographs of Ree appear alongside archival and contemporary fashion imagery, interviews and dance footage exploring Swenka, Pantsula and Skhothane.</p>
+        <h3>Music</h3>
+        <ul><li>Hugh Masekela ? Stimela (The Coal Train)</li><li>Miriam Makeba ? Khawuleza; Nongqongqo (To Those We Love)</li><li>Kwesta featuring Wale ? Spirit</li></ul>
+        <p>Thank you to the people whose dress, movement and stories invite a closer look.</p>
+        <button onClick={() => creditsRef.current.close()}>Back to the reflection</button>
+      </dialog>
     </section>
   );
 
@@ -54,10 +71,10 @@ function Reflection() {
       outro="Back to where it all began…"
       finalPage={finalPage}
       frames={[
-        { label: "AFTER THE NOISE", image: streetImage, text: "I thought this story was far from my life. My cousin was a connection I had overlooked while he was here.", kind: "quiet" },
-        { label: "WHAT CHANGED", image: buildingImage, text: "The more I paid attention, the more I questioned my own assumptions about him, about Soweto, and about belonging.", kind: "quiet" },
-        { label: "WHAT I CAN CARRY", image: houseImage, text: "I’m still learning. I cannot tell his story for him. I can honour what I remember and keep asking others what their style means to them.", kind: "quiet" },
-        { label: "THERE HE IS", collage: cousinPhotos, text: "These are the photographs I kept of him. Come closer. I want you to meet the cousin I have been remembering." },
+        { label: "AFTER THE NOISE", image: streetImage, text: "I thought this story was far from my life. My cousin was a connection I had overlooked while he was here.", kind: "quiet", layout: "quiet", storyRole: "reflection" },
+        { label: "WHAT CHANGED", image: buildingImage, text: "Swenka helped me recognise pride and dignity. Pantsula let me feel the energy of moving together. Skhothane asked me to look beyond appearances. Each chapter changed how I looked at Ree.", kind: "quiet", layout: "quiet", storyRole: "reflection" },
+        { label: "WHAT I CAN CARRY", image: houseImage, text: "I can remember Ree with a deeper appreciation of what mattered to him: the care he put into his clothes, the joy he showed and the way he wanted to be seen. I still have questions, but I carry his memory with more tenderness now.", kind: "quiet", layout: "quiet", storyRole: "reflection" },
+        { label: "THERE HE IS", collage: cousinPhotos, photoMasks: ["portrait", "square"], text: "These are the photographs I kept of him. Come closer. I want you to meet the cousin I have been remembering." },
       ]}
       onComplete={() => completeChapter("reflection")}
     />

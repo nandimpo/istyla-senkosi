@@ -4,12 +4,11 @@ import { useNavigation } from "../context/NavigationContext";
 import ChapterPlayer from "../components/ChapterPlayer";
 import UnzipIntro from "../components/UnzipIntro";
 import WardrobeGame from "../components/games/WardrobeGame";
-import interviewVideo from "../assets/Chapter 1_Swenka/Video/Swenka_Intro_Video.mp4";
-import interviewVideoTwo from "../assets/Chapter 1_Swenka/Video/Swenka_Explainer.mp4";
-import editorial1 from "../assets/Chapter 1_Swenka/Images/Editorial/Portraits from apartheid-era South Africa - in pictures , Art and design , The Guardian.jpg";
+import interviewVideo from "../assets/edited-clips/swenka-intro.mp4";
+import interviewVideoTwo from "../assets/edited-clips/swenka-interview.mp4";
+import reePhoto from "../assets/Chapter 4_Reflection/Images/Cousin_Old_Photo.png";
 import editorial4 from "../assets/Chapter 1_Swenka/Images/Editorial/Man with pinstripe jacket.jpg";
 import editorial5 from "../assets/Chapter 1_Swenka/Images/Editorial/Inkabi nation.jpg";
-import editorial6 from "../assets/Chapter 1_Swenka/Images/Editorial/South Africa 90's 80's aesthetic.jpg";
 import xhosaMen from "../assets/Chapter 1_Swenka/Images/Editorial/Xhosa men.jpg";
 import portraitImage from "../assets/Chapter 1_Swenka/Images/Editorial/Man with yellow and blue suit.jpg";
 import chapterImage from "../assets/images/Chapter images/swenka chapter image.jpg";
@@ -70,7 +69,7 @@ function Swenka() {
             storyRole: "voices",
             video: interviewVideo,
             videoOutro:
-              "After hearing them speak, I had to look back at their outfits.",
+              "Hearing them speak made me notice the care in getting dressed. I want to look at the hat, the sleeve and the shoes, one detail at a time.",
             videoBridge: "To understand Swenka, I had to hear it from them.",
             playToEnd: true,
             skipAfter: 10,
@@ -81,7 +80,7 @@ function Swenka() {
             storyRole: "observe",
             collage: [editorial5, editorial4, xhosaMen],
             motion: "gallery",
-            text: "The suits, the detail… nothing feels accidental. I begin to notice the care behind each choice.",
+            text: "The suits, the detail... nothing feels accidental. I begin to see dressing with care as an expression of pride and self-respect. I admire the dignity in how these men present themselves.",
           },
           {
             label: "PREPARATION, IN THEIR WORDS",
@@ -90,7 +89,7 @@ function Swenka() {
             videoOutro:
               "This desire to look good despite hardship reminded me of my cousin.",
             videoBridge:
-              "They may have looked glamourous, but there was more to it. They lived a hard life",
+              "After looking at the details myself, I wanted to hear what that preparation meant to them.",
             shoeShine: true,
             playToEnd: true,
             skipAfter: 38,
@@ -99,9 +98,10 @@ function Swenka() {
           {
             label: "WHAT FELT FAMILIAR",
             storyRole: "memory",
-            collage: [editorial1, editorial6],
-            motion: "gallery",
-            text: "That attention to an outfit feels familiar. I remember my cousin checking every detail before he stepped outside. I never asked him which details mattered most.",
+            image: reePhoto,
+            kind: "memory-photo", layout: "quiet",
+            alt: "The same old photograph of Ree, recalled after Swenka",
+            text: "I return to the same photograph of Ree. After watching the care these men take, I find myself looking more closely at his choices. I remember him checking every detail before he stepped outside. I never asked which details mattered most to him. Swenka gives me a new way to look; it cannot answer for him.",
           },
           {
             label: "WHAT I KEEP",
@@ -113,13 +113,14 @@ function Swenka() {
             kind: "fashion-wall",
             backgroundImage: collageBackground,
             textStyle: "float",
-            text: "After going back to Swenka, I notice its echoes in the styles around me today. The suits, the hats, the care in each detail. I see my cousin in them, too. These are the fragments I keep: a way to keep looking, and keep him close.",
+            text: "Swenka has taught me to look at the care behind an outfit. A suit, a hat, a polished shoe can carry pride and dignity. I think of Ree taking time to get ready, and feel a new respect for those choices. I carry that attention with me as I turn towards Pantsula.",
             caption: "UP NEXT: PANTSULA",
             nextChapter: "pantsula",
             nextChapterLabel: "Explore Pantsula next",
           },
         ]}
-        gamePage={(onComplete) => (
+        gamePosition="afterFirstFrame"
+      gamePage={(onComplete) => (
           <WardrobeGame portraitImage={portraitImage} onComplete={onComplete} />
         )}
         onComplete={() => completeChapter("swenka")}

@@ -1,0 +1,176 @@
+[
+  {
+    "name": "swenka-intro",
+    "source": "Chapter 1_Swenka/Video/Swenka_Intro_Video.mp4",
+    "duration_limit": null,
+    "input": {
+      "input_i": "-18.95",
+      "input_tp": "-5.11",
+      "input_lra": "3.50",
+      "input_thresh": "-28.99",
+      "output_i": "-15.01",
+      "output_tp": "-1.78",
+      "output_lra": "2.10",
+      "output_thresh": "-25.02",
+      "normalization_type": "dynamic",
+      "target_offset": "-0.99"
+    },
+    "output": {
+      "input_i": "-19.10",
+      "input_tp": "-5.11",
+      "input_lra": "3.50",
+      "input_thresh": "-29.14",
+      "output_i": "-16.16",
+      "output_tp": "-2.16",
+      "output_lra": "3.60",
+      "output_thresh": "-26.20",
+      "normalization_type": "linear",
+      "target_offset": "0.16"
+    }
+  },
+  {
+    "name": "swenka-interview",
+    "source": "Chapter 1_Swenka/Video/Swenka_Explainer.mp4",
+    "duration_limit": null,
+    "input": {
+      "input_i": "-7.34",
+      "input_tp": "0.29",
+      "input_lra": "6.90",
+      "input_thresh": "-18.04",
+      "output_i": "-15.07",
+      "output_tp": "-5.53",
+      "output_lra": "4.90",
+      "output_thresh": "-25.63",
+      "normalization_type": "dynamic",
+      "target_offset": "-0.93"
+    },
+    "output": {
+      "input_i": "-7.14",
+      "input_tp": "0.29",
+      "input_lra": "6.90",
+      "input_thresh": "-17.89",
+      "output_i": "-15.81",
+      "output_tp": "-8.37",
+      "output_lra": "6.80",
+      "output_thresh": "-26.55",
+      "normalization_type": "linear",
+      "target_offset": "-0.19"
+    }
+  },
+  {
+    "name": "pantsula-movement",
+    "source": "Chapter 2_Pantsula/Video/Pantsula_1.mov",
+    "duration_limit": null,
+    "input": {
+      "input_i": "-16.83",
+      "input_tp": "-2.57",
+      "input_lra": "9.00",
+      "input_thresh": "-27.31",
+      "output_i": "-17.77",
+      "output_tp": "-3.19",
+      "output_lra": "6.20",
+      "output_thresh": "-28.13",
+      "normalization_type": "dynamic",
+      "target_offset": "1.77"
+    },
+    "output": {
+      "input_i": "-16.57",
+      "input_tp": "-2.68",
+      "input_lra": "8.80",
+      "input_thresh": "-27.08",
+      "output_i": "-15.76",
+      "output_tp": "-1.85",
+      "output_lra": "8.90",
+      "output_thresh": "-26.25",
+      "normalization_type": "linear",
+      "target_offset": "-0.24"
+    }
+  },
+  {
+    "name": "pantsula-performance",
+    "source": "Chapter 2_Pantsula/Video/Pantsula_2.mov",
+    "duration_limit": null,
+    "input": {
+      "input_i": "-15.87",
+      "input_tp": "-2.17",
+      "input_lra": "0.80",
+      "input_thresh": "-25.87",
+      "output_i": "-15.97",
+      "output_tp": "-2.51",
+      "output_lra": "0.80",
+      "output_thresh": "-25.97",
+      "normalization_type": "dynamic",
+      "target_offset": "-0.03"
+    },
+    "output": {
+      "input_i": "-15.87",
+      "input_tp": "-2.19",
+      "input_lra": "0.80",
+      "input_thresh": "-25.87",
+      "output_i": "-16.00",
+      "output_tp": "-2.32",
+      "output_lra": "0.80",
+      "output_thresh": "-26.00",
+      "normalization_type": "linear",
+      "target_offset": "0.00"
+    }
+  },
+  {
+    "name": "skhothane-expression",
+    "source": "Chapter 3_Skothane/Video/Intro Video - Skothane.mp4",
+    "duration_limit": 20,
+    "input": {
+      "input_i": "-7.23",
+      "input_tp": "2.32",
+      "input_lra": "0.50",
+      "input_thresh": "-17.23",
+      "output_i": "-15.76",
+      "output_tp": "-6.23",
+      "output_lra": "0.40",
+      "output_thresh": "-25.76",
+      "normalization_type": "dynamic",
+      "target_offset": "-0.24"
+    },
+    "output": {
+      "input_i": "-7.24",
+      "input_tp": "1.71",
+      "input_lra": "0.40",
+      "input_thresh": "-17.24",
+      "output_i": "-16.02",
+      "output_tp": "-7.06",
+      "output_lra": "0.50",
+      "output_thresh": "-26.02",
+      "normalization_type": "linear",
+      "target_offset": "0.02"
+    }
+  },
+  {
+    "name": "skhothane-voices",
+    "source": "video-clips/skhothane-voices.mp4",
+    "duration_limit": 20,
+    "input": {
+      "input_i": "-21.69",
+      "input_tp": "-8.02",
+      "input_lra": "1.40",
+      "input_thresh": "-31.69",
+      "output_i": "-16.29",
+      "output_tp": "-2.92",
+      "output_lra": "1.00",
+      "output_thresh": "-26.29",
+      "normalization_type": "dynamic",
+      "target_offset": "0.29"
+    },
+    "output": {
+      "input_i": "-21.60",
+      "input_tp": "-8.02",
+      "input_lra": "1.30",
+      "input_thresh": "-31.60",
+      "output_i": "-15.91",
+      "output_tp": "-2.33",
+      "output_lra": "1.20",
+      "output_thresh": "-25.91",
+      "normalization_type": "linear",
+      "target_offset": "-0.09"
+    }
+  }
+]

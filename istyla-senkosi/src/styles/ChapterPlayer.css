@@ -325,7 +325,7 @@ html[data-reduced-motion="true"] .chapter-player__gallery-track--alternate .chap
 .chapter-player--red { --narrative-accent:#efa4aa; }
 .chapter-player--beige { --narrative-accent:#e1ccb0; }
 .chapter-player .stitched-narrative { --thread-colour:var(--narrative-accent); }
-.chapter-player__story { position:absolute; z-index:2; left:7vw; bottom:110px; width:min(500px,calc(100% - 14vw)); }
+.chapter-player__story { position:absolute; z-index:2; left:var(--page-gutter); bottom:110px; width:min(var(--copy-width),calc(100% - 2 * var(--page-gutter))); }
 .chapter-player__story-beat { margin:0 0 9px; color:#e7bd81; font:800 9px Montserrat,Arial,sans-serif; letter-spacing:2px; text-transform:uppercase; }
 .chapter-player__story--memory { box-sizing:border-box; padding:15px 18px; border-left:2px solid #bc8b70; background:linear-gradient(90deg,#161411eb,#161411a8 78%,transparent); }
 .chapter-player__story--memory .chapter-player__story-beat { color:#efc2aa; }
@@ -511,4 +511,34 @@ html[data-reduced-motion="true"] .chapter-player__video-note { animation:none; }
 }
 @media(max-width:1000px),(max-height:700px) {
   #skhothane .chapter-player__page:has(.memory-flipbook) { padding-top:56px; }
+}
+
+#skhothane .chapter-player__next-chapter { margin-top:38px; }
+
+/* The same personal photograph returns without cropping its paper edges. */
+.chapter-player__visual--memory-photo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chapter-player__visual--memory-photo > img {
+  width: auto;
+  height: 88%;
+  max-width: 92%;
+  object-fit: contain;
+  aspect-ratio: 1122 / 1402;
+  mask-image: url("../assets/images/masks/old-photo-portrait.svg");
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  filter: none;
+}
+
+#introduction .chapter-player__visual--memory-photo .chapter-player__collage-backdrop {
+  opacity: .3;
+  filter: grayscale(1);
+  background-position: center;
+}
+#introduction .chapter-player__visual--memory-photo > img {
+  position: relative;
+  z-index: 1;
 }

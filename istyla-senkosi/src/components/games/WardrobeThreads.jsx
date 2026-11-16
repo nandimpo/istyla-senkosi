@@ -66,11 +66,11 @@ const WardrobeThreads = forwardRef(function WardrobeThreads({ items, sourceRefs,
       context.lineTo(points.at(-1).x, points.at(-1).y);
       context.globalAlpha = opacity * .08;
       context.strokeStyle = "#e7decd";
-      context.lineWidth = 1;
+      context.lineWidth = 1.3;
       context.stroke();
       context.globalAlpha = opacity;
       context.strokeStyle = color;
-      context.lineWidth = .7;
+      context.lineWidth = .9;
       context.stroke();
       context.globalAlpha = 1;
     };

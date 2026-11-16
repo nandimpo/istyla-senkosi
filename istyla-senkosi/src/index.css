@@ -85,3 +85,15 @@ code {
   background: var(--code-bg);
 }
 
+
+/* A small metallic safety pin echoes the site's sewing and collage theme. */
+@media(any-pointer:fine) {
+  html,body,body * { cursor:url("./assets/images/safety-pin-cursor.svg") 29 20, auto !important; }
+}
+
+@media(any-pointer:fine) {
+  :is(button:not(:disabled),a[href],summary,label[for],[role="button"]:not([aria-disabled="true"]),[draggable="true"]),
+  :is(button:not(:disabled),a[href],summary,label[for],[role="button"]:not([aria-disabled="true"]),[draggable="true"]) * {
+    cursor:url("./assets/images/mouse-pointer-cursor.svg") 12 1, pointer !important;
+  }
+}

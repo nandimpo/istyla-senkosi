@@ -1,0 +1,236 @@
+/* Shared documentary rules. Chapter palettes, objects and collages stay local. */
+:root {
+  --font-display: "Barlow Condensed", Impact, sans-serif;
+  --font-body: Montserrat, Arial, sans-serif;
+  --page-gutter: clamp(24px, 7vw, 112px);
+  --copy-width: 500px;
+  --body-size: clamp(17px, 1.35vw, 21px);
+  --caption-size: 11px;
+  --control-size: 11px;
+  --space-1: 8px;
+  --space-2: 16px;
+  --space-3: 24px;
+  --control-top: 24px;
+  --control-bottom: 28px;
+  --motion-quick: 180ms;
+  --motion-page: 450ms;
+  --motion-ease: cubic-bezier(.22,.8,.25,1);
+  --focus-colour: #f4d598;
+}
+#root .chapter-player { font-family: var(--font-body); }
+#root .chapter-player__title-card { padding-inline: var(--page-gutter); }
+#root .chapter-player__title-card h2 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6.5vw, 92px);
+  line-height: .95;
+  letter-spacing: -.02em;
+}
+#root .chapter-player__title-context { max-width: var(--copy-width); }
+#root .stitched-narrative__copy {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  line-height: 1.6;
+}
+#root .chapter-player__story .chapter-player__label,
+#root .chapter-player__story .chapter-player__caption,
+#root .chapter-player__story-beat {
+  font-family: var(--font-body);
+  font-size: var(--caption-size);
+  line-height: 1.5;
+  letter-spacing: 1.4px;
+}
+#root :is(.chapter-player__next-chapter, .ispoti-enter, .final-frame__actions button) {
+  min-height: 44px;
+  border-radius: 0;
+  padding: 12px 20px;
+  font: 700 13px/1.4 var(--font-body);
+  transition: background-color var(--motion-quick), color var(--motion-quick), border-color var(--motion-quick);
+}
+#root :is(.chapter-player__next-chapter, .ispoti-enter, .final-frame__actions button):not(:disabled):hover {
+  filter: brightness(1.12);
+}
+#root button:focus-visible, #root [role="button"]:focus-visible {
+  outline: 2px solid var(--focus-colour);
+  outline-offset: 4px;
+}
+#root button:disabled { cursor: default; }
+/* Sound uses the same corner, footprint and state treatment in intros and chapters. */
+#root .chapter-player__rail {
+  top: var(--control-top);
+  right: var(--page-gutter);
+  padding: 0;
+}
+#root :is(.intro-ambient-sound, .chapter-player__sound) {
+  min-width: 116px;
+  min-height: 48px;
+  padding: 12px 16px;
+  border-radius: 0;
+  font: 800 var(--control-size)/1.2 var(--font-body);
+  letter-spacing: 1.5px;
+  transition: background-color var(--motion-quick), border-color var(--motion-quick);
+}
+#root .intro-ambient-sound { top: var(--control-top); right: var(--page-gutter); }
+#root .global-home-link {
+  top: calc(var(--control-top) + 2px);
+  left: var(--page-gutter);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+#root :is(.menu-trigger, .chapters-trigger) {
+  bottom: var(--control-bottom);
+  min-height: 44px;
+  font: 700 var(--control-size)/1.4 var(--font-body);
+  letter-spacing: 1.5px;
+}
+#root .menu-trigger { right: var(--page-gutter); }
+#root .chapters-trigger { left: var(--page-gutter); }
+#root .chapter-player__page { animation-duration: var(--motion-page); animation-timing-function: var(--motion-ease); }
+@media(max-width:700px) {
+  :root { --control-top:16px; --control-bottom:24px; --body-size:17px; }
+}
+@media(max-height:650px) {
+  :root { --body-size:16px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  #root .chapter-player__page { animation:none; }
+  #root :is(.chapter-player__next-chapter, .ispoti-enter, .final-frame__actions button, .intro-ambient-sound, .chapter-player__sound) { transition:none; }
+}
+html[data-reduced-motion="true"] #root .chapter-player__page { animation:none; }
+
+/* Quiet personal beats alternate with the expressive archival collages. */
+#root .chapter-player__page:has(.chapter-player__visual--quiet-layout) {
+  background: #171611;
+  animation-name: page-fade-in;
+}
+#root .chapter-player__visual--quiet-layout {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 90px var(--page-gutter) 100px 50%;
+  background: #171611;
+}
+#root .chapter-player__visual--quiet-layout > img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  max-height: 74svh;
+  max-width: 100%;
+  object-fit: contain;
+  animation: none;
+  transform: none;
+  filter: none;
+}
+#root .chapter-player__visual--quiet-layout.chapter-player__visual--memory-photo > img {
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  max-height: 74svh;
+  mask-size: 100% 100%;
+}
+#root .chapter-player__visual--quiet-layout::after { display: none; }
+#root .chapter-player__page:has(.chapter-player__visual--quiet-layout) .chapter-player__story {
+  left: var(--page-gutter);
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+  width: min(36vw, var(--copy-width));
+  padding: 0;
+  border: 0;
+  background: none;
+}
+#root .chapter-player__page:has(.chapter-player__visual--quiet-layout) .stitched-narrative::before { display: none; }
+#root .chapter-player__page:has(.chapter-player__visual--quiet-layout) .stitched-narrative__copy { text-shadow: none; }
+#root .chapter-player__page:has(.chapter-player__visual--quiet-layout) .stitched-narrative__tail { animation: none; stroke-dashoffset: 0; }
+/* The scrapbook remains expressive while its longer narration has a clear reading surface. */
+#root .chapter-player__page:has(.fashion-wall) .chapter-player__story {
+  padding: 20px;
+  background: #171611f5;
+  border-left: 1px solid #c8b39b66;
+}
+#root #reflection .chapter-player__page { animation-name: page-fade-in; animation-duration: 700ms; }
+#root #reflection .final-frame {
+  height: 100svh;
+  min-height: 0;
+  padding: 100px var(--page-gutter) 110px;
+  gap: 32px;
+  overflow-y: auto;
+  background: #171611;
+}
+#root #reflection .final-frame__meeting { gap: clamp(40px, 7vw, 110px); }
+#root #reflection .final-frame__meeting p {
+  font-family: var(--font-body);
+  font-size: var(--body-size);
+  line-height: 1.7;
+  max-width: var(--copy-width);
+}
+#root #reflection .final-frame__meeting img { max-height: 57svh; }
+#root #reflection .final-frame__actions button { background: transparent; border: 1px solid #c8b39b88; color: #f5f1e9; }
+@media(max-width:700px) {
+  #root .chapter-player__page:has(.chapter-player__visual--quiet-layout) {
+    display: flex;
+    justify-content: flex-start;
+    gap: 24px;
+    padding: 82px var(--page-gutter) 110px;
+    overflow-y: auto;
+    touch-action: pan-y;
+  }
+  #root .chapter-player__visual--quiet-layout {
+    position: relative;
+    inset: auto;
+    flex: 0 0 36svh;
+    min-height: 200px;
+    padding: 0;
+    justify-content: center;
+    background: transparent;
+  }
+  #root .chapter-player__visual--quiet-layout > img,
+  #root .chapter-player__visual--quiet-layout.chapter-player__visual--memory-photo > img {
+    width: auto;
+    height: 36svh;
+    max-height: 36svh;
+    max-width: 100%;
+  }
+  #root .chapter-player__page:has(.chapter-player__visual--quiet-layout) .chapter-player__story {
+    position: relative;
+    inset: auto;
+    transform: none;
+    width: 100%;
+    max-width: var(--copy-width);
+    margin-inline: auto;
+  }
+  #root #reflection .final-frame { display: block; padding-top: 82px; }
+  #root #reflection .final-frame__meeting { gap: 28px; text-align: left; }
+  #root #reflection .final-frame__meeting img { max-height: 40svh; }
+  #root #reflection .final-frame__actions { margin-top: 32px; }
+}
+
+#root .interaction-continue {
+  min-height: 44px;
+  margin-top: 24px;
+  padding: 12px 18px;
+  border: 1px solid #c8b39b;
+  border-radius: 0;
+  background: #d5ae70;
+  color: #181d18;
+  font: 700 13px/1.5 var(--font-body);
+}
+#root .interaction-continue:disabled { opacity: .45; }
+#root .interaction-continue:not(:disabled):hover { background: #f0cf99; }
+
+#root .ending-dialog { margin:auto; width:min(620px,calc(100vw - 48px)); max-height:80svh; overflow:auto; padding:32px; border:1px solid #c8b39b88; background:#201e18; color:#f5f1e9; text-align:left; }
+#root .ending-dialog::backdrop { background:#000c; }
+#root .ending-dialog h2 { font:700 36px/1.1 var(--font-display); margin-bottom:24px; }
+#root .ending-dialog h3 { font:700 16px/1.5 var(--font-body); margin-top:24px; }
+#root .ending-dialog p,#root .ending-dialog li { font:400 16px/1.7 var(--font-body); }
+#root .ending-dialog p { margin:12px 0; }
+#root .ending-dialog ul { padding-left:20px; }
+#root .ending-dialog nav { display:grid; gap:12px; margin-bottom:24px; }
+#root .video-scene-notes { position:absolute; z-index:5; top:100px; left:var(--page-gutter); width:min(400px,calc(100% - 48px)); max-height:55svh; overflow:auto; padding:12px 16px; background:#171611ed; color:#fff0d6; font:400 16px/1.6 var(--font-body); }
+#root .video-scene-notes summary { cursor:pointer; font-weight:700; }
+#root .video-scene-notes p { margin:16px 0; }
+#root .video-scene-notes small { font-size:12px; color:#c8b39b; }
+#root .video-loading { position:absolute; z-index:5; top:50%; left:50%; transform:translate(-50%,-50%); padding:12px 18px; background:#171611ed; }
+#root .video-recovery { position:absolute; z-index:6; top:50%; left:50%; transform:translate(-50%,-50%); width:min(440px,85vw); padding:24px; background:#171611; color:#f5f1e9; }
+#root .video-recovery button { min-height:44px; padding:10px 16px; margin:16px 8px 0 0; }

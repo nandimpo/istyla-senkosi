@@ -80,3 +80,6 @@ html[data-reduced-motion="true"] .chapter-player .fashion-wall--scrapbook .scrap
 #pantsula .scrapbook-mixed-papers span:nth-child(3) { background-image:url("../assets/Chapter%203_Skothane/Images/Background/Collage_5.jpg"); }
 
 :is(#pantsula,#swenka,#skhothane) .scrapbook-scribble { z-index:110; color:#fff0bf; text-shadow:0 2px 3px #111,0 0 5px #111c; }
+
+.scrapbook-footer { font-size:10px; line-height:1.5; }
+@media(max-width:700px) { .scrapbook-footer { font-size:8px; max-width:92%; } }

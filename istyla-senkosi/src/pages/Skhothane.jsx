@@ -14,8 +14,8 @@ import img8 from "../assets/Chapter 3_Skothane/Skothane/skhothane-8.jpg";
 import img9 from "../assets/Chapter 3_Skothane/Skothane/skhothane-9.jpg";
 import chapterImage from "../assets/images/Chapter images/skothane chapter.jpg";
 import backgroundTrack from "../assets/audio/New Music/Moonchild Sanelly - Yebo Teacher _Skhothane.mp3";
-import materialCultureVideo from "../assets/Chapter 3_Skothane/Video/Intro Video - Skothane.mp4";
-import materialBoysVideo from "../assets/video-clips/skhothane-voices.mp4";
+import materialCultureVideo from "../assets/edited-clips/skhothane-expression.mp4";
+import materialBoysVideo from "../assets/edited-clips/skhothane-voices.mp4";
 
 const skhothaneAlbumImages = [img1, img9, img2, img3];
 const skhothaneAlbumTitles = [
@@ -62,11 +62,12 @@ function Skhothane() {
           { start: 2, end: 7, text: "I notice how the patterns carry through their outfits." },
           { start: 8, end: 13, text: "The clothes move with them. The style feels alive." },
           { start: 14, end: 20, text: "They take turns being seen. I notice the group around them." },
-        ], videoOutro: "After seeing them express themselves, I wanted to look more closely at the colours and the clothes.", videoBridge: "To understand the style my cousin loved, I had to look beyond the clothes.", outfitGate: true, playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
-        { label: "THROUGH THE ALBUM", storyRole: "observe", collage: skhothaneAlbumImages, albumTitles: skhothaneAlbumTitles, albumNotes: skhothaneAlbumNotes, albumImagePositions: ["center bottom", "center 28%", "center 22%", "center 14%"], kind: "memory-album", photoAlbum: true, albumLabel: "Photographs of other Skhothanes", text: "I flip through photos of other Skhothanes, hoping to understand my cousin a little better. Their colours, their poses, the care in each outfit remind me of him. I look closer, wondering what his style meant to him and what I missed before.", caption: "LOOKING AT THEIR STYLE. THINKING OF HIM." },
-        { label: "WHAT IT COSTS TO SHINE", storyRole: "voices", video: materialBoysVideo, videoOutro: "Hearing their stories brought me back to the way my cousin wore his own style.", videoBridge: "I used to see only the spectacle. Now I wanted to hear what it meant to the people behind it.", playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
-        { label: "LOOKING AGAIN", storyRole: "reflection", collage: finaleCollage, collageLabel: "Skhothane finale collage", kind: "fashion-wall", scrapbookChapter: "03 / SKHOTHANE", galleryStyle: "crossfade", textStyle: "float", text: "After looking closer at Skhothane, I still see its colours and confidence in the styles around me today. And I see my cousin in them. I add these images to my book of him , holding on to the joy and care I once overlooked. I cannot speak for him, but I can keep his memory with more tenderness.", caption: "UP NEXT: REFLECTION", nextChapter: "reflection", nextChapterLabel: "Continue to the reflection" },
+        ], videoOutro: "The bold colours caught my eye. Now I want to slow down and notice what the clothes might communicate about identity, status and being recognised.", videoBridge: "To understand the style my cousin loved, I had to look beyond the clothes.", playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
+        { label: "THROUGH THE ALBUM", storyRole: "observe", collage: skhothaneAlbumImages, albumTitles: skhothaneAlbumTitles, albumNotes: skhothaneAlbumNotes, albumImagePositions: ["center bottom", "center 28%", "center 22%", "center 14%"], kind: "memory-album", photoAlbum: true, albumLabel: "Photographs of other Skhothanes", text: "I turn one photograph at a time, looking beyond my first impression. Their choices remind me of Ree, and the questions I never asked him.", caption: "LOOKING AT THEIR STYLE. THINKING OF HIM." },
+        { label: "WHAT IT COSTS TO SHINE", storyRole: "voices", video: materialBoysVideo, outfitGate: true, videoOutro: "I first noticed the spectacle. Hearing their stories makes me question that first impression. I think of Ree and the meaning I never asked him to explain.", videoBridge: "Choosing the clothes made me wonder why a brand, a colour or a complete look might matter. I cannot answer for Ree. I want to hear how others describe the cost, the recognition and the meaning of their style.", playSeconds: 20, skipAfter: 10, caption: "20 SECOND CLIP" },
+        { label: "LOOKING AGAIN", storyRole: "reflection", collage: finaleCollage, collageLabel: "Skhothane finale collage", kind: "fashion-wall", scrapbookChapter: "03 / SKHOTHANE", galleryStyle: "crossfade", textStyle: "float", text: "I came here remembering what I once called showing off. Now the colours surprise me in another way: I notice the care, joy and connection around them. Ree's choices feel less distant. I cannot decide what every outfit meant to him, but I can look beyond my first impression and remember him with more understanding.", caption: "UP NEXT: REFLECTION", nextChapter: "reflection", nextChapterLabel: "Continue to the reflection" },
       ]}
+      gamePosition="afterFirstFrame"
       gamePage={(onComplete) => <SwipeCarouselGame images={carouselImages} audioRef={audioRef} onComplete={onComplete} />}
       onComplete={() => completeChapter("skhothane")}
     />

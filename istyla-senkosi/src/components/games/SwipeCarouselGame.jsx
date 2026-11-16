@@ -5,15 +5,11 @@ import "../../styles/ChapterGames.css";
 import "../../styles/CurvedCarousel.css";
 
 const photoNarratives = [
-  "I look a little closer.",
-  "The colours catch my eye.",
-  "I notice how they move.",
-  "I stay with the details.",
-  "I think about belonging.",
-  "I look beyond the clothes.",
-  "I remember my cousin's confidence.",
-  "I wish I had asked.",
-  "I carry these questions forward.",
+  "I look at the choices that make an outfit stand out. Move through the photographs and notice a colour, a detail or a pose before moving on.",
+  "I wonder what it means to be recognised for your style.",
+  "A colour, a label, a whole look. What might each choice communicate?",
+  "I notice the care behind the display, and question my first impression.",
+  "I think of Ree. I want to understand what being seen meant to him.",
 ];
 const photoNotes = {
   0: "so many little choices…",
@@ -81,7 +77,7 @@ function SwipeCarouselGame({ images, onComplete, audioRef }) {
     <OutfitAmbience audioRef={audioRef} />
     <header className="game-copy curved-gallery__copy">
       <div><p className="tag">03 / SKHOTHANE</p><h1>Looking closer at their style.</h1></div>
-      <StitchedNarrative key={current} onComplete={() => setCopyReady(true)} className="game-copy__narrative" text={photoNarratives[current] || photoNarratives[photoNarratives.length - 1]} placement="inline" />
+      <StitchedNarrative key={current} onComplete={() => setCopyReady(true)} className="game-copy__narrative" text={current === images.length - 1 ? "Looking more closely has unsettled my first impression of showing off. I notice choices, care and a wish to be seen. I cannot decide what these clothes mean for everyone. I carry that question into the album, and into the stories of people who wear them." : photoNarratives[current] || photoNarratives[photoNarratives.length - 1]} placement="inline" />
     </header>
     <div aria-busy={!copyReady} className={`curved-gallery__stage ${dragging ? "is-dragging" : ""}`} tabIndex={0} role="group" aria-roledescription="carousel" aria-label="Skhothane fashion photographs. Drag, scroll, or use the arrow keys to explore." onPointerDown={down} onPointerMove={move} onPointerUp={release} onPointerCancel={cancel} onLostPointerCapture={cancel} onPointerLeave={() => setCursor(null)} onKeyDown={(event) => { if (["ArrowRight", "ArrowLeft", "Home", "End"].includes(event.key)) { event.preventDefault(); event.stopPropagation(); goTo(event.key === "Home" ? 0 : event.key === "End" ? images.length - 1 : current + (event.key === "ArrowRight" ? 1 : -1)); } }}>
       {images.map((src, index) => {
@@ -94,7 +90,7 @@ function SwipeCarouselGame({ images, onComplete, audioRef }) {
       <button type="button" disabled={!copyReady || current === 0} aria-label="Previous photograph" onClick={() => goTo(current - 1)}>&larr;</button>
       <span role="status">{current + 1} / {images.length}</span>
       <button type="button" disabled={!copyReady || current === images.length - 1} aria-label="Next photograph" onClick={() => goTo(current + 1)}>&rarr;</button>
-      {ready && <button type="button" disabled={!copyReady} className="curved-gallery__continue" onClick={() => { if (copyReady) onComplete(); }}>Continue the story &rarr;</button>}
+      {ready && current === images.length - 1 && <button type="button" disabled={!copyReady} className="curved-gallery__continue" onClick={() => { if (copyReady) onComplete(); }}>Carry these questions forward &rarr;</button>}
     </div>
     <p className="curved-gallery__hint" role="status">{copyReady ? "DRAG, SCROLL OR USE THE ARROWS TO EXPLORE" : "READ TO UNLOCK THE PHOTOGRAPHS"}</p>
   </section>;

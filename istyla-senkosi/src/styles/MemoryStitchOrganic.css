@@ -1,21 +1,92 @@
-/* Organic torn edges and hand worked thread. */
-.memory-stitch__fragments { gap:var(--piece-gap,9px); transition:gap .75s cubic-bezier(.2,.8,.2,1); }
-.memory-stitch__fragment { transition:transform .8s cubic-bezier(.2,.8,.2,1) var(--piece-delay),filter 1s,clip-path .8s; }
-.memory-stitch__fragment:nth-child(1) { clip-path:polygon(0 2%,95% 0,100% 9%,96% 27%,100% 45%,96% 67%,100% 83%,95% 100%,3% 97%,0 75%,3% 56%,0 32%); }
-.memory-stitch__fragment:nth-child(2) { clip-path:polygon(4% 1%,100% 3%,97% 31%,100% 55%,97% 78%,100% 96%,5% 100%,0 84%,4% 66%,0 45%,4% 26%,0 8%); }
-.memory-stitch__fragment:nth-child(3) { clip-path:polygon(2% 0,96% 3%,100% 19%,96% 41%,100% 64%,96% 82%,100% 98%,4% 96%,0 80%,3% 61%,0 39%,4% 17%); }
-.memory-stitch__fragment:nth-child(4) { clip-path:polygon(4% 3%,98% 0,100% 22%,97% 47%,100% 68%,96% 89%,98% 100%,5% 97%,0 82%,4% 62%,0 38%,4% 18%); }
-.memory-stitch__fragment:nth-child(5) { clip-path:polygon(0 2%,95% 0,100% 18%,96% 39%,100% 58%,96% 79%,100% 100%,3% 97%,0 73%,3% 49%,0 28%); }
-.memory-stitch__fragment:nth-child(6) { clip-path:polygon(4% 0,100% 3%,97% 26%,100% 51%,97% 75%,100% 98%,5% 100%,0 82%,4% 59%,0 34%,4% 15%); }
-.memory-stitch.is-complete .memory-stitch__fragment { clip-path:polygon(0 0,100% 0,100% 100%,0 100%); }
-.memory-stitch__seam.vertical { left:calc(50% - 16px); width:32px; }
-.memory-stitch__seam.horizontal { height:32px; }
-.memory-stitch__seam.seam-h1,.memory-stitch__seam.seam-h2 { top:calc(33.333% - 16px); }
-.memory-stitch__seam.seam-h3,.memory-stitch__seam.seam-h4 { top:calc(66.666% - 16px); }
-.memory-stitch__seam.vertical::before { left:15px; }
-.memory-stitch__seam.horizontal::before { top:15px; }
-.memory-stitch__seam.is-done::before { opacity:.45; border-color:var(--thread-colour); border-width:1px; }
-.memory-stitch__seam.is-done::after { content:""; position:absolute; filter:drop-shadow(0 1px 1px #000b); mix-blend-mode:normal; animation:memory-thread-in .55s ease-out both; }
-.memory-stitch__seam.vertical.is-done::after { inset:0 3px; width:auto; left:3px; background:repeating-linear-gradient(68deg,transparent 0 7px,var(--thread-colour) 8px 10px,transparent 11px 17px),repeating-linear-gradient(112deg,transparent 0 12px,color-mix(in srgb,var(--thread-colour),#fff 18%) 13px 14px,transparent 15px 22px); }
-.memory-stitch__seam.horizontal.is-done::after { inset:3px 0; height:auto; top:3px; background:repeating-linear-gradient(22deg,transparent 0 8px,var(--thread-colour) 9px 11px,transparent 12px 19px),repeating-linear-gradient(-22deg,transparent 0 14px,color-mix(in srgb,var(--thread-colour),#fff 15%) 15px 16px,transparent 17px 24px); }
-@media (prefers-reduced-motion:reduce) { .memory-stitch__fragments,.memory-stitch__fragment { transition:none; } }
+/* Organic torn edges and hand worked thread. */
+.memory-stitch__fragments { gap:var(--piece-gap,9px); transition:gap .75s cubic-bezier(.2,.8,.2,1); }
+.memory-stitch__fragment { transition:transform .8s cubic-bezier(.2,.8,.2,1) var(--piece-delay),filter 1s,clip-path .8s; }
+.memory-stitch__fragment:nth-child(1) { clip-path:polygon(0 0,100% 0,96% 18%,100% 36%,96% 54%,100% 72%,96% 90%,100% 100%,80% 96%,60% 100%,40% 96%,20% 100%,0 96%); }
+.memory-stitch__fragment:nth-child(2) { clip-path:polygon(0 0,100% 0,100% 96%,80% 100%,60% 96%,40% 100%,20% 96%,0 100%,4% 90%,0 72%,4% 54%,0 36%,4% 18%); }
+.memory-stitch__fragment:nth-child(3) { clip-path:polygon(0 0,20% 4%,40% 0,60% 4%,80% 0,100% 4%,96% 20%,100% 40%,96% 60%,100% 80%,96% 100%,80% 96%,60% 100%,40% 96%,20% 100%,0 96%); }
+.memory-stitch__fragment:nth-child(4) { clip-path:polygon(0 4%,20% 0,40% 4%,60% 0,80% 4%,100% 0,100% 96%,80% 100%,60% 96%,40% 100%,20% 96%,0 100%,4% 80%,0 60%,4% 40%,0 20%); }
+.memory-stitch__fragment:nth-child(5) { clip-path:polygon(0 0,20% 4%,40% 0,60% 4%,80% 0,100% 4%,96% 20%,100% 40%,96% 60%,100% 80%,96% 100%,0 100%); }
+.memory-stitch__fragment:nth-child(6) { clip-path:polygon(0 4%,20% 0,40% 4%,60% 0,80% 4%,100% 0,100% 100%,0 100%,4% 80%,0 60%,4% 40%,0 20%); }
+.memory-stitch.is-complete .memory-stitch__fragment { clip-path:polygon(0 0,100% 0,100% 100%,0 100%); }
+.memory-stitch__seam.vertical { left:calc(50% - 16px); width:32px; }
+.memory-stitch__seam.horizontal { height:32px; }
+.memory-stitch__seam.seam-h1,.memory-stitch__seam.seam-h2 { top:calc(33.333% - 16px); }
+.memory-stitch__seam.seam-h3,.memory-stitch__seam.seam-h4 { top:calc(66.666% - 16px); }
+.memory-stitch__seam.vertical::before { left:15px; }
+.memory-stitch__seam.horizontal::before { top:15px; }
+.memory-stitch__seam.is-done::before { opacity:.45; border-color:var(--thread-colour); border-width:1px; }
+.memory-stitch__seam.is-done::after { content:""; position:absolute; filter:drop-shadow(0 1px 1px #000b); mix-blend-mode:normal; animation:memory-thread-in .55s ease-out both; }
+.memory-stitch__seam.vertical.is-done::after { inset:0 3px; width:auto; left:3px; background:repeating-linear-gradient(68deg,transparent 0 7px,var(--thread-colour) 8px 10px,transparent 11px 17px),repeating-linear-gradient(112deg,transparent 0 12px,color-mix(in srgb,var(--thread-colour),#fff 18%) 13px 14px,transparent 15px 22px); }
+.memory-stitch__seam.horizontal.is-done::after { inset:3px 0; height:auto; top:3px; background:repeating-linear-gradient(22deg,transparent 0 8px,var(--thread-colour) 9px 11px,transparent 12px 19px),repeating-linear-gradient(-22deg,transparent 0 14px,color-mix(in srgb,var(--thread-colour),#fff 15%) 15px 16px,transparent 17px 24px); }
+@media (prefers-reduced-motion:reduce) { .memory-stitch__fragments,.memory-stitch__fragment { transition:none; } }
+
+/* Keep the photo below the fixed navigation without crowding the lower controls. */
+@media(min-width:761px) {
+  .memory-stitch__work { top:max(125px,14%); height:calc(100% - max(125px,14%) - 120px); }
+}
+@media(max-width:760px) {
+  .memory-stitch__work { margin-top:28px; }
+}
+
+/* A single warm zigzag thread, with small punctures at each turn. */
+.memory-stitch__seam.is-done::before,.memory-stitch__seam.is-done::after { display:none; }
+.memory-stitch__zigzag { display:block; width:100%; height:100%; overflow:visible; filter:drop-shadow(0 1px 1px #0007); animation:memory-thread-in .45s ease-out both; }
+@media(prefers-reduced-motion:reduce) { .memory-stitch__zigzag { animation:none; } }
+html[data-reduced-motion="true"] .memory-stitch__zigzag { animation:none; }
+
+.memory-stitch__asset-thread { position:absolute; inset:0; display:block; width:100%; height:100%; overflow:visible; filter:drop-shadow(0 1px 1px #0007); animation:memory-thread-in .45s ease-out both; pointer-events:none; }
+@media(prefers-reduced-motion:reduce) { .memory-stitch__asset-thread { animation:none; } }
+html[data-reduced-motion="true"] .memory-stitch__asset-thread { animation:none; }
+
+/* Stitches cross onto both pieces of the photograph, beyond the torn gap. */
+.memory-stitch__asset-thread { opacity:.55; }
+.memory-stitch__seam.vertical .memory-stitch__asset-thread { width:44px; height:100%; left:calc(50% - 22px); top:0; }
+.memory-stitch__seam.horizontal .memory-stitch__asset-thread { width:100%; height:44px; top:calc(50% - 22px); left:0; }
+
+/* A faint camera image supports the memory theme behind the stitching. */
+.memory-stitch::before { inset:0; background:url("../assets/Chapter%204_Reflection/Background/Camera.jpg") center/cover no-repeat; opacity:.16; animation:none; }
+
+.memory-stitch__instruction { display:flex; align-items:center; justify-content:center; gap:14px; }
+.memory-stitch__instruction .memory-stitch__needle { position:relative; right:auto; bottom:auto; display:block; flex:0 0 34px; width:34px; transform:rotate(-35deg); transform-origin:center; }
+
+.memory-stitch::before { background-size:contain; }
+
+/* Turn the camera artwork sideways and frame it across the scene. */
+.memory-stitch::before { inset:auto; left:50%; top:50%; width:max(100vw,100svh); height:max(100vw,100svh); background-size:100% 100%; background-position:center; transform:translate(-50%,-50%) rotate(0deg); opacity:.16; }
+
+.memory-stitch::before { width:100vw; height:100svh; background-size:contain; }
+
+.memory-stitch::before { background-size:100% auto; }
+
+/* An album backing sits directly behind the torn photograph. */
+.memory-stitch__work::before { content:""; position:absolute; inset:-26px -30px; background:url("../assets/Chapter%204_Reflection/Background/Photo_Album_Background.jpg") center/cover no-repeat; opacity:.45; pointer-events:none; }
+
+/* Frame the photograph inside the album cover's black inset. */
+.memory-stitch__work::before { inset:0; background-size:156.25% 119.05%; background-position:center; }
+.memory-stitch__fragments,.memory-stitch__seams { inset:19% 9% 18%; }
+@media(min-width:761px) {
+  .memory-stitch__work { top:110px; width:min(46vw,620px); height:calc(100% - 190px); }
+}
+@media(max-width:760px) {
+  .memory-stitch__work { width:min(92vw,500px); height:65svh; min-height:480px; }
+}
+
+/* Preserve the cover's original proportions (320 × 420 crop of the source). */
+@media(min-width:761px) {
+  .memory-stitch__work { width:min(46vw,calc((100svh - 190px) * .76190476)); height:auto; aspect-ratio:320 / 420; }
+}
+@media(max-width:760px) {
+  .memory-stitch__work { width:min(88vw,calc(72svh * .76190476)); height:auto; min-height:0; aspect-ratio:320 / 420; }
+}
+.memory-stitch__work::before { background-size:156.25% 119.047619%; }
+.memory-stitch__fragments,.memory-stitch__seams { inset:21% 11% 20%; }
+
+/* The old photograph stands on its own, without an album backing. */
+.memory-stitch__work::before { display:none; }
+.memory-stitch__fragments,.memory-stitch__seams { inset:0; }
+@media(min-width:761px) {
+  .memory-stitch__work { width:min(42vw,calc((100svh - 245px) * .8002853)); height:auto; aspect-ratio:1122 / 1402; top:135px; }
+}
+@media(max-width:760px) {
+  .memory-stitch__work { width:min(84vw,calc(65svh * .8002853)); height:auto; aspect-ratio:1122 / 1402; }
+}

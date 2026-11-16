@@ -34,9 +34,11 @@ const STORY_BEATS = {
 };
 
 function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging = false, directGalleryDrag = false, visualOnly = false, showStory = true, onTextComplete, videoUnlocked = true, videoExiting = false, onVideoProgress, onVideoEnded, onVideoStarted, allowVideoSound = true, onNextChapter, onAlbumWritingReady, interactionsReady = true }) {
-  const { soundOn } = useNavigation();
+  const { soundOn, volume } = useNavigation();
   const videoRef = useRef(null);
   const [videoNeedsStart, setVideoNeedsStart] = useState(false);
+  const [videoFailed, setVideoFailed] = useState(false);
+  const [videoWaiting, setVideoWaiting] = useState(false);
   const [clipStarted, setClipStarted] = useState(false);
   const [userPaused, setUserPaused] = useState(false);
   const [observationTime, setObservationTime] = useState(0);
@@ -49,10 +51,10 @@ function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging
     const video = videoRef.current;
     if (!video) return;
     video.muted = visualOnly || !allowVideoSound || !clipStarted || !soundOn;
-    if (!videoExiting) video.volume = 1;
+    if (!videoExiting) video.volume = volume;
     if (userPaused || (!videoUnlocked && !videoExiting) || visualOnly || (allowVideoSound && !clipStarted)) { video.pause(); return; }
     if (video.paused) video.play().then(() => setVideoNeedsStart(false)).catch(() => setVideoNeedsStart(true));
-  }, [videoUnlocked, videoExiting, visualOnly, soundOn, allowVideoSound, clipStarted, userPaused]);
+  }, [videoUnlocked, videoExiting, visualOnly, soundOn, allowVideoSound, clipStarted, userPaused, volume]);
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !videoExiting) return;
@@ -74,7 +76,7 @@ function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging
     if (!video || !videoUnlocked) return;
     video.defaultMuted = false;
     video.muted = !allowVideoSound || !soundOn;
-    video.volume = 1;
+    video.volume = volume;
     setClipStarted(true);
     setUserPaused(false);
     video.play()
@@ -104,7 +106,7 @@ function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging
   };
   return (
     <>
-      <div inert={!visualOnly && !interactionsReady} className={`chapter-player__visual ${frame.motion ? `chapter-player__visual--${frame.motion}` : ""} ${frame.kind ? `chapter-player__visual--${frame.kind}` : ""}`}>
+      <div inert={!visualOnly && !interactionsReady} className={`chapter-player__visual ${frame.layout === "quiet" ? "chapter-player__visual--quiet-layout" : ""} ${frame.motion ? `chapter-player__visual--${frame.motion}` : ""} ${frame.kind ? `chapter-player__visual--${frame.kind}` : ""}`}>
         {frame.backgroundImage && <div className="chapter-player__collage-backdrop" style={{ backgroundImage: `url("${frame.backgroundImage}")` }} aria-hidden="true" />}
         {frame.kind === "fashion-wall" ? (
           <FashionAlbum images={frame.collage} label={frame.collageLabel || "My Swenka scrapbook"} scrapbook chapter={frame.scrapbookChapter} clippingKinds={frame.clippingKinds} customSlots={frame.scrapbookSlots} notes={frame.scrapbookNotes} visualOnly={visualOnly}/>
@@ -127,14 +129,17 @@ function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging
         ) : frame.collage ? (
           <div className={`chapter-player__collage chapter-player__collage--${frame.collage.length}`}>
             {frame.collage.map((src, index) => (
-              <img key={src} src={src} alt={frame.alt || ""} loading="lazy" decoding="async" style={{ animationDelay: `${index * -1.2}s` }} />
+              <img key={src} className={frame.photoMasks?.[index] ? `old-photo--${frame.photoMasks[index]}` : undefined} src={src} alt={frame.alt || ""} loading="lazy" decoding="async" style={{ animationDelay: `${index * -1.2}s` }} />
             ))}
           </div>
         ) : frame.video ? (
           <>
-            <video ref={videoRef} src={frame.video} playsInline loop={!frame.playSeconds && !frame.playToEnd} preload="auto" role={visualOnly ? undefined : "button"} tabIndex={visualOnly ? -1 : 0} aria-label={userPaused ? "Play video" : "Click to pause or play video"} onPointerDown={(event) => event.stopPropagation()} onClick={toggleVideo} onKeyDown={(event) => { event.stopPropagation(); if (event.key === " " || event.key === "Enter") { event.preventDefault(); toggleVideo(event); } }} onEnded={() => { if (!visualOnly && videoUnlocked) { if (frame.playToEnd) onVideoEnded?.(); else onVideoProgress?.(frame.playSeconds); } }} onLoadedMetadata={seekToStart} onTimeUpdate={holdStart} onSeeked={() => { lastVideoTime.current = videoRef.current.currentTime; }} />
+            <video ref={videoRef} onWaiting={() => setVideoWaiting(true)} onPlaying={() => setVideoWaiting(false)} onCanPlay={() => setVideoWaiting(false)} onError={() => { setVideoFailed(true); setVideoWaiting(false); }} src={frame.video} playsInline loop={!frame.playSeconds && !frame.playToEnd} preload="auto" role={visualOnly ? undefined : "button"} tabIndex={visualOnly ? -1 : 0} aria-label={userPaused ? "Play video" : "Click to pause or play video"} onPointerDown={(event) => event.stopPropagation()} onClick={toggleVideo} onKeyDown={(event) => { event.stopPropagation(); if (event.key === " " || event.key === "Enter") { event.preventDefault(); toggleVideo(event); } }} onEnded={() => { if (!visualOnly && videoUnlocked) { if (frame.playToEnd) onVideoEnded?.(); else onVideoProgress?.(frame.playSeconds); } }} onLoadedMetadata={seekToStart} onTimeUpdate={holdStart} onSeeked={() => { lastVideoTime.current = videoRef.current.currentTime; }} />
+            {!visualOnly && videoWaiting && !videoFailed && <p className="video-loading" role="status">Loading the video...</p>}
+            {!visualOnly && videoFailed && <div className="video-recovery" role="alert"><p>This video could not load. You can retry or continue with the written scene notes.</p><button onClick={(event) => { event.stopPropagation(); setVideoFailed(false); videoRef.current?.load(); setVideoNeedsStart(true); }}>Retry video</button><button onClick={(event) => { event.stopPropagation(); onVideoEnded?.(); }}>Continue the story</button></div>}
+            {!visualOnly && <details className="video-scene-notes" onClick={(event) => event.stopPropagation()} onPointerDown={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}><summary>Read about this scene</summary><p>{frame.videoBridge}</p>{frame.videoNotes?.map((note) => <p key={note.start}>{note.text}</p>)}{frame.videoOutro && <p>{frame.videoOutro}</p>}<small>Scene context and Jama's observations; not a transcript.</small></details>}
             {!visualOnly && clipStarted && !videoExiting && observation && <aside key={observation.start} className="chapter-player__video-note" aria-live="polite"><p>{observation.text}</p></aside>}
-            {!visualOnly && videoUnlocked && ((allowVideoSound && !clipStarted) || videoNeedsStart || userPaused) && <VideoPlayButton onClick={startClipWithSound} label={userPaused ? "Resume video" : allowVideoSound ? "Play video with sound" : "Play video"} />}
+            {!visualOnly && videoUnlocked && !videoFailed && ((allowVideoSound && !clipStarted) || videoNeedsStart || userPaused) && <VideoPlayButton onClick={startClipWithSound} label={userPaused ? "Resume video" : allowVideoSound ? "Play video with sound" : "Play video"} />}
           </>
         ) : (
           <img ref={photoRef} src={frame.image} alt={frame.alt || ""} loading="lazy" decoding="async" />
@@ -197,15 +202,19 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const advanceRef = useRef(() => {});
   const hasGamePage = Boolean(gamePage);
   const gameAfterFrames = hasGamePage && gamePosition === "afterFrames";
-  const gamePageIndex = hasGamePage ? (gameAfterFrames ? frames.length + 1 : 1) : null;
-  const framesStart = 1 + (hasGamePage && !gameAfterFrames ? 1 : 0);
-  const framesEnd = framesStart + frames.length - 1;
+  const gamePageIndex = hasGamePage ? (gameAfterFrames ? frames.length + 1 : gamePosition === "afterFirstFrame" ? 2 : 1) : null;
+  const framesStart = hasGamePage && gamePageIndex === 1 ? 2 : 1;
+  const framesEnd = frames.length + (hasGamePage && gamePageIndex <= frames.length ? 1 : 0);
+  const frameAtPage = (target) => {
+    if (target < 1 || target === gamePageIndex || target > framesEnd) return null;
+    return frames[target - 1 - (hasGamePage && target > gamePageIndex ? 1 : 0)];
+  };
   const totalPages = 1 + frames.length + (hasGamePage ? 1 : 0) + (finalPage ? 1 : 0);
   const lastFrameIndex = totalPages - 1;
   useEffect(() => {
     try { sessionStorage.setItem(`istyla:${id}:last-page`, JSON.stringify(lastFrameIndex)); } catch { /* Optional navigation persistence. */ }
   }, [id, lastFrameIndex]);
-  const currentFrame = pageIndex >= framesStart && pageIndex <= framesEnd ? frames[pageIndex - framesStart] : null;
+  const currentFrame = frameAtPage(pageIndex);
   const lacesLocked = Boolean(currentFrame?.laceGate && !lacesUnlocked);
   const shoeLocked = Boolean(currentFrame?.shoeShine && !shoeUnlocked);
   const outfitLocked = Boolean(currentFrame?.outfitGate && !outfitUnlocked);
@@ -243,7 +252,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
 
   const transitionToPage = (target, direction) => {
     lockedRef.current = true;
-    const next = frames[target - framesStart];
+    const next = frameAtPage(target);
     const nextGalleryIndex = direction < 0 && next?.motion === "gallery" ? next.collage.length - 1 : 0;
     setFrameTransition({ next, nextGalleryIndex, direction, motion: currentFrame.motion });
     transitionTimer.current = setTimeout(() => {
@@ -271,7 +280,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
     setVideoBridge({ text: frame.videoBridge || "I wanted to understand the story behind the style. So I stopped to listen.", reveal });
   };
   const enterVideoPage = (target) => {
-    const next = frames[target - framesStart];
+    const next = frameAtPage(target);
     if (!next?.video || next.laceGate || next.outfitGate || next.shoeShine) return false;
     bridgeToVideo(next, () => { goToPage(target); setGalleryIndex(0); });
     return true;
@@ -327,7 +336,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
     }
     if (pageIndex > 0) {
       lock();
-      const previous = frames[pageIndex - 1 - framesStart];
+      const previous = frameAtPage(pageIndex - 1);
       setGalleryIndex(previous?.motion === "gallery" ? previous.collage.length - 1 : 0);
       followThreadToPage(pageIndex - 1);
     }
@@ -418,10 +427,15 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
       className={`chapter-player chapter-player--${accent} ${exiting ? `chapter-player--exiting chapter-player--exit-${exitTransition}` : ""}`}
       tabIndex={0}
       onKeyDown={handleKeyDown}
-      onWheelCapture={(event) => reverseScroll(event, guardedRetreat)}
+      onWheelCapture={(event) => { if (id !== "pantsula") reverseScroll(event, guardedRetreat); }}
+      onContextMenu={(event) => {
+        if (id !== "pantsula" || isGamePage || event.target.closest("button, a, input, textarea, select, video, [role=button]")) return;
+        event.preventDefault();
+        guardedAdvance();
+      }}
       onAnimationEnd={exiting ? handleExitEnd : undefined}
       aria-label={`${chapter}: ${title}, page ${pageIndex + 1} of ${totalPages}`}
-      {...(!isGamePage ? { ...gesture.handlers, ...(interaction !== "drag" ? { onWheel: scrollGesture.handlers.onWheel } : {}), onDragStart: (event) => event.preventDefault() } : interaction !== "drag" ? { onWheel: (event) => { if (event.deltaY < 0) scrollGesture.handlers.onWheel(event); } } : {})}
+      {...(!isGamePage ? { ...gesture.handlers, ...(interaction !== "drag" && id !== "pantsula" ? { onWheel: scrollGesture.handlers.onWheel } : {}), onDragStart: (event) => event.preventDefault() } : interaction !== "drag" && id !== "pantsula" ? { onWheel: (event) => { if (event.deltaY < 0) scrollGesture.handlers.onWheel(event); } } : {})}
     >
       {track && !sharedAudioRef && (
         <audio

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import StitchedNarrative from "../StitchedNarrative";
 import WardrobeThreads from "./WardrobeThreads";
 import suitBackground from "../../assets/Chapter 1_Swenka/Images/Page Backgrounds/Suit_Background.jpg";
@@ -10,8 +10,15 @@ const elements = [
   { id: "SHOES", zone: { left: 18, top: 76, width: 46, height: 22 }, thumb: { x: 40, y: 87 } },
 ];
 
+const detailNarratives = {
+  HAT: "The yellow hat catches my eye first. I notice how it finishes the outfit and frames the way he carries himself.",
+  SLEEVE: "I follow the sleeve to his hands. The neat cuff and the movement make me notice the care in how he presents himself.",
+  SHOES: "I look down at the shoes and the striped socks. Even here, there is another detail he has chosen to show.",
+};
+
 function WardrobeGame({ portraitImage, onComplete }) {
   const [copyReady, setCopyReady] = useState(false);
+  const copyReadyRef = useRef(false);
   const [placed, setPlaced] = useState([]);
   const [dragged, setDragged] = useState(null);
   const [feedback, setFeedback] = useState(null);
@@ -22,13 +29,18 @@ function WardrobeGame({ portraitImage, onComplete }) {
   const pointerDrag = useRef(null);
   const ignoreClick = useRef(false);
   const ready = placed.length === elements.length;
+  const lastDetail = placed[placed.length - 1];
+  const narrative = lastDetail
+    ? detailNarratives[lastDetail] + (ready ? " Piece by piece, I see the care behind the whole outfit. I think of Ree checking his clothes before leaving, and wish I had paid this much attention then." : "")
+    : "After hearing them speak, I look at the outfit differently. I follow the care in each choice: the hat, the sleeve, the shoes. Choose a detail from the spool, then tap its matching place on the photograph, or drag it there. Piece by piece, I want to understand how that care becomes pride.";
+  const finishReading = () => { copyReadyRef.current = true; setCopyReady(true); };
   const center = (element) => {
     const bounds = element?.getBoundingClientRect();
     return bounds ? { x: bounds.left + bounds.width / 2, y: bounds.top + bounds.height / 2 } : { x: 0, y: 0 };
   };
 
   const placeElement = (id, targetId, point = center(zoneRefs.current[targetId])) => {
-    if (!copyReady || !elements.some((element) => element.id === id) || placed.includes(id) || placed.includes(targetId)) return;
+    if (!copyReadyRef.current || !elements.some((element) => element.id === id) || placed.includes(id) || placed.includes(targetId)) return;
     const spool = spoolRef.current?.getBoundingClientRect();
     if (!targetId && spool && point.x >= spool.left && point.x <= spool.right && point.y >= spool.top && point.y <= spool.bottom) {
       threadRef.current?.cancel(id);
@@ -42,18 +54,22 @@ function WardrobeGame({ portraitImage, onComplete }) {
         message: targetId ? `Not a match. The ${id.toLowerCase()} does not belong in the ${targetId.toLowerCase()} area. Pick it up and try again.` : `Not a match. Pick up the ${id.toLowerCase()} and try again.` }));
       return;
     }
+    copyReadyRef.current = false;
+    setCopyReady(false);
     threadRef.current?.cut(id, point);
     setPlaced((current) => [...current, id]);
     setDragged(null);
     setFeedback({ type: "success", message: `${id.charAt(0)}${id.slice(1).toLowerCase()} matched. The thread is cut. ${placed.length + 1} of ${elements.length} details in place.` });
   };
   const selectElement = (id, point = center(itemRefs.current[id])) => {
+    if (!copyReadyRef.current || placed.includes(id)) return;
     setDragged(id);
     setFeedback(null);
     threadRef.current?.begin(id, point);
   };
 
   const beginDrag = (id, event) => {
+    if (!copyReadyRef.current || placed.includes(id)) return;
     if (event.pointerType === "mouse" && event.button !== 0) return;
     event.preventDefault();
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -62,6 +78,7 @@ function WardrobeGame({ portraitImage, onComplete }) {
     selectElement(id, { x: event.clientX, y: event.clientY });
   };
   const moveDrag = (id, event) => {
+    if (!copyReadyRef.current) return;
     const drag = pointerDrag.current;
     if (!drag || drag.id !== id) return;
     if (Math.hypot(event.clientX - drag.x, event.clientY - drag.y) > 6) drag.moved = true;
@@ -77,20 +94,17 @@ function WardrobeGame({ portraitImage, onComplete }) {
   };
   const returnDetail = (id) => { threadRef.current?.cancel(id); setDragged(null); setFeedback(null); };
 
-  useEffect(() => {
-    if (!ready) return undefined;
-    const timer = setTimeout(onComplete, 1200);
-    return () => clearTimeout(timer);
-  }, [ready, onComplete]);
+
 
   return (
     <div className="game-stage game-stage--swenka" style={{ "--suit-background": `url("${suitBackground}")` }}>
       <div className="game-copy">
         <p className="tag">01 / SWENKA</p>
         <h1>Piece by piece,<br />it came together.</h1>
-        <StitchedNarrative onComplete={() => setCopyReady(true)} className="game-copy__narrative" text="I couldn't take in the whole outfit at once, not at first. So I broke it down the way I actually noticed it: the hat, the sleeve, the shoes, one detail at a time." placement="inline" />
-        <strong role="status">{copyReady ? "PULL A DETAIL FROM THE SPOOL. A MATCH CUTS THE THREAD; A RED THREAD ASKS ME TO TRY AGAIN." : "READ TO UNLOCK THE OUTFIT"}</strong>
+        <StitchedNarrative key={placed.join("-") || "intro"} onComplete={finishReading} className="game-copy__narrative" text={narrative} placement="inline" />
+        <strong role="status">{ready ? "THE OUTFIT IS WHOLE. I LOOK AT IT WITH NEW RESPECT." : copyReady ? "PULL A DETAIL FROM THE SPOOL. A MATCH CUTS THE THREAD; A RED THREAD ASKS ME TO TRY AGAIN." : placed.length ? "FOLLOW THE THREAD BEFORE CHOOSING ANOTHER DETAIL" : "READ TO UNLOCK THE OUTFIT"}</strong>
         <i />
+        {ready && <button type="button" className="interaction-continue" disabled={!copyReady} onClick={() => { if (copyReady) onComplete(); }}>Carry this attention forward &rarr;</button>}
       </div>
       <div className="fashion-portrait" inert={!copyReady}>
         <div className="portrait-frame">

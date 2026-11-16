@@ -64,7 +64,7 @@ export default function SkhothaneOutfit({ onBack, onComplete, audioRef }) {
       <button type="button" className="skhothane-outfit__back" onClick={onBack}>← Back to the story</button>
       <small>03 / SKHOTHANE / MY COUSIN'S BACKPACK</small>
       <h2 id="skhothane-outfit-title">I found his backpack.</h2>
-      <p>{opened ? "I lay out his clothes, piece by piece. I choose a shirt, jeans and shoes, imagining how he might have worn them together. I want to understand what this style meant to him." : "I found my cousin's backpack with his things still inside. As I open it, I find his shirts, jeans and shoes. These were his choices, his colours. I want to look at them more carefully now."}</p>
+      <p>{opened ? "After looking through the photographs, I lay out his clothes. I choose a shirt, jeans and shoes, imagining the look he might have wanted to create. Tap a shirt, jeans and shoes, or drag each piece into its matching space. There is no correct outfit: notice what your choices suggest about identity, status or being noticed." : "I found my cousin's backpack with his things still inside. As I open it, I find his shirts, jeans and shoes. These were his choices, his colours. I want to look at them more carefully now."}</p>
     </header>
 
     <div inert={revealing} className={`skhothane-outfit__workspace ${opened ? "is-open" : ""}`}>
@@ -114,7 +114,7 @@ export default function SkhothaneOutfit({ onBack, onComplete, audioRef }) {
               {selected[group.id] ? <img src={selected[group.id].image} alt={selected[group.id].name} /> : <span>CHOOSE {group.id.toUpperCase()}</span>}
             </div>)}
           </div>
-          <p role="status">{ready ? "I imagine him in these clothes. Now I want to hear from others who share his style." : `${groups.filter(({ id }) => selected[id]).length} of 3 pieces chosen from his backpack`}</p>
+          <p role="status">{ready ? "I have imagined a look, but I cannot decide its meaning for him. Now I want to hear from people who share his style." : `${groups.filter(({ id }) => selected[id]).length} of 3 pieces chosen. ${groups.filter(({ id }) => selected[id]).map(({ id }) => selected[id].name).join(", ") || "Start with a piece that catches your eye"}. You can change any choice before hearing their stories.`}</p>
           <button type="button" className="skhothane-outfit__watch" disabled={!ready || revealing} onClick={() => { if (ready) setRevealing(true); }}>Hear their stories →</button>
         </div>
       </>}

@@ -1,36 +1,40 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigation } from "../../context/NavigationContext";
 import StitchedNarrative from "../StitchedNarrative";
 import "../../styles/ChapterGames.css";
 
 const beats = ["STANCE", "STEP", "RHYTHM", "SWING", "FINALE"];
 const beatNotes = [110, 147, 165, 196, 220];
 const beatNarratives = [
-  "Nobody could explain the rhythm to me in words. So I stopped asking and started trying to catch it myself, one beat at a time.",
+  "I have watched the dancers move together. Now I try to follow how their shoes meet the beat and their clothes move with them. Read each observation, then tap the numbered beat that lights up. Each tap adds another part of the movement. I want to feel the rhythm I have been watching.",
   "First, I watched how he stood. Knees loose, weight low, ready to move. I softened my own stance and waited for the beat.",
   "Then I followed his feet. A quick step, a shift of weight, a pause. I tried it again until my shoes began to find their place.",
   "The rhythm started making sense in my body. I stopped counting every step and listened for the spaces between them.",
   "His arms swung with the steps, loose but deliberate. I let mine follow, adding a little of myself to the movement.",
-  "For a moment, everything came together: the stance, the steps, the swing. I was still learning, but now I was part of the dance.",
+  "For a moment, the stance, steps and swing come together. I begin to feel how movement can express who you are while connecting you to others. I think of Ree, and wish I could share this moment with him.",
 ];
 
 function BeatGame({ sceneImages, onComplete }) {
+  const { soundOn, volume, reducedMotion } = useNavigation();
   const [copyReady, setCopyReady] = useState(false);
   const [activeBeat, setActiveBeat] = useState(0);
   const [replayFrame, setReplayFrame] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [paused, setPaused] = useState(true);
   const audioContext = useRef(null);
   const ready = activeBeat === beats.length;
 
   useEffect(() => {
-    if (!ready || paused) return undefined;
+    if (!ready || paused || !copyReady || reducedMotion) return undefined;
     const timer = setInterval(() => setReplayFrame((frame) => (frame + 1) % sceneImages.length), 240);
     return () => clearInterval(timer);
-  }, [ready, paused, sceneImages.length]);
+  }, [ready, paused, copyReady, reducedMotion, sceneImages.length]);
 
-  const displayedFrame = ready ? replayFrame : activeBeat;
+  const displayedFrame = Math.min(sceneImages.length - 1, ready ? replayFrame : activeBeat);
 
   const playBeat = (index) => {
+    if (!soundOn) return;
     const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
     audioContext.current ??= new AudioContext();
     const context = audioContext.current;
     if (context.state === "suspended") context.resume();
@@ -39,7 +43,7 @@ function BeatGame({ sceneImages, onComplete }) {
     oscillator.type = index % 2 ? "square" : "triangle";
     oscillator.frequency.setValueAtTime(beatNotes[index], context.currentTime);
     gain.gain.setValueAtTime(0.0001, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.32, context.currentTime + 0.015);
+    gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, 0.32 * volume), context.currentTime + 0.015);
     gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.26);
     oscillator.connect(gain).connect(context.destination);
     oscillator.start();
@@ -53,7 +57,7 @@ function BeatGame({ sceneImages, onComplete }) {
     setActiveBeat(index + 1);
   };
 
-  const currentScene = activeBeat === 0 ? "TAP THE FIRST BEAT" : activeBeat === beats.length ? "THE DANCE IS ALIVE" : `${beats[activeBeat - 1]} UNLOCKED`;
+  const currentScene = activeBeat === 0 ? "TAP THE FIRST BEAT" : activeBeat === beats.length ? "FIVE MOVEMENTS, ONE SHARED RHYTHM" : `${activeBeat} OF ${beats.length} MOVEMENTS FOUND. NEXT: ${beats[activeBeat]}`;
 
   return (
     <div className="game-stage game-stage--pantsula">
@@ -67,7 +71,7 @@ function BeatGame({ sceneImages, onComplete }) {
       </div>
       <div className={`pantsula-image beat-scene-${activeBeat}`}>
         {sceneImages.map((src, index) => <img key={src} src={src} alt={index === displayedFrame ? (ready ? "The complete Pantsula dance sequence" : `Pantsula dance scene: ${activeBeat ? beats[activeBeat - 1] : "ready"}`) : ""} aria-hidden={index !== displayedFrame} style={{ display:index === displayedFrame ? "block" : "none" }} loading="eager" decoding="async" />)}
-        <div className="beat-overlay"><span>{ready ? "COMPLETE SEQUENCE / LOOP" : `BEAT ${activeBeat} / ${beats.length}`}</span><b>{ready ? (paused ? "PAUSED" : "THE DANCE IS ALIVE") : activeBeat ? beats[activeBeat - 1] : "READY"}</b></div>
+        <div className="beat-overlay"><span>{ready ? "COMPLETE SEQUENCE / LOOP" : `NEXT BEAT ${activeBeat + 1} / ${beats.length}`}</span></div>
         {!ready && <div className="beat-map" aria-label="Pantsula beat map">
           {beats.map((beat, index) => (
             <button
