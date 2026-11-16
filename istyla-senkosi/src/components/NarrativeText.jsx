@@ -4,7 +4,7 @@ import { soundtrackBeats } from "../utils/musicRhythm";
 import { glyphThread } from "./glyphThread";
 import "../styles/NarrativeText.css";
 
-export default function NarrativeText({ text, delay = 400, embroidered = false, speed = 1, onComplete, rhythmAudioRef }) {
+export default function NarrativeText({ text, delay = 400, embroidered = false, speed = 1, onComplete, rhythmAudioRef, maxDuration }) {
   const { reducedMotion } = useNavigation();
   const [systemReduced, setSystemReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const rootRef = useRef(null);
@@ -46,6 +46,7 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
     const cache = new Map();
     let index = 0;
     let started;
+    let revealStarted;
     let active;
     let paths = [];
     let length = 0;
@@ -88,6 +89,14 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
     };
     const tick = (now) => {
       if (disposed) return;
+      revealStarted ??= now;
+      if (Number.isFinite(maxDuration) && now - revealStarted >= delay + maxDuration) {
+        letters.forEach((letter) => { letter.style.opacity = 1; });
+        needle.style.visibility = "hidden";
+        svg.replaceChildren();
+        completeRef.current?.();
+        return;
+      }
       if (now - lastPaint < 1000 / 30) { frame = requestAnimationFrame(tick); return; }
       lastPaint = now;
       if (started === undefined) started = now + delay;
@@ -148,7 +157,7 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
     };
     document.fonts.ready.then(() => { if (!disposed) frame = requestAnimationFrame(tick); });
     return () => { disposed = true; cancelAnimationFrame(frame); resizeObserver.disconnect(); };
-  }, [text, delay, speed, reducedMotion, systemReduced, rhythmAudioRef]);
+  }, [text, delay, speed, reducedMotion, systemReduced, rhythmAudioRef, maxDuration]);
 
   return <>
     <span className="narrative-text__accessible">{text}</span>

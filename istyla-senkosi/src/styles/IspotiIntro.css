@@ -199,3 +199,55 @@ body:has(.ispoti-intro) #root .help-trigger span {
 }
 body:has(.ispoti-intro) #root .chapters-trigger span { color:#66501f; }
 body:has(.ispoti-intro) #root .menu-trigger i { background:#303a22; }
+
+/* Share the available monitor height between the story and hat activity. */
+#root .ispoti-copy .ispoti-copy__advance {
+  position:relative;
+  inset:auto;
+  width:100%;
+  max-width:440px;
+  display:block;
+  margin-top:24px;
+}
+#root .ispoti-copy__advance .rhythm-advance { margin:0; }
+#root .ispoti-copy__body p { margin:0; }
+@media(min-width:701px) {
+  #root .ispoti-intro {
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);
+    gap:clamp(32px,6vw,110px);
+    box-sizing:border-box;
+    padding:clamp(90px,12svh,145px) 7vw 95px;
+    min-height:650px;
+  }
+  #root .ispoti-copy {
+    position:relative;
+    inset:auto;
+    width:100%;
+    min-height:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-evenly;
+    align-items:flex-start;
+    gap:clamp(18px,3svh,42px);
+  }
+  #root .ispoti-copy h1 {
+    margin:0;
+    font-size:clamp(48px,5.8vw,100px);
+  }
+  #root .ispoti-copy small { line-height:1.7; }
+  #root .ispoti-copy p {
+    margin:0;
+    max-width:420px;
+    font-size:clamp(14px,1.1vw,18px);
+    line-height:1.75;
+  }
+  #root .ispoti-station {
+    position:relative;
+    inset:auto;
+    width:100%;
+    min-height:0;
+    justify-content:space-evenly;
+    gap:clamp(18px,3svh,40px);
+  }
+}

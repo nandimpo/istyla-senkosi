@@ -2,8 +2,9 @@ import { readingTiming } from "../utils/readingTiming";
 import { useEffect, useRef } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import "../styles/VideoBridge.css";
+import "../styles/ChapterLoading.css";
 
-export default function VideoBridge({ text, onCovered, onComplete, outgoing = false, prepareVideoAudio = false }) {
+export default function VideoBridge({ text, onCovered, onComplete, outgoing = false, prepareVideoAudio = false, loadingLabel }) {
   const { reducedMotion } = useNavigation();
   const callbacks = useRef({ onCovered, onComplete });
   useEffect(() => { callbacks.current = { onCovered, onComplete }; });
@@ -30,5 +31,6 @@ export default function VideoBridge({ text, onCovered, onComplete, outgoing = fa
   };
   return <div className={`video-bridge${outgoing ? " video-bridge--outgoing" : ""}${calm ? " video-bridge--calm" : ""}`} style={timing} role="status" aria-live="polite">
     <p>{text}</p>
+    {loadingLabel && <span className="video-bridge__loading">{loadingLabel}</span>}
   </div>;
 }

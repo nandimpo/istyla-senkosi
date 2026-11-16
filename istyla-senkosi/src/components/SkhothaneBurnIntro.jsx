@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import shirt from "../assets/Chapter 3_Skothane/Images/Extra/Shirt.png";
+import backpack from "../assets/Chapter 3_Skothane/Images/Interaction/backpack.png";
+import shoes from "../assets/Chapter 3_Skothane/Images/Interaction/Carvela.png";
 import matchStick from "../assets/Chapter 3_Skothane/Images/Textures/Match_Stick.jpg";
 import flameOne from "../assets/Chapter 3_Skothane/Images/Textures/Flame_1.jpg";
 import flameTwo from "../assets/Chapter 3_Skothane/Images/Textures/Flame_2.jpg";
@@ -89,12 +91,16 @@ export default function SkhothaneBurnIntro({ track, audioRef, children }) {
     <div className="skhothane-burn-intro__background" style={{ "--skhothane-background":`url("${skhothaneBackground}")` }} aria-hidden="true" />
     <OutfitAmbience audioRef={audioRef} />
     <div className="skhothane-burn-intro__copy">
-      <small><NarrativeText rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="03 / SKHOTHANE · MY JOURNEY" delay={0} /></small>
-      <h1><NarrativeText rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="A look made to be seen." delay={100} /></h1>
-      <p><NarrativeText rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="I set this shirt alight like a true Skhothane to enter a world of colour, performance and memories I am still trying to understand." delay={250} /></p>
+      <small><NarrativeText maxDuration={2500} rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="03 / SKHOTHANE · MY JOURNEY" delay={0} /></small>
+      <h1><NarrativeText maxDuration={2500} rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="A look made to be seen." delay={100} /></h1>
+      <p><NarrativeText maxDuration={2500} rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="I set this shirt alight like a true Skhothane to enter a world of colour, performance and memories I am still trying to understand." delay={250} /></p>
       <p className="skhothane-burn-intro__instruction" role="status">{copyReady ? notice : "Read to unlock the match."}</p>
     </div>
     <div className="skhothane-burn-intro__stage">
+      <div className="skhothane-burn-intro__details" aria-hidden="true">
+        <img className="skhothane-burn-intro__backpack" src={backpack} alt="" draggable={false} />
+        <img className="skhothane-burn-intro__shoes" src={shoes} alt="" draggable={false} />
+      </div>
       <button ref={shirtRef} type="button" className="skhothane-burn-intro__shirt" disabled={!copyReady || burning} aria-label={armed ? "Set the shirt alight" : "Shirt. Select the match first, then tap here."} onClick={() => { if (armed) ignite(); else setNotice("Pick up the match first, then tap the shirt."); }}>
         <img src={shirt} alt="" style={{ maskImage:mask, WebkitMaskImage:mask }} />
         {burning && <span className="skhothane-burn-intro__embers" aria-hidden="true" style={{ "--burn-radius":`${burnRadius}%` }} />}

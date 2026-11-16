@@ -76,7 +76,7 @@ export default function UnzipIntro({ image, track, nextTrack, audioRef, children
   return <>
     {track && <audio ref={audioRef} src={track} loop={!nextTrack} preload="metadata" aria-hidden="true" />}
     {opened ? children : <section className={`unzip-intro ${opening ? "is-opening" : ""} ${copyReady ? "is-ready" : "is-reading"}`} aria-label="Unzip the Swenka chapter" style={{ "--zip-progress": progress }}>
-    <IntroAmbientAudio id="swenka" volumeScale={0.8} nextTrack={nextTrack} track={track} sharedAudioRef={audioRef} />
+    <IntroAmbientAudio id="swenka" volumeScale={0.6} nextTrack={nextTrack} track={track} sharedAudioRef={audioRef} />
     <img className="unzip-preview" src={image} alt="" />
     <div className="unzip-fabric unzip-fabric-left" aria-hidden="true" style={{ clipPath: `polygon(${polygon([[0, 0], ...leftEdge, [50, 100], [0, 100]])})` }} />
     <div className="unzip-fabric unzip-fabric-right" aria-hidden="true" style={{ clipPath: `polygon(${polygon([...rightEdge, [50, 100], [100, 100], [100, 0]])})` }} />

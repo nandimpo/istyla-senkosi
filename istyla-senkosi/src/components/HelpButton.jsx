@@ -19,7 +19,7 @@ function currentHelp(section) {
     if (control.querySelector("button:disabled") && !control.classList.contains("is-complete")) return "Let the words finish appearing and complete the activity on this page. The next-page control lights up when it is ready.";
     if (control.matches(".spotlight-advance")) return "Press and hold the loafer circle until its ring fills. Keep your mouse or trackpad button pressed, or hold with your finger. You can also hold Space or Enter while the button is focused.";
     if (control.matches(".rhythm-advance")) return "Tap the shoe control twice to continue: one tap for each step. A mouse click, trackpad click, touch or Enter on the focused button works.";
-    return "Drag the needle to the right, along the seam, to continue. Use your mouse, trackpad or finger. You can also focus the control and use Enter or the right arrow.";
+    return "Drag the needle to the right along the seam to continue. It stays where you leave it if you release early. You can also choose Continue, or focus the needle and press Enter or Space.";
   }
   if (visible("video")) return "Watch this film. The story continues when it finishes. A Skip button becomes available on supported clips. Use Sound or Menu to adjust the audio.";
   const prompt = visible('[class*="__instruction"], [class*="__hint"]');

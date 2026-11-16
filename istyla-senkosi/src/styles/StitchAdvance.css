@@ -56,7 +56,6 @@
 
 .stitch-advance__instruction { display:block; margin-top:4px; color:#d9c8a9; font:500 10px/1.4 var(--font-body); letter-spacing:.3px; text-shadow:0 1px 4px #000; }
 .stitch-advance.is-inviting p { animation:stitch-invitation-pulse 2.8s ease-in-out infinite; }
-.stitch-advance.is-inviting .stitch-advance__needle { animation:stitch-needle-nudge 2s ease-in-out infinite; }
 @keyframes stitch-invitation-pulse {
   0%,100% { opacity:.65; }
   50% { opacity:1; text-shadow:0 1px 4px #000,0 0 10px #e8c58280; }
@@ -71,11 +70,21 @@
 }
 html[data-reduced-motion="true"] .stitch-advance.is-inviting p,
 html[data-reduced-motion="true"] .stitch-advance.is-inviting .stitch-advance__needle { animation:none; }
-#root .stitch-advance.is-inviting .stitch-advance__needle { width:44px; height:19px; top:4px; }
+#root .stitch-advance .stitch-advance__needle { width:44px; height:19px; top:4px; }
 #root .stitch-advance.is-inviting .stitch-advance__guide { border-color:#e5c27caa; }
 /* A generous drag target, with the visible needle centered inside it. */
-#root .stitch-advance__seam { height:48px; cursor:grab; }
+#root .stitch-advance__seam { height:48px; cursor:grab; touch-action:none; }
 #root .stitch-advance__seam:active { cursor:grabbing; }
+.stitch-advance.is-complete .stitch-advance__needle { transition:left .45s ease; }
+.stitch-advance.is-complete .stitch-advance__thread { transition:width .45s ease; }
 #root .stitch-advance__guide,#root .stitch-advance__thread { top:24px; }
 #root .stitch-advance__needle { top:14px; }
-#root .stitch-advance.is-inviting .stitch-advance__needle { top:12px; }
+#root .stitch-advance .stitch-advance__needle { top:12px; }
+
+/* Keep moving photographs still while the reader handles the needle. */
+#root .chapter-player:has(.stitch-advance.is-dragging) :is(.chapter-player__visual, .chapter-player__title-visual, .chapter-player__gallery-track, .fashion-album) *,
+#root .chapter-player:has(.stitch-advance.is-dragging) :is(.chapter-player__visual, .chapter-player__title-visual, .chapter-player__gallery-track, .fashion-album) {
+  animation-play-state:paused !important;
+}
+#root .stitch-advance.is-dragging .stitch-advance__needle,
+#root .stitch-advance.is-dragging .stitch-advance__thread { animation:none; transition:none; }

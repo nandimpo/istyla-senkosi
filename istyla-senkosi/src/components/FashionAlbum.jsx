@@ -54,7 +54,8 @@ export default function FashionAlbum({ images, label, crossfade, visualOnly, scr
   }, [images]);
   const { reducedMotion } = useNavigation();
   const calm = reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const assembly = useCollageAssembly({ count: images.length, noteCount: handwrittenNotes.length, audioRef, paused: visualOnly, reducedMotion: calm });
+  const assembly = useCollageAssembly({ count: images.length, noteCount: handwrittenNotes.length, audioRef, paused: visualOnly || !assetsReady, reducedMotion: calm });
+  const empty = assembly.papers === 0 && assembly.placed === 0;
   useEffect(() => {
     if (!visualOnly) readyCallback.current?.(assembly.complete && assetsReady);
   }, [assembly.complete, assetsReady, visualOnly]);
@@ -67,7 +68,7 @@ export default function FashionAlbum({ images, label, crossfade, visualOnly, scr
   }, [open]);
   const move = (direction) => setSelected((index) => (index + direction + images.length) % images.length);
   return <>
-    <div className={`fashion-wall fashion-wall--assembling ${scrapbook ? "fashion-wall--scrapbook" : ""} ${crossfade ? "fashion-wall--crossfade" : ""} ${images.length <= 16 ? "fashion-wall--compact" : ""}`} style={{ "--assembly-end": "0ms" }} aria-label={label} onPointerDown={stop} onClick={stop} onKeyDown={stop} onWheel={stop}>
+    <div className={`fashion-wall fashion-wall--assembling ${empty ? "fashion-wall--empty" : ""} ${scrapbook ? "fashion-wall--scrapbook" : ""} ${crossfade ? "fashion-wall--crossfade" : ""} ${images.length <= 16 ? "fashion-wall--compact" : ""}`} style={{ "--assembly-end": "0ms" }} aria-label={label} onPointerDown={stop} onClick={stop} onKeyDown={stop} onWheel={stop}>
       {scrapbook && <><header className="scrapbook-masthead" aria-label={`${chapter} scrapbook`}><h3>Still here.<br /><em>Still him.</em></h3><small>What stays with me</small></header><span className="scrapbook-note" style={{ visibility: assembly.decorated ? "visible" : "hidden" }}>the past, in the present ↗</span><span className="scrapbook-footer">COLLECTED, NOT FORGOTTEN / HOVER TO LOOK CLOSER · TAP TO OPEN</span></>}
       <div className="scrapbook-canvas">
       {scrapbook && <>

@@ -1,5 +1,6 @@
 import { useNavigation } from "../context/NavigationContext";
 import Hero from "../components/Hero";
+import ChapterLoading from "../components/ChapterLoading";
 import { lazy, Suspense } from "react";
 import { reverseScroll } from "../utils/reverseScroll";
 
@@ -17,8 +18,8 @@ function Experience() {
   if (currentSection === "about") return <Hero />;
   const Chapter = CHAPTERS[currentSection];
   return Chapter ? <div onWheelCapture={(event) => {
-    if (!event.target.closest(".chapter-player")) reverseScroll(event, goBackChapter);
-  }}><Suspense fallback={<div role="status" style={{ minHeight:"100svh", display:"grid", placeItems:"center", background:"#171714", color:"#f5eddf" }}>Opening the chapter…</div>}><Chapter key={`${currentSection}:${chapterVisit}`} /></Suspense></div> : <Hero />;
+    if (!event.target.closest(".chapter-player, dialog[open]")) reverseScroll(event, goBackChapter);
+  }}><Suspense fallback={<ChapterLoading chapter={currentSection === "introduction" ? "Introduction" : currentSection.charAt(0).toUpperCase() + currentSection.slice(1)} />}><Chapter key={`${currentSection}:${chapterVisit}`} /></Suspense></div> : <Hero />;
 }
 
 export default Experience;

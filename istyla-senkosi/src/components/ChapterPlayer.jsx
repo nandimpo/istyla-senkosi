@@ -1,4 +1,6 @@
 import ViewportFit from "./ViewportFit";
+import { createPortal } from "react-dom";
+import ChapterLoading from "./ChapterLoading";
 import SpotlightAdvance from "./SpotlightAdvance";
 import RhythmAdvance from "./RhythmAdvance";
 import StitchAdvance from "./StitchAdvance";
@@ -256,7 +258,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   );
   const calm = () => reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   useEffect(() => () => clearTimeout(transitionTimer.current), []);
-  const { autoplayBlocked, resumeAudio } = useSectionAudio({ id, audioRef, soundOn, nextTrack, volumeScale: videoBridge ? 0.25 : currentFrame?.video && !shoeLocked && !lacesLocked && !outfitLocked && id !== "introduction" ? 0.12 : id === "introduction" && pageIndex === gamePageIndex ? 0.9 : (hasGamePage && pageIndex === gamePageIndex) || shoeLocked || lacesLocked || outfitLocked ? 0.8 : 1, duckMusic: Boolean(currentFrame?.video && videoStarted && !videoBridge && !outfitLocked && id !== "introduction"), continueWhileLocked: id === "introduction", fadeOut: exiting });
+  const { autoplayBlocked, resumeAudio } = useSectionAudio({ id, audioRef, soundOn, nextTrack, volumeScale: videoBridge ? 0.25 : currentFrame?.video && !shoeLocked && !lacesLocked && !outfitLocked && id !== "introduction" ? 0.12 : id === "introduction" && pageIndex === gamePageIndex ? 0.9 : (hasGamePage && pageIndex === gamePageIndex) || shoeLocked || lacesLocked || outfitLocked ? 0.6 : 1, duckMusic: Boolean(currentFrame?.video && videoStarted && !videoBridge && !outfitLocked && id !== "introduction"), continueWhileLocked: id === "introduction", fadeOut: exiting });
 
   useEffect(() => {
     if (!exiting || !(reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches) || completedRef.current) return;
@@ -266,10 +268,10 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   }, [exiting, reducedMotion, onComplete, goTo, id]);
 
   const seekTrackToStart = () => {
-    if (trackStart && audioRef.current) audioRef.current.currentTime = trackStart;
+    if (trackStart && audioRef.current && !audioRef.current.dataset.restoredPosition && !audioRef.current.dataset.playlistAdvanced) audioRef.current.currentTime = trackStart;
   };
   const holdTrackStart = () => {
-    if (trackStart && audioRef.current && audioRef.current.currentTime < trackStart - 1) {
+    if (trackStart && audioRef.current && !audioRef.current.dataset.playlistAdvanced && audioRef.current.currentTime < trackStart - 1) {
       audioRef.current.currentTime = trackStart;
     }
   };
@@ -396,6 +398,23 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const guardedRetreat = () => {
     retreat();
   };
+  const scrollBack = () => {
+    // Back navigation remains available during films, text and activity locks.
+    clearTimeout(transitionTimer.current);
+    lockedRef.current = false;
+    setVideoBridge(null);
+    setFrameTransition(null);
+    setThreadLeaving(false);
+    setGallerySettling(false);
+    setExiting(false);
+    completedRef.current = false;
+    pendingChapter.current = null;
+    window.dispatchEvent(new Event("istyla:video-audio-end"));
+    if (pageIndex === 0) { goBackChapter(); return; }
+    const previous = frameAtPage(pageIndex - 1);
+    setGalleryIndex(previous?.motion === "gallery" ? previous.collage.length - 1 : 0);
+    goToPage(pageIndex - 1);
+  };
 
   const completeGame = () => {
     if (exiting || lockedRef.current) return;
@@ -468,7 +487,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
       className={`chapter-player chapter-player--${accent} ${exiting ? `chapter-player--exiting chapter-player--exit-${exitTransition}` : ""}`}
       tabIndex={0}
       onKeyDown={handleKeyDown}
-      onWheelCapture={(event) => reverseScroll(event, guardedRetreat)}
+      onWheelCapture={(event) => { if (!event.target.closest("dialog[open]")) reverseScroll(event, scrollBack); }}
       onContextMenu={(event) => {
         if (id !== "pantsula" || isGamePage || event.target.closest("button, a, input, textarea, select, video, [role=button]")) return;
         event.preventDefault();
@@ -478,6 +497,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
       aria-label={`${chapter}: ${title}, page ${pageIndex + 1} of ${totalPages}`}
       {...(!isGamePage ? { ...gesture.handlers, ...(interaction !== "drag" && id !== "pantsula" ? { onWheel: scrollGesture.handlers.onWheel } : {}), onDragStart: (event) => event.preventDefault() } : interaction !== "drag" && id !== "pantsula" ? { onWheel: (event) => { if (event.deltaY < 0) scrollGesture.handlers.onWheel(event); } } : {})}
     >
+      {exiting && id === "introduction" && createPortal(<ChapterLoading chapter="Swenka" />, document.body)}
       {track && !sharedAudioRef && (
         <audio
           ref={audioRef}

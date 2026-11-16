@@ -67,6 +67,12 @@ html[data-reduced-motion="true"] .skhothane-burn-intro * { animation:none !impor
 
 /* Enlarge upward, keeping the shirt hem at the same distance from the flame. */
 .skhothane-burn-intro__shirt { top:-6%; height:100%; }
+.skhothane-burn-intro__details { position:absolute; inset:0; pointer-events:none; }
+.skhothane-burn-intro__details img { position:absolute; object-fit:contain; opacity:.3; filter:saturate(.7) drop-shadow(0 12px 14px #0008); }
+.skhothane-burn-intro__backpack { left:7%; top:38%; width:30%; height:38%; transform:rotate(-13deg); }
+.skhothane-burn-intro__shoes { right:13%; bottom:24%; width:29%; height:25%; transform:rotate(12deg); }
 @media(max-width:700px) {
   .skhothane-burn-intro__shirt { top:-10%; left:-6%; width:112%; height:92%; }
+  .skhothane-burn-intro__backpack { left:10%; width:28%; }
+  .skhothane-burn-intro__shoes { right:10%; bottom:28%; width:28%; }
 }

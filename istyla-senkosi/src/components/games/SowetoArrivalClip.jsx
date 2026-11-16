@@ -5,10 +5,11 @@ import { createPortal } from "react-dom";
 import { useNavigation } from "../../context/NavigationContext";
 import arrivalVideo from "../../assets/Additional Videos/Enviroment/Enter Soweto Video.mov?url";
 import "../../styles/SowetoArrivalClip.css";
+import { reverseScroll } from "../../utils/reverseScroll";
 
 const CLIP_SECONDS = 20;
 const SKIP_AFTER_SECONDS = 10;
-export default function SowetoArrivalClip({ onComplete }) {
+export default function SowetoArrivalClip({ onComplete, onBack }) {
   const dialogRef = useRef(null);
   const videoRef = useRef(null);
   const watched = useRef(0);
@@ -56,7 +57,7 @@ export default function SowetoArrivalClip({ onComplete }) {
       completeClip();
     }
   };
-  return createPortal(<dialog ref={dialogRef} className={`soweto-arrival ${bridging ? "is-bridging" : ""} ${!covered ? "is-before-clip" : ""} ${leaving ? "is-reflecting" : ""} ${outroCovered ? "is-outro-covered" : ""}`} aria-labelledby="soweto-arrival-title" onCancel={(event) => event.preventDefault()}>
+  return createPortal(<dialog ref={dialogRef} className={`soweto-arrival ${bridging ? "is-bridging" : ""} ${!covered ? "is-before-clip" : ""} ${leaving ? "is-reflecting" : ""} ${outroCovered ? "is-outro-covered" : ""}`} aria-labelledby="soweto-arrival-title" onWheelCapture={(event) => reverseScroll(event, () => { videoRef.current?.pause(); onBack?.(); })} onCancel={(event) => event.preventDefault()}>
     <video ref={videoRef} src={arrivalVideo} muted playsInline preload="auto" disablePictureInPicture
       role="button" tabIndex={0} aria-label="Click to pause or play arrival video"
       onClick={() => { if (!bridging && !leaving) { if (videoRef.current.paused) play(); else videoRef.current.pause(); } }}
@@ -68,7 +69,7 @@ export default function SowetoArrivalClip({ onComplete }) {
       onEnded={() => { if (!finished.current) { lastTime.current = 0; videoRef.current.currentTime = 0; play(); } }}
       onError={() => setFailed(true)} />
     {bridging && <VideoBridge text="To understand my cousin's world, I had to begin where his story lived, in Soweto." onCovered={() => setCovered(true)} onComplete={() => { setBridging(false); play(); }} />}
-    {leaving && <VideoBridge outgoing text="I arrive in Soweto looking for Ree. I begin tracing the roots of township fashion through Swenka: the care in a suit, the pride in a polished shoe. I want to understand what dressing meant before I can understand what it meant to him." onCovered={() => setOutroCovered(true)} onComplete={() => { setNavigationLocked(false); onComplete(); }} />}
+    {leaving && <VideoBridge outgoing loadingLabel="Taking you to Swenka…" text="I arrive in Soweto looking for Ree. I begin tracing the roots of township fashion through Swenka: the care in a suit, the pride in a polished shoe. I want to understand what dressing meant before I can understand what it meant to him." onCovered={() => setOutroCovered(true)} onComplete={() => { setNavigationLocked(false); onComplete(); }} />}
     <div className="soweto-arrival-copy">
       <p>I AM ENTERING SOWETO</p>
       <h1 id="soweto-arrival-title">I’m a little closer to my cousin’s world</h1>

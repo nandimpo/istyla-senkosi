@@ -7,7 +7,7 @@
 .scrapbook-masthead h3 { margin:12px 0 0; font:500 clamp(30px,3.2vw,54px)/1.1 Georgia,serif; letter-spacing:-2px; }
 .scrapbook-masthead h3 br { display:none; }
 .scrapbook-masthead h3 em { padding-left:12px; }
-.scrapbook-masthead small { position:absolute; right:0; bottom:20px; max-width:26%; text-align:right; font:italic 12px/1.4 Georgia,serif; }
+.scrapbook-masthead small { position:absolute; right:0; bottom:20px; max-width:32%; text-align:right; font:italic clamp(20px,1.7vw,28px)/1.4 Georgia,serif; }
 .chapter-player .fashion-wall--scrapbook .scrapbook-clipping { position:absolute; left:var(--clip-x); top:var(--clip-y); width:var(--clip-w); height:var(--clip-h); box-sizing:border-box; padding:4px; background:#f4f0e6; transform:rotate(var(--tilt)); z-index:var(--clip-layer); box-shadow:2px 4px 9px #33281e40; animation:none; transition:transform .35s ease,box-shadow .35s ease; }
 .chapter-player .fashion-wall--scrapbook .scrapbook-clipping:nth-of-type(3n)::before { content:""; position:absolute; z-index:2; width:40%; height:15px; top:-7px; left:30%; transform:rotate(-7deg); background:#c6ad6ca6; box-shadow:0 1px 1px #0001; pointer-events:none; }
 .chapter-player .fashion-wall--scrapbook .scrapbook-clipping--article { padding:3px; background:#faf8f1; transform:rotate(var(--tilt)); }
@@ -300,3 +300,7 @@ html[data-reduced-motion="true"] .fashion-wall figure { animation:none!important
 .chapter-player .fashion-wall--assembling .scrapbook-clipping:not(.is-placed) { animation:none!important; }
 .chapter-player .fashion-wall--assembling .scrapbook-doodles.is-placed { animation:scrapbook-write 1700ms ease-out backwards; }
 .chapter-player__page:has(.fashion-wall--assembling) .chapter-player__collage-backdrop { display:none; }
+
+/* Begin every collage with a clear canvas before the first paper arrives. */
+#root .fashion-wall--empty :is(.scrapbook-masthead,.scrapbook-footer,.scrapbook-canvas) { visibility:hidden; }
+#root .chapter-player__visual:has(.fashion-wall--empty) > .chapter-player__collage-backdrop { visibility:hidden; }

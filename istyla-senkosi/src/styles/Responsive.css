@@ -1,5 +1,85 @@
 /* Device-independent viewport and input sizing, loaded after chapter rules. */
 :root { --safe-bottom:env(safe-area-inset-bottom,0px); }
+#root #reflection .final-frame__meeting .final-frame__signature {
+  align-self:flex-end;
+  margin:12px 0 0;
+  color:#e9cc9d;
+  font:400 clamp(30px,2.6vw,44px)/1.3 var(--handwriting);
+  transform:rotate(-3deg);
+  text-align:right;
+}
+@media(min-width:701px) and (min-height:601px) {
+  #root #reflection .final-frame { height:100svh; }
+  #root #reflection .final-frame__fit > .viewport-fit__content {
+    min-height:100%;
+    justify-content:space-between;
+    gap:clamp(24px,4svh,48px);
+  }
+  #root #reflection .final-frame__meeting {
+    flex:1;
+    align-items:stretch;
+  }
+  #root #reflection .final-frame__meeting img { align-self:center; }
+  #root #reflection .final-frame__meeting > div {
+    display:flex;
+    flex-direction:column;
+    justify-content:space-evenly;
+    gap:clamp(14px,2.5svh,30px);
+  }
+  #root #reflection .final-frame__meeting :is(h1,p) { margin-block:0; }
+}
+#root .game-stage--pantsula {
+  background:linear-gradient(90deg,rgba(12,17,11,.93),rgba(12,17,11,.78)),var(--pantsula-background) center/cover;
+}
+#root .game-stage--pantsula .pantsula-image,
+#root .game-stage--pantsula .pantsula-image img { background:#0b0b0b; }
+@media(min-width:701px) {
+  #root .game-stage--pantsula { grid-template-columns:minmax(290px,.9fr) minmax(420px,1.3fr); }
+  #root .game-stage--pantsula .game-copy.viewport-fit {
+    margin-top:clamp(90px,12svh,145px);
+    height:calc(100svh - clamp(90px,12svh,145px) - 95px);
+    padding:0 clamp(28px,4vw,72px) 0 clamp(32px,6vw,110px);
+  }
+  #root .game-stage--pantsula .game-copy > .viewport-fit__content {
+    min-height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-evenly;
+    align-items:flex-start;
+    gap:clamp(16px,3svh,40px);
+  }
+  #root .game-stage--pantsula .game-copy :is(p.tag,h1,.game-copy__narrative,strong,i,.rhythm-advance,.beat-replay-controls) {
+    margin-block:0;
+    flex-shrink:0;
+  }
+  #root .game-stage--pantsula .game-copy__narrative { width:100%; max-width:460px; }
+  #root .game-stage--pantsula .game-copy h1 { font-size:clamp(36px,3.4vw,64px); }
+}
+@media(min-width:701px) {
+  #root .game-stage--swenka {
+    grid-template-columns:minmax(280px,1fr) minmax(300px,1.35fr) clamp(220px,22vw,360px);
+  }
+  #root .game-stage--swenka .game-copy.viewport-fit {
+    margin-top:clamp(90px,12svh,150px);
+    height:calc(100svh - clamp(90px,12svh,150px) - 90px);
+    padding:0 clamp(24px,3vw,56px) 0 clamp(28px,4vw,72px);
+  }
+  #root .game-stage--swenka .game-copy > .viewport-fit__content {
+    min-height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-evenly;
+    align-items:flex-start;
+    gap:clamp(16px,3svh,40px);
+  }
+  #root .game-stage--swenka .game-copy :is(p.tag,h1,.game-copy__narrative,strong,i,.stitch-advance) {
+    margin-top:0;
+    margin-bottom:0;
+    flex-shrink:0;
+  }
+  #root .game-stage--swenka .game-copy__narrative { width:100%; max-width:440px; }
+  #root .game-stage--swenka .game-copy h1 { font-size:clamp(34px,3.2vw,62px); }
+}
 html,body,#root { max-width:100%; }
 #root .journey-guide__sheet { height:100%; min-height:0; display:flex; align-items:center; }
 #root .journey-guide__sheet > .viewport-fit__content { width:100%; }

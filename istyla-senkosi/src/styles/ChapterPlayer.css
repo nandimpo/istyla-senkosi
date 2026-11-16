@@ -166,6 +166,12 @@
   text-align: center;
   animation: hint-pulse 1.8s ease-in-out infinite;
 }
+#introduction .chapter-player__hint {
+  width: calc(100% - 32px);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
 @keyframes hint-pulse { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
 
 /* Chapter exit transitions */
@@ -438,6 +444,7 @@ html[data-reduced-motion="true"] .chapter-player__gallery-track--direct .chapter
 .memory-flipbook__album-note small { font:800 10px Montserrat,Arial,sans-serif; letter-spacing:1.5px; }
 .memory-flipbook__album-note p { margin:8px 0; font:italic clamp(19px,1.7vw,27px)/1.2 Georgia,serif; }
 .memory-flipbook__album-note span { font:12px/1.45 Montserrat,Arial,sans-serif; }
+#skhothane .memory-flipbook__album-note > span { font-size:15px; line-height:1.6; }
 .memory-flipbook__controls button { min-width:44px; min-height:44px; }
 .memory-flipbook__controls { bottom:-70px; }
 .memory-flipbook__hint { bottom:-100px; line-height:1.5; }

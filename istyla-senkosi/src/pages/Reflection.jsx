@@ -29,7 +29,8 @@ function Reflection() {
           <small>MY MEMORY</small>
           <h1>There he is.</h1>
           <p>You meet my cousin here, in the photographs I kept. He died before this journey began. I remember him stepping out in colour, asking me to really look.</p>
-          <p>Ree was a Skhothane. This journey has helped me appreciate the care and joy in the way he dressed. I cannot ask him what it all meant to him, but I appreciate him and his style so much more. I return to the photograph I began with. The image has not changed, but the way I look at it has. I see more of the person I love. From Jama, with love.</p>
+          <p>Ree was a Skhothane. This journey has helped me appreciate the care and joy in the way he dressed. I cannot ask him what it all meant to him, but I appreciate him and his style so much more. I return to the photograph I began with. The image has not changed, but the way I look at it has. I see more of the person I love.</p>
+          <p className="final-frame__signature">From Jama, with love.</p>
         </div>
       </div>
       <div className="final-frame__actions">

@@ -5,23 +5,36 @@ export default function StitchAdvance({ disabled = false, onComplete, label = "C
   const [progress, setProgress] = useState(0);
   const [complete, setComplete] = useState(false);
   const [interacted, setInteracted] = useState(false);
+  const [dragging, setDragging] = useState(false);
   const drag = useRef(null);
   const progressRef = useRef(0);
   const done = useRef(false);
   const timer = useRef(null);
+  const control = useRef(null);
   const callback = useRef(onComplete);
   useEffect(() => { callback.current = onComplete; }, [onComplete]);
   useEffect(() => () => clearTimeout(timer.current), []);
+  useEffect(() => {
+    if (!dragging) return;
+    const chapter = control.current?.closest(".chapter-player");
+    const animations = chapter ? chapter.getAnimations({ subtree:true }).filter((animation) => {
+      const target = animation.effect?.target;
+      return animation.playState === "running" && target?.closest?.(".chapter-player__visual, .chapter-player__title-visual");
+    }) : [];
+    animations.forEach((animation) => animation.pause());
+    return () => animations.forEach((animation) => { if (animation.playState === "paused") animation.play(); });
+  }, [dragging]);
   const finish = () => {
     if (disabled || done.current) return;
     done.current = true;
+    setDragging(false);
     progressRef.current = 1;
     setProgress(1);
     setComplete(true);
     timer.current = setTimeout(() => callback.current?.(), 550);
   };
   const stop = (event) => event.stopPropagation();
-  return <nav className={`stitch-advance ${complete ? "is-complete" : ""} ${!disabled && !complete && !interacted ? "is-inviting" : ""}`} aria-label="Follow the stitch to continue" onClick={stop} onKeyDown={stop} onPointerDown={stop} onWheel={stop} onDragStart={(event) => event.preventDefault()}>
+  return <nav ref={control} className={`stitch-advance ${dragging ? "is-dragging" : ""} ${complete ? "is-complete" : ""} ${!disabled && !complete && !interacted ? "is-inviting" : ""}`} aria-label="Follow the stitch to continue" onClick={stop} onKeyDown={stop} onPointerDown={stop} onWheel={stop} onDragStart={(event) => event.preventDefault()}>
     <p role="status">{complete ? "Every detail deserves attention." : disabled ? "Let the words unfold..." : "Follow the thread"}</p>
     <span className="stitch-advance__instruction">Drag the needle right to continue</span>
     <div className="stitch-advance__seam" role="slider" tabIndex={disabled || complete ? -1 : 0} aria-label="Drag the needle to the right to continue, or press Enter" aria-disabled={disabled || complete} aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}
@@ -31,6 +44,7 @@ export default function StitchAdvance({ disabled = false, onComplete, label = "C
         const bounds = event.currentTarget.getBoundingClientRect();
         event.preventDefault();
         setInteracted(true);
+        setDragging(true);
         event.currentTarget.focus({ preventScroll: true });
         event.currentTarget.setPointerCapture(event.pointerId);
         drag.current = { x: event.clientX, start: progressRef.current, width: Math.max(48, bounds.width - 36) };
@@ -53,10 +67,11 @@ export default function StitchAdvance({ disabled = false, onComplete, label = "C
           if (value >= .8) finish();
         }
         drag.current = null;
+        setDragging(false);
         if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
       }}
-      onPointerCancel={(event) => { event.stopPropagation(); drag.current = null; }}
-      onLostPointerCapture={() => { drag.current = null; }}
+      onPointerCancel={(event) => { event.stopPropagation(); drag.current = null; setDragging(false); }}
+      onLostPointerCapture={(event) => { event.stopPropagation(); drag.current = null; setDragging(false); }}
       onKeyDown={(event) => { event.stopPropagation(); if (["Enter", " ", "ArrowRight", "End"].includes(event.key)) { event.preventDefault(); finish(); } }}>
       <span className="stitch-advance__guide" />
       <span className="stitch-advance__thread" style={{ width: `${progress * 100}%` }} />

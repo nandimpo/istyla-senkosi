@@ -215,7 +215,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
     setClosedStop(null);
     sliderRef.current?.focus();
   };
-  if (showArrivalClip) return <SowetoArrivalClip onComplete={onComplete} />;
+  if (showArrivalClip) return <SowetoArrivalClip onComplete={onComplete} onBack={() => { setShowArrivalClip(false); setEntering(false); }} />;
 
   return (
     <section style={{ "--journey-map-background": `url("${mapImage}")` }} className={`journey-stage ${calm ? "journey-calm" : ""} ${ready ? "journey-arrived" : ""} ${entering ? "journey-entering" : ""}`} aria-labelledby="journey-title" onWheel={(event) => {

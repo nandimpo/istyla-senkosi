@@ -3,7 +3,7 @@ import { useNavigation } from "../context/NavigationContext";
 import { useSectionAudio } from "../hooks/useSectionAudio";
 import "../styles/IntroAmbientAudio.css";
 
-export default function IntroAmbientAudio({ id, track, sharedAudioRef, volumeScale = 0.8, nextTrack }) {
+export default function IntroAmbientAudio({ id, track, sharedAudioRef, volumeScale = 0.6, nextTrack }) {
   const localAudioRef = useRef(null);
   const audioRef = sharedAudioRef || localAudioRef;
   const { soundOn, setSoundOn } = useNavigation();

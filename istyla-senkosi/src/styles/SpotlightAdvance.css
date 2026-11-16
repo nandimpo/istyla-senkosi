@@ -82,13 +82,14 @@
 }
 /* The glow signals that the preceding interaction has unlocked continuation. */
 .spotlight-advance.is-ready button {
-  box-shadow:0 0 0 1px #efc27288,0 0 18px #efc27255;
+  box-shadow:0 0 0 1px #ffd78dcc,0 0 20px #efc27288,0 0 36px #efc27244;
   animation:loafer-ready-glow 2s ease-in-out infinite;
 }
-.spotlight-advance.is-ready .spotlight-advance__ring { stroke:#efc272bb; }
+.spotlight-advance.is-ready .spotlight-advance__ring { stroke:#ffdb96; }
+.spotlight-advance.is-ready .spotlight-advance__icon { filter:drop-shadow(0 0 4px #efc272aa); }
 @keyframes loafer-ready-glow {
-  0%,100% { box-shadow:0 0 0 1px #efc27288,0 0 12px #efc27233; }
-  50% { box-shadow:0 0 0 2px #efc272aa,0 0 24px #efc27277; }
+  0%,100% { box-shadow:0 0 0 1px #ffd78daa,0 0 18px #efc27277,0 0 30px #efc27233; }
+  50% { box-shadow:0 0 0 2px #ffdf9fdd,0 0 28px #efc272aa,0 0 46px #efc27255; }
 }
 html[data-reduced-motion="true"] .spotlight-advance.is-ready button { animation:none; }
 @media(prefers-reduced-motion:reduce) {

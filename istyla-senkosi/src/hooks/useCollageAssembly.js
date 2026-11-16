@@ -33,8 +33,8 @@ export default function useCollageAssembly({ count, noteCount, audioRef, paused,
       const playing = audio && !audio.paused && !audio.muted && audio.volume > .001;
       const beat = playing && previousAudioTime !== undefined && beats.some((time) => time > previousAudioTime && time <= current);
       previousAudioTime = current;
-      if (paperCount < 3 && elapsed >= 300 + paperCount * 300) setPapers(++paperCount);
-      if (elapsed >= 1300 && index < count) {
+      if (paperCount < 3 && elapsed >= 1000 + paperCount * 300) setPapers(++paperCount);
+      if (elapsed >= 2200 && index < count) {
         const gap = lastPlacement === undefined ? 1150 : now - lastPlacement;
         if ((gap >= 750 && beat) || gap >= 1150) {
           setPlaced(++index);

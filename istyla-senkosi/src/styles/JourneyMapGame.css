@@ -435,8 +435,10 @@ html[data-reduced-motion="true"] .journey-continue,html[data-reduced-motion="tru
 .journey-start-invitation { pointer-events:none; }
 .journey-start-invitation path { fill:none; stroke:#ffe1a1; stroke-width:.8; stroke-linecap:round; stroke-linejoin:round; }
 .journey-start-invitation text { fill:#ffe1a1; font:600 6px Montserrat,Arial,sans-serif; paint-order:stroke; stroke:#181713; stroke-width:1.5px; }
-.journey-home-invitation { background:#d6ad5918!important; box-shadow:inset 0 0 0 1px #d6ad5970; }
-.journey-home-invitation small { display:block; margin-top:5px; color:#ffe1a1; font:600 12px/1.4 Montserrat,Arial,sans-serif; }
+#root .journey-stop-buttons > button { padding-left:18px; padding-right:18px; }
+#root .journey-stop-buttons > button > span { margin:0; }
+.journey-stop-buttons button.journey-home-invitation { align-items:baseline; background:#d6ad5918!important; box-shadow:inset 0 0 0 1px #d6ad5970; }
+#root .journey-stop-buttons .journey-home-invitation small { display:block; margin:0 0 0 auto; text-align:right; color:#ffe1a1; font:600 12px/1.4 Montserrat,Arial,sans-serif; }
 .journey-stage:not(.journey-calm) .journey-home-invitation { animation:journey-home-invite 1.8s ease-in-out infinite; }
 @keyframes journey-home-invite { 50% { background:#d6ad5930; box-shadow:inset 0 0 0 1px #ffe1a1,0 0 15px #d6ad5920; } }
 @media(prefers-reduced-motion:reduce) { .journey-home-invitation { animation:none!important; } }
