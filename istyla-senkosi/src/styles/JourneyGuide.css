@@ -8,6 +8,7 @@
 .journey-guide__steps > div > span { color:#d6a24a; font:400 23px/1 Georgia,serif; }
 .journey-guide h2 { margin:0 0 8px; font:600 15px/1.3 Montserrat,sans-serif; }
 .journey-guide__steps p { margin:0; font:400 13px/1.65 Montserrat,sans-serif; color:#d5c6ad; }
+#root .journey-guide__steps p strong { font-weight:700; color:#f5eedf; }
 .journey-guide__navigation { display:grid; grid-template-columns:repeat(3,1fr); gap:24px; padding:20px 0; margin:24px 0 0; border-top:1px solid #c8b39b44; border-bottom:1px solid #c8b39b44; }
 .journey-guide dt { color:#e0b66d; font:700 11px/1.3 Montserrat,sans-serif; letter-spacing:1px; }
 .journey-guide dd { margin:7px 0 0; color:#d5c6ad; font:400 12px/1.5 Montserrat,sans-serif; }
