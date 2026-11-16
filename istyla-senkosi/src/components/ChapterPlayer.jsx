@@ -299,7 +299,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const transitionToPage = (target, direction) => {
     lockedRef.current = true;
     const next = frameAtPage(target);
-    const nextGalleryIndex = direction < 0 && next?.motion === "gallery" ? next.collage.length - 1 : 0;
+    const nextGalleryIndex = direction < 0 && next?.motion === "gallery" && next.galleryNavigation !== "page" ? next.collage.length - 1 : 0;
     setFrameTransition({ next, nextGalleryIndex, direction, motion: currentFrame.motion });
     transitionTimer.current = setTimeout(() => {
       goToPage(target);
@@ -371,7 +371,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const retreat = () => {
     if (lockedRef.current || exiting || threadLeaving) return;
     if (pageIndex === 0) { goBackChapter(); return; }
-    if (currentFrame?.motion === "gallery" && galleryIndex > 0) {
+    if (currentFrame?.motion === "gallery" && currentFrame.galleryNavigation !== "page" && galleryIndex > 0) {
       lockedRef.current = true;
       setGallerySettling(true);
       setGalleryIndex((index) => index - 1);
@@ -385,7 +385,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
     if (pageIndex > 0) {
       lock();
       const previous = frameAtPage(pageIndex - 1);
-      setGalleryIndex(previous?.motion === "gallery" ? previous.collage.length - 1 : 0);
+      setGalleryIndex(previous?.motion === "gallery" && previous.galleryNavigation !== "page" ? previous.collage.length - 1 : 0);
       followThreadToPage(pageIndex - 1);
     }
   };
@@ -425,7 +425,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
     window.dispatchEvent(new Event("istyla:video-audio-end"));
     if (pageIndex === 0) { goBackChapter(); return; }
     const previous = frameAtPage(pageIndex - 1);
-    setGalleryIndex(previous?.motion === "gallery" ? previous.collage.length - 1 : 0);
+    setGalleryIndex(previous?.motion === "gallery" && previous.galleryNavigation !== "page" ? previous.collage.length - 1 : 0);
     goToPage(pageIndex - 1);
   };
 
