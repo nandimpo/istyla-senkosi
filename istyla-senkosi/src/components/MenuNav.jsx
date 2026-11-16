@@ -13,6 +13,18 @@ function MenuNav() {
   const currentLabel = links.find(([, id]) => id === currentSection)?.[0];
   const completed = Math.min(4, Math.max(0, unlockedIndex - 1));
 
+  const updateVolume = (value) => {
+    const next = Math.max(0, Math.min(100, value)) / 100;
+    setVolume(next);
+    if (next > 0) setSoundOn(true);
+  };
+  const dragVolume = (event) => {
+    const input = event.currentTarget;
+    const bounds = input.getBoundingClientRect();
+    // Match the thumb's travel, keeping its centre under the pointer.
+    updateVolume(Math.round((event.clientX - bounds.left - 10) / (bounds.width - 20) * 100));
+  };
+
   useEffect(() => {
     if (!open) return undefined;
     const dialog = dialogRef.current;
@@ -43,7 +55,7 @@ function MenuNav() {
       {view === "Settings" && <section aria-label="Settings">
         <div className="menu-section-heading"><h3>Make it yours</h3><span>Preferences</span></div>
         <div className="menu-setting"><div><h4>Background music</h4><p>The soundtrack for your journey.</p></div><button className="menu-toggle" aria-pressed={soundOn} onClick={() => setSoundOn(!soundOn)}>{soundOn ? "On" : "Off"}</button></div>
-        <div className="menu-volume"><label htmlFor="journey-volume">Music volume <output>{Math.round(volume * 100)}%</output></label><input id="journey-volume" style={{ "--volume": `${Math.round(volume * 100)}%` }} aria-valuetext={`${Math.round(volume * 100)} percent`} type="range" min="0" max="100" value={Math.round(volume * 100)} onChange={(event) => { const next = Number(event.target.value) / 100; setVolume(next); if (next > 0) setSoundOn(true); }} /><div><span>Quiet</span><span>Loud</span></div></div>
+        <div className="menu-volume"><label htmlFor="journey-volume">Music volume <output>{Math.round(volume * 100)}%</output></label><input id="journey-volume" style={{ "--volume": `${Math.round(volume * 100)}%` }} aria-valuetext={`${Math.round(volume * 100)} percent`} type="range" min="0" max="100" value={Math.round(volume * 100)} onChange={(event) => updateVolume(Number(event.target.value))} onPointerDown={(event) => { if (event.button !== 0) return; event.preventDefault(); event.currentTarget.focus(); event.currentTarget.setPointerCapture(event.pointerId); dragVolume(event); }} onPointerMove={(event) => { if (event.currentTarget.hasPointerCapture(event.pointerId)) dragVolume(event); }} onPointerUp={(event) => { if (event.currentTarget.hasPointerCapture(event.pointerId)) { dragVolume(event); event.currentTarget.releasePointerCapture(event.pointerId); } }} /><div><span>Quiet</span><span>Loud</span></div></div>
         <div className="menu-setting"><div><h4>Reduced motion</h4><p>Keep transitions and movement minimal.</p></div><button className="menu-toggle" aria-pressed={reducedMotion} onClick={() => setReducedMotion(!reducedMotion)}>{reducedMotion ? "On" : "Off"}</button></div>
         <p className="menu-note">Your preferences are saved in this browser.</p>
       </section>}

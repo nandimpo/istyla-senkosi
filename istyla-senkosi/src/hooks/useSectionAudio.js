@@ -52,6 +52,7 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
   const [playbackReady, setPlaybackReady] = useState(false);
   const resumeRef = useRef(() => {});
   const transitionSilenced = useRef(false);
+  const previousVolume = useRef(volume);
   const targetVolume = volume * (duckMusic ? 0 : volumeScale);
 
   useEffect(() => {
@@ -102,6 +103,8 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return undefined;
+    const volumeChanged = previousVolume.current !== volume;
+    previousVolume.current = volume;
     audio.muted = !soundOn;
     const playlist = CHAPTER_FOLLOWUPS[id]?.length ? CHAPTER_FOLLOWUPS[id] : nextTrack ? [nextTrack] : [];
     if (!audio.dataset.openingTrack) audio.dataset.openingTrack = audio.src;
@@ -171,7 +174,12 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
         audio.volume = 0;
         audio.play().then(playbackStarted).catch(playbackFailed);
       }
-      if (!fadeTrackEnd()) fadeTo(audio, targetVolume, { duration: fadeInMs });
+      if (!fadeTrackEnd()) {
+        if (volumeChanged) {
+          cancelFade(audio);
+          audio.volume = Math.min(1, Math.max(0, targetVolume));
+        } else fadeTo(audio, targetVolume, { duration: fadeInMs });
+      }
     };
     const prepareForVideo = (event) => {
       // Keep a quiet musical bed while the user decides when to press Play.
