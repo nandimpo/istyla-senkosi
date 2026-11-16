@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="44" viewBox="0 0 64 44">
+<defs>
+  <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f1f0e9"/><stop offset=".28" stop-color="#a6a7a3"/><stop offset=".5" stop-color="#e0e0d9"/><stop offset=".7" stop-color="#646866"/><stop offset="1" stop-color="#c6c9c4"/></linearGradient>
+  <linearGradient id="edge"><stop stop-color="#555b59"/><stop offset=".5" stop-color="#d6d9d1"/><stop offset="1" stop-color="#747c78"/></linearGradient>
+  <filter id="shadow" x="-20%" y="-25%" width="150%" height="160%">
+  <feDropShadow dx="0" dy="0" stdDeviation=".9" flood-color="#fff0c9" flood-opacity=".82"/>
+  <feDropShadow dx=".6" dy=".9" stdDeviation=".6" flood-color="#000" flood-opacity=".6"/>
+</filter>
+</defs>
+<g filter="url(#shadow)" stroke-linejoin="round">
+  <path d="M22 24L31 20L60 28L52 31L30 26L23 29Z" fill="url(#steel)" stroke="#545b56" stroke-width=".7"/>
+  <path d="M24 20L32 17L60 8L51 16L32 23L24 24Z" fill="url(#steel)" stroke="#626a64" stroke-width=".7"/>
+  <path d="M32 19L57 9.5" fill="none" stroke="#efeee7" stroke-width=".6"/>
+  <path d="M34 25L54 29" fill="none" stroke="#e6e7dd" stroke-width=".55"/>
+  <path d="M25 21C21 17 18 12 13 12C7 12 3 15 3 18C3 22 8 23 13 22C18 22 20 20 22 21L28 25" fill="none" stroke="#303834" stroke-width="2.4"/>
+  <path d="M25 21C21 17 18 12 13 12C7 12 3 15 3 18C3 22 8 23 13 22C18 22 20 20 22 21L28 25" fill="none" stroke="url(#edge)" stroke-width="1.2"/>
+  <path d="M28 22L23 28C20 30 18 29 15 31C10 33 9 38 12 40C15 43 20 40 23 36C25 33 24 31 25 29L31 24" fill="none" stroke="#303834" stroke-width="2.6"/>
+  <path d="M28 22L23 28C20 30 18 29 15 31C10 33 9 38 12 40C15 43 20 40 23 36C25 33 24 31 25 29L31 24" fill="none" stroke="url(#edge)" stroke-width="1.4"/>
+  <circle cx="30.5" cy="22" r="2.2" fill="url(#steel)" stroke="#444b45" stroke-width=".6"/>
+  <path d="M29.2 22.7L31.8 21.3" stroke="#424a43" stroke-width=".7"/>
+</g>
+</svg>

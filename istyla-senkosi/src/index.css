@@ -86,9 +86,9 @@ code {
 }
 
 
-/* A small metallic safety pin echoes the site's sewing and collage theme. */
+/* Metallic scissors echo the site's sewing and collage theme. */
 @media(any-pointer:fine) {
-  html,body,body * { cursor:url("./assets/images/safety-pin-cursor.svg") 29 20, auto !important; }
+  html,body,body * { cursor:url("./assets/images/scissors-cursor.svg") 60 8, auto !important; }
 }
 
 @media(any-pointer:fine) {
