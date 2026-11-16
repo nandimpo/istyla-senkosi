@@ -13,9 +13,9 @@ export default function JourneyGuide({ onStart, onBack }) {
       <p className="journey-guide__intro">A personal documentary through township fashion, told in photographs, film, memories and small interactions. You take part as the story unfolds.</p>
       </header>
       <div className="journey-guide__steps">
-        <div><span aria-hidden="true">01</span><div><h2>Read, watch, then take part</h2><p>Let the words finish. Follow the prompt to drag, tap or press and hold. Complete the interaction to unlock the next page. The control glows when ready.</p></div></div>
-        <div><span aria-hidden="true">02</span><div><h2>Move at your own pace</h2><p>Scroll down when invited to continue. Scroll up twice, with a brief pause between scrolls, to go back. Videos play through, with a skip option when available. Use a mouse, trackpad or touch. Buttons also work with the keyboard.</p></div></div>
-        <div><span aria-hidden="true">03</span><div><h2>Listen to the story</h2><p>For the full experience, connect your headphones or listen aloud with your sound on.</p></div></div>
+        <div><span aria-hidden="true">01</span><div><h2>Read, watch, then take part</h2><p><strong>Let the words finish.</strong> Follow the prompt to <strong>drag</strong>, <strong>tap</strong> or <strong>press and hold</strong>. Complete the interaction to unlock the next page. The control <strong>glows when ready</strong>.</p></div></div>
+        <div><span aria-hidden="true">02</span><div><h2>Move at your own pace</h2><p><strong>Scroll down</strong> when invited to continue. <strong>Scroll up twice</strong>, with a brief pause between scrolls, to go back. Videos play through, with a <strong>skip option</strong> when available. Use a mouse, trackpad or touch. Buttons also work with the <strong>keyboard</strong>.</p></div></div>
+        <div><span aria-hidden="true">03</span><div><h2>Listen to the story</h2><p>For the full experience, connect your <strong>headphones</strong> or listen aloud with your <strong>sound on</strong>.</p></div></div>
       </div>
       <dl className="journey-guide__navigation">
         <div><dt>HOME</dt><dd>Return to the opening screen.</dd></div>

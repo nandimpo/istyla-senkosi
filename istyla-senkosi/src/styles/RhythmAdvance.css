@@ -9,7 +9,11 @@
 .rhythm-advance__instruction { display:block; font:500 10px/1.5 var(--font-body); color:#dbdec4; text-shadow:0 1px 4px #000; }
 .rhythm-advance button:disabled { opacity:.5; }
 .rhythm-advance:has(.is-lit) button:disabled { opacity:1; }
-@keyframes pantsula-step-invitation { 0%,100% { opacity:.55; } 50% { opacity:1; fill:#a4b77877; } }
+@keyframes pantsula-step-invitation {
+  0%,100% { opacity:.75; fill:#a4b77888; filter:drop-shadow(0 0 4px #c4d29288); }
+  50% { opacity:1; fill:#d9e8aa; filter:drop-shadow(0 0 8px #d5e7aadd) drop-shadow(0 0 15px #b7cf8288); }
+}
+.rhythm-advance.is-ready .rhythm-advance__foot { stroke:#e1ebc3; stroke-width:1.5; }
 @media(min-width:701px) { #pantsula:has(.fashion-wall--scrapbook) > .rhythm-advance { left:21.5vw; bottom:96px; } }
 @media(max-width:700px) { .rhythm-advance { bottom:70px; } #pantsula .chapter-player__story { bottom:240px; } #root #pantsula .chapter-player__page:has(.chapter-player__visual--quiet-layout) { padding-bottom:245px; } }
 @media(prefers-reduced-motion:reduce) { .rhythm-advance.is-ready .rhythm-advance__foot.is-next { animation:none; } }

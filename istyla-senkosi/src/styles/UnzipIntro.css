@@ -1,7 +1,7 @@
 .unzip-intro { position:relative; height:100svh; overflow:hidden; background:#0d0d0d; color:#fff7e9; isolation:isolate; }
 .unzip-preview { width:100%; height:100%; object-fit:cover; filter:brightness(.65); }
 .unzip-fabric { position:absolute; inset:0; background:#493422; transition:transform 1s ease; }
-.unzip-fabric::before { content:""; position:absolute; inset:-4%; background:url('../assets/Additional Images/Textiles/brown fabric.jpg') center/cover; transform-origin:50% 50%; animation:fabric-billow 4s ease-in-out infinite alternate; }
+.unzip-fabric::before { content:""; position:absolute; inset:-4%; background:var(--unzip-fabric) center/cover; transform-origin:50% 50%; animation:fabric-billow 4s ease-in-out infinite alternate; }
 .unzip-fabric::after { content:""; position:absolute; inset:-8%; pointer-events:none; background:repeating-linear-gradient(105deg,transparent 0%,#130a0359 15%,#ffe4bb24 24%,transparent 35%); background-size:150% 100%; animation:fabric-wave-light 4s ease-in-out infinite alternate; }
 .unzip-fabric-right::before,.unzip-fabric-right::after { animation-delay:-2s; }
 @keyframes fabric-billow { from { transform:translate(-.8%,-.4%) skewY(-.7deg) scale(1.015); } to { transform:translate(.8%,.4%) skewY(.7deg) scale(1.035); } }

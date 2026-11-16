@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import NarrativeText from "./NarrativeText";
 import IntroAmbientAudio from "./IntroAmbientAudio";
+import ChapterLoading from "./ChapterLoading";
+import { prepareSwenkaIntro, swenkaFabric } from "../utils/swenkaIntroAssets";
 import zipImage from "../assets/Chapter 1_Swenka/Images/Editorial/Zip.jpg";
 import "../styles/UnzipIntro.css";
 
@@ -21,6 +23,17 @@ export default function UnzipIntro({ image, track, nextTrack, audioRef, children
     } catch { return false; }
   });
   const { reducedMotion } = useNavigation();
+  const [readyImage, setReadyImage] = useState(null);
+  const [assetsFailed, setAssetsFailed] = useState(false);
+  const [loadAttempt, setLoadAttempt] = useState(0);
+  useEffect(() => {
+    if (opened) return;
+    let active = true;
+    prepareSwenkaIntro(image).then(() => {
+      if (active) setReadyImage(image);
+    }).catch(() => { if (active) setAssetsFailed(true); });
+    return () => { active = false; };
+  }, [opened, image, loadAttempt]);
   const drag = useRef(null);
 
   const openingFrom = useRef(0);
@@ -76,7 +89,7 @@ export default function UnzipIntro({ image, track, nextTrack, audioRef, children
 
   return <>
     {track && <audio ref={audioRef} src={track} loop={!nextTrack} preload="metadata" aria-hidden="true" />}
-    {opened ? children : <section className={`unzip-intro ${opening ? "is-opening" : ""} ${copyReady ? "is-ready" : "is-reading"}`} aria-label="Unzip the Swenka chapter" style={{ "--zip-progress": progress }}>
+    {opened ? children : readyImage !== image ? assetsFailed ? <div className="chapter-loading" role="status"><div><p>The chapter could not load.</p><button type="button" onClick={() => { setAssetsFailed(false); setLoadAttempt((attempt) => attempt + 1); }}>Try again</button></div></div> : <ChapterLoading chapter="Swenka" /> : <section className={`unzip-intro ${opening ? "is-opening" : ""} ${copyReady ? "is-ready" : "is-reading"}`} aria-label="Unzip the Swenka chapter" style={{ "--zip-progress": progress, "--unzip-fabric": `url("${swenkaFabric}")` }}>
     <IntroAmbientAudio id="swenka" volumeScale={0.6} nextTrack={nextTrack} track={track} sharedAudioRef={audioRef} />
     <img className="unzip-preview" src={image} alt="" />
     <div className="unzip-fabric unzip-fabric-left" aria-hidden="true" style={{ clipPath: `polygon(${polygon([[0, 0], ...leftEdge, [50, 100], [0, 100]])})` }} />

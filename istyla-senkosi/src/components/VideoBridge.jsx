@@ -4,12 +4,12 @@ import { useNavigation } from "../context/NavigationContext";
 import "../styles/VideoBridge.css";
 import "../styles/ChapterLoading.css";
 
-export default function VideoBridge({ text, onCovered, onComplete, outgoing = false, prepareVideoAudio = false, loadingLabel }) {
+export default function VideoBridge({ text, onCovered, onComplete, outgoing = false, prepareVideoAudio = false, loadingLabel, holdMs, coverMs }) {
   const { reducedMotion } = useNavigation();
   const callbacks = useRef({ onCovered, onComplete });
   useEffect(() => { callbacks.current = { onCovered, onComplete }; });
   const calm = reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const { hold, cover, reveal, exit, exitAt, total } = readingTiming(text, { outgoing, calm });
+  const { hold, cover, reveal, exit, exitAt, total } = readingTiming(text, { outgoing, calm, holdMs, coverMs });
   useEffect(() => {
     const covered = setTimeout(() => callbacks.current.onCovered?.(), cover);
     const complete = setTimeout(() => callbacks.current.onComplete?.(), total);

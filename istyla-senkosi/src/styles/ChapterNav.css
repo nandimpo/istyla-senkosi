@@ -38,5 +38,5 @@
 .chapters-drawer .chapter-pages button:hover { color:#f1bc62; }
 .chapters-drawer .chapter-pages button:focus-visible { outline:2px solid #efc272; outline-offset:4px; }
 .chapter-pages__number { flex:0 0 20px; color:#c7923c; font-size:10px; }
-.chapters-drawer .chapter-pages .chapter-pages__start { justify-content:space-between; margin-bottom:8px; color:#efc272; font-weight:700; }
+.chapters-drawer .chapter-pages .chapter-pages__start { justify-content:space-between; margin-bottom:8px; color:#efc272; font-size:15px; font-weight:700; }
 @media(max-width:650px) { .chapter-pages { padding-left:43px; } }

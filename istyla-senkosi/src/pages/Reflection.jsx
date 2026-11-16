@@ -14,6 +14,17 @@ import "../styles/Reflection.css";
 
 const cousinPhotos = [cousin4, cousin2Old];
 
+function closeOnBackdropClick(event) {
+  event.stopPropagation();
+  if (event.target !== event.currentTarget) return;
+  const dialog = event.currentTarget;
+  const bounds = dialog.getBoundingClientRect();
+  if (event.clientX < bounds.left || event.clientX > bounds.right ||
+      event.clientY < bounds.top || event.clientY > bounds.bottom) {
+    dialog.close();
+  }
+}
+
 function Reflection() {
   const audioRef = useRef(null);
   const { completeChapter, goTo, restartJourney } = useNavigation();
@@ -39,12 +50,12 @@ function Reflection() {
         <button onClick={() => creditsRef.current.showModal()}>CREDITS <span>+</span></button>
       </div>
       </ViewportFit>
-      <dialog ref={chaptersRef} className="ending-dialog" aria-labelledby="ending-chapters-title" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
+      <dialog ref={chaptersRef} className="ending-dialog" aria-labelledby="ending-chapters-title" onClick={closeOnBackdropClick} onKeyDown={(event) => event.stopPropagation()}>
         <h2 id="ending-chapters-title">Explore the chapters</h2>
         <nav aria-label="Choose a chapter">{[["Introduction", "introduction"], ["Swenka", "swenka"], ["Pantsula", "pantsula"], ["Skhothane", "skhothane"], ["Reflection", "reflection"]].map(([label, id]) => <button key={id} onClick={() => { chaptersRef.current.close(); goTo(id); }}>{label}</button>)}</nav>
         <button onClick={() => chaptersRef.current.close()}>Back to the reflection</button>
       </dialog>
-      <dialog ref={creditsRef} className="ending-dialog" aria-labelledby="ending-credits-title" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
+      <dialog ref={creditsRef} className="ending-dialog" aria-labelledby="ending-credits-title" onClick={closeOnBackdropClick} onKeyDown={(event) => event.stopPropagation()}>
         <h2 id="ending-credits-title">Credits &amp; acknowledgements</h2>
         <p>A personal journey through township fashion, told from Jama's perspective in memory of Ree.</p>
         <h3>Photographs &amp; voices</h3>
