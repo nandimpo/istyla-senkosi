@@ -9,7 +9,7 @@ import chapterImage from "../assets/images/Cousin/Cousin 1.jpeg";
 import houseImage from "../assets/Additional Images/Street Visuals/Wattville/House.jpg";
 import streetImage from "../assets/Additional Images/Street Visuals/Wattville/Street sign.jpg";
 import buildingImage from "../assets/Additional Images/Street Visuals/Wattville/Building.jpg";
-import backgroundTrack from "../assets/audio/New Music/Kwesta - Spirit (Official Music Video) ft Wale ft. Wale _Conclusion.mp3";
+import backgroundTrack from "../assets/normalized-audio/Kwesta - Spirit (Official Music Video) ft Wale ft. Wale _Conclusion.mp3";
 import "../styles/Reflection.css";
 
 const cousinPhotos = [cousin4, cousin2Old];
@@ -29,7 +29,7 @@ function Reflection() {
           <small>MY MEMORY</small>
           <h1>There he is.</h1>
           <p>You meet my cousin here, in the photographs I kept. He died before this journey began. I remember him stepping out in colour, asking me to really look.</p>
-          <p>Ree was a Skhothane. This journey has helped me appreciate the care and joy in the way he dressed. I cannot ask him what it all meant to him, but I appreciate him and style so much more. I return to the photograph I began with. The image has not changed, but the way I look at it has. I see more of the person I love. From Jama with love.</p>
+          <p>Ree was a Skhothane. This journey has helped me appreciate the care and joy in the way he dressed. I cannot ask him what it all meant to him, but I appreciate him and his style so much more. I return to the photograph I began with. The image has not changed, but the way I look at it has. I see more of the person I love. From Jama, with love.</p>
         </div>
       </div>
       <div className="final-frame__actions">
@@ -50,8 +50,8 @@ function Reflection() {
         <p>Family photographs of Ree appear alongside archival and contemporary fashion imagery, interviews and dance footage exploring Swenka, Pantsula and Skhothane.</p>
         <h3>Music</h3>
         <ul>
-          <li>Hugh Masekela: Stimela (The Coal Train); Mamoriri</li>
-          <li>Miriam Makeba: Khawuleza (Live 1966); Nongqongqo (To Those We Love)</li>
+          <li>Hugh Masekela: Stimela (The Coal Train), Mamoriri</li>
+          <li>Miriam Makeba: Khawuleza (Live 1966), Nongqongqo (To Those We Love), Welela</li>
           <li>Dorothy Masuka: Magumede</li>
           <li>Unomeva (Isileyi Sami)</li>
           <li>TKZee: Dlala Mapantsula</li>
@@ -89,7 +89,7 @@ function Reflection() {
       frames={[
         { label: "AFTER THE NOISE", image: streetImage, text: "I thought this story was far from my life. My cousin was a connection I had overlooked while he was here.", kind: "quiet", layout: "quiet", storyRole: "reflection" },
         { label: "WHAT CHANGED", image: buildingImage, text: "Swenka helped me recognise pride and dignity. Pantsula let me feel the energy of moving together. Skhothane asked me to look beyond appearances. Each chapter changed how I looked at Ree.", kind: "quiet", layout: "quiet", storyRole: "reflection" },
-        { label: "WHAT I CAN CARRY", image: houseImage, text: "I can remember Ree with a deeper appreciation of what mattered to him. The care he put into his clothes, the joy he showed and the way he wanted to be seen. I still have questions, but I carry his memory with more gently now.", kind: "quiet", layout: "quiet", storyRole: "reflection" },
+        { label: "WHAT I CAN CARRY", image: houseImage, text: "I can remember Ree with a deeper appreciation of what mattered to him. I remember the care he put into his clothes, the joy he showed and the way he wanted to be seen. I still have questions, but I carry his memory more gently now.", kind: "quiet", layout: "quiet", storyRole: "reflection" },
         { label: "THERE HE IS", collage: cousinPhotos, photoMasks: ["portrait", "square"], text: "These are the photographs I kept of him. Come closer. I want you to meet the cousin I have been remembering." },
       ]}
       onComplete={() => completeChapter("reflection")}

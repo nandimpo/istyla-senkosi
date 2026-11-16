@@ -67,7 +67,7 @@ export default function SowetoArrivalClip({ onComplete }) {
       onPlaying={() => setNeedsPlay(false)}
       onEnded={() => { if (!finished.current) { lastTime.current = 0; videoRef.current.currentTime = 0; play(); } }}
       onError={() => setFailed(true)} />
-    {bridging && <VideoBridge text="To understand my cousin's world, I had to begin where his story lived. In Soweto." onCovered={() => setCovered(true)} onComplete={() => { setBridging(false); play(); }} />}
+    {bridging && <VideoBridge text="To understand my cousin's world, I had to begin where his story lived, in Soweto." onCovered={() => setCovered(true)} onComplete={() => { setBridging(false); play(); }} />}
     {leaving && <VideoBridge outgoing text="I arrive in Soweto looking for Ree. I begin tracing the roots of township fashion through Swenka: the care in a suit, the pride in a polished shoe. I want to understand what dressing meant before I can understand what it meant to him." onCovered={() => setOutroCovered(true)} onComplete={() => { setNavigationLocked(false); onComplete(); }} />}
     <div className="soweto-arrival-copy">
       <p>I AM ENTERING SOWETO</p>

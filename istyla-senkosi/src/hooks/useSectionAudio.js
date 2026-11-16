@@ -1,5 +1,5 @@
 import { CHAPTER_FOLLOWUPS, nextQueueIndex } from "./chapterAudioQueue";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
 
 const resumeListeners = new Set();
@@ -16,7 +16,7 @@ if (typeof window !== "undefined") {
   window.addEventListener("touchstart", markInteracted, { once: true, passive: true });
 }
 
-const FADE_MS = 2200;
+const FADE_MS = 3000;
 
 function cancelFade(audio) {
   if (audio._fadeRaf) {
@@ -48,7 +48,16 @@ function fadeTo(audio, target, { thenPause = false, duration = FADE_MS } = {}) {
 
 export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volumeScale = 1, continueWhileLocked = false, fadeOut = false, nextTrack }) {
   const { currentSection, volume, navigationLocked } = useNavigation();
-  const targetVolume = volume * (duckMusic ? 0.01 : volumeScale);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const resumeRef = useRef(() => {});
+  const transitionSilenced = useRef(false);
+  const targetVolume = volume * (duckMusic ? 0 : volumeScale);
+
+  // Stop on unmount, while allowing changes in level to fade without pausing.
+  useEffect(() => {
+    const audio = audioRef.current;
+    return () => { if (audio) { cancelFade(audio); audio.pause(); } };
+  }, [audioRef]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -61,15 +70,29 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
       audio.dataset.followupIndex = "-1";
     }
 
-    if (currentSection !== id || fadeOut || (navigationLocked && !continueWhileLocked)) {
+    if (duckMusic) {
+      audio.dataset.videoSoundActive = "true";
+      fadeTo(audio, 0, { thenPause: true, duration: 400 });
+      return () => cancelFade(audio);
+    }
+
+    if (transitionSilenced.current || currentSection !== id || fadeOut || (navigationLocked && !continueWhileLocked)) {
       fadeTo(audio, 0, { thenPause: true });
       return () => cancelFade(audio);
     }
 
     let disposed = false;
+    const playbackFailed = (error) => {
+      if (!disposed && error?.name === "NotAllowedError" && soundOn) setAutoplayBlocked(true);
+    };
+    const playbackStarted = () => {
+      if (disposed) return;
+      setAutoplayBlocked(false);
+    };
     let fadingTrackEnd = false;
     const hasNextTrack = () => playlist.length > 0;
     const fadeTrackEnd = () => {
+      if (duckMusic || audio.dataset.videoSoundActive === "true") return false;
       const remaining = audio.duration - audio.currentTime;
       if (!hasNextTrack() || !Number.isFinite(remaining) || remaining > 4 || remaining <= 0) return false;
       if (!fadingTrackEnd) {
@@ -79,7 +102,7 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
       return true;
     };
     const startNextTrack = () => {
-      if (!hasNextTrack()) return;
+      if (duckMusic || !hasNextTrack() || transitionSilenced.current || audio.dataset.videoSoundActive === "true") return;
       const savedIndex = Number(audio.dataset.followupIndex ?? -1);
       const index = nextQueueIndex(Number.isInteger(savedIndex) ? savedIndex : -1, playlist.length);
       audio.dataset.followupIndex = String(index);
@@ -89,37 +112,65 @@ export function useSectionAudio({ id, audioRef, soundOn, duckMusic = false, volu
       fadingTrackEnd = false;
       audio.load();
       audio.play().then(() => {
-        if (!disposed) fadeTo(audio, targetVolume, { duration: 4000 });
-      }).catch(() => {});
+        if (disposed) return;
+        playbackStarted();
+        fadeTo(audio, targetVolume, { duration: 4000 });
+      }).catch(playbackFailed);
     };
-    const retry = () => {
+    const retry = (event) => {
+      if (transitionSilenced.current) return;
+      if (audio.dataset.videoSoundActive === "true") { fadeTo(audio, 0, { thenPause: true, duration: 400 }); return; }
+      if (event?.target?.closest?.(".chapter-player__sound, .intro-ambient-sound")) return;
       if (audio.ended && hasNextTrack()) { startNextTrack(); return; }
       if (audio.paused) {
         audio.volume = 0;
-        audio.play().catch(() => {});
+        audio.play().then(playbackStarted).catch(playbackFailed);
       }
       if (!fadeTrackEnd()) fadeTo(audio, targetVolume);
     };
+    const prepareForVideo = (event) => {
+      // Keep a quiet musical bed while the user decides when to press Play.
+      if (audio.dataset.videoSoundActive !== "true") fadeTo(audio, volume * .12, { duration: event?.detail?.duration || 3000 });
+    };
+    const silenceForVideo = (event) => {
+      audio.dataset.videoSoundActive = "true";
+      fadeTo(audio, 0, { thenPause: true, duration: event?.detail?.duration || 400 });
+    };
+    const restoreAfterVideo = () => { delete audio.dataset.videoSoundActive; retry(); };
+    window.addEventListener("istyla:video-audio-prepare", prepareForVideo);
+    window.addEventListener("istyla:video-audio-start", silenceForVideo);
+    window.addEventListener("istyla:video-audio-end", restoreAfterVideo);
     audio.addEventListener("timeupdate", fadeTrackEnd);
     audio.addEventListener("ended", startNextTrack);
+    resumeRef.current = retry;
     retry();
     resumeListeners.add(retry);
-    window.addEventListener("pointerdown", retry);
-    window.addEventListener("keydown", retry);
-    window.addEventListener("touchstart", retry, { passive: true });
-    const fadeForTransition = () => fadeTo(audio, 0, { thenPause: true });
+    window.addEventListener("pointerdown", retry, true);
+    window.addEventListener("keydown", retry, true);
+    window.addEventListener("touchstart", retry, { passive: true, capture: true });
+    window.addEventListener("click", retry, true);
+    const fadeForTransition = () => {
+      transitionSilenced.current = true;
+      fadeTo(audio, 0, { thenPause: true });
+    };
     window.addEventListener("istyla:fade-section-audio", fadeForTransition);
     if (hasInteracted) retry();
     return () => {
       disposed = true;
+      window.removeEventListener("istyla:video-audio-prepare", prepareForVideo);
+      window.removeEventListener("istyla:video-audio-start", silenceForVideo);
+      window.removeEventListener("istyla:video-audio-end", restoreAfterVideo);
+      resumeRef.current = () => {};
+      window.removeEventListener("click", retry, true);
       audio.removeEventListener("timeupdate", fadeTrackEnd);
       audio.removeEventListener("ended", startNextTrack);
       resumeListeners.delete(retry);
-      window.removeEventListener("pointerdown", retry);
-      window.removeEventListener("keydown", retry);
-      window.removeEventListener("touchstart", retry);
+      window.removeEventListener("pointerdown", retry, true);
+      window.removeEventListener("keydown", retry, true);
+      window.removeEventListener("touchstart", retry, true);
       window.removeEventListener("istyla:fade-section-audio", fadeForTransition);
       cancelFade(audio);
     };
   }, [currentSection, id, soundOn, audioRef, targetVolume, navigationLocked, continueWhileLocked, fadeOut, nextTrack]);
+  return { autoplayBlocked, resumeAudio: () => resumeRef.current() };
 }

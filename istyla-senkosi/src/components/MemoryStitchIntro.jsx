@@ -81,9 +81,9 @@ export default function MemoryStitchIntro({ track, audioRef, children }) {
     {opened ? children : <section className={`memory-stitch ${complete ? "is-complete" : ""}`} style={{ "--piece-gap":`${9 * remaining}px` }} onPointerUp={() => setDrawing(false)} onPointerCancel={() => setDrawing(false)}>
     <IntroAmbientAudio id="reflection" track={track} sharedAudioRef={audioRef} />
     <div className="memory-stitch__copy">
-      <small><NarrativeText onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="04 / REFLECTION · MY JOURNEY" delay={150} /></small>
-      <h1><NarrativeText onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="PIECE THE" delay={1000} /><em><NarrativeText onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="MEMORY TOGETHER." delay={1900} /></em></h1>
-      <p><NarrativeText onComplete={() => setFinishedCopy((done) => done[3] ? done : { ...done, [3]: true })} text="I have carried fragments of Ree through every chapter. Draw the thread across each tear and bring the photograph back together." delay={1200} speed={0.18} /></p>
+      <small><NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="04 / REFLECTION · MY JOURNEY" delay={150} /></small>
+      <h1><NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="PIECE THE" delay={1000} /><em><NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="MEMORY TOGETHER." delay={1900} /></em></h1>
+      <p><NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[3] ? done : { ...done, [3]: true })} text="I have carried fragments of Ree through every chapter. Draw the thread across each tear and bring the photograph back together." delay={1200} speed={0.18} /></p>
       <strong>{complete ? "The memory is whole." : `${stitched.size} of ${seams.length} seams joined`}</strong>
     </div>
     <div inert={!copyReady} className="memory-stitch__work" aria-label="A torn photograph of Ree waiting to be stitched together">

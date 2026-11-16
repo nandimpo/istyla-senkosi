@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
+import { soundtrackBeats } from "../utils/musicRhythm";
 import { glyphThread } from "./glyphThread";
 import "../styles/NarrativeText.css";
 
-export default function NarrativeText({ text, delay = 400, embroidered = false, speed = 1, onComplete }) {
+export default function NarrativeText({ text, delay = 400, embroidered = false, speed = 1, onComplete, rhythmAudioRef }) {
   const { reducedMotion } = useNavigation();
   const [systemReduced, setSystemReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const rootRef = useRef(null);
@@ -34,6 +35,14 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
     }
     letters.forEach((letter) => { letter.style.opacity = 0; });
     needle.style.visibility = "hidden";
+    let musicBeats = [];
+    let lastAudioTime;
+    let lastWord;
+    let wordWait;
+    if (rhythmAudioRef?.current) {
+      const audio = rhythmAudioRef.current;
+      soundtrackBeats(audio.currentSrc || audio.src).then((result) => { if (!disposed) musicBeats = result; });
+    }
     const cache = new Map();
     let index = 0;
     let started;
@@ -72,6 +81,7 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
       });
       length = paths.reduce((sum, part) => sum + part.size, 0);
       duration = Math.min(320, Math.max(160, length * 2.4)) * speed;
+      if (rhythmAudioRef) duration = Math.min(50, duration);
       active.dataset.glyphHeight = glyph.height;
       svg.style.stroke = getComputedStyle(active).getPropertyValue("--thread-main").trim() || "#fff0cb";
       return true;
@@ -81,7 +91,23 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
       if (now - lastPaint < 1000 / 30) { frame = requestAnimationFrame(tick); return; }
       lastPaint = now;
       if (started === undefined) started = now + delay;
+      const audio = rhythmAudioRef?.current;
+      const audioTime = audio?.currentTime ?? 0;
+      const beat = musicBeats.length && lastAudioTime !== undefined && musicBeats.some((time) => time > lastAudioTime && time <= audioTime);
+      lastAudioTime = audioTime;
       if (now >= started) {
+        if (!active && rhythmAudioRef) {
+          const nextLetter = letters.slice(index).find((letter) => letter.textContent.trim());
+          const nextWord = nextLetter?.parentElement;
+          const playing = audio && !audio.paused && !audio.muted && audio.volume > .001;
+          if (nextWord && nextWord !== lastWord && playing && musicBeats.length) {
+            wordWait ??= now;
+            if (!beat && now - wordWait < 900) { frame = requestAnimationFrame(tick); return; }
+            started = now;
+          }
+          lastWord = nextWord;
+          wordWait = undefined;
+        }
         if (!active && !prepare()) {
           needle.style.visibility = "hidden";
           svg.replaceChildren();
@@ -115,14 +141,14 @@ export default function NarrativeText({ text, delay = 400, embroidered = false, 
           active = null;
           index++;
           started = now;
-          travelUntil = now + 65 * speed;
+          travelUntil = now + (rhythmAudioRef ? 8 : 65 * speed);
         }
       }
       frame = requestAnimationFrame(tick);
     };
     document.fonts.ready.then(() => { if (!disposed) frame = requestAnimationFrame(tick); });
     return () => { disposed = true; cancelAnimationFrame(frame); resizeObserver.disconnect(); };
-  }, [text, delay, speed, reducedMotion, systemReduced]);
+  }, [text, delay, speed, reducedMotion, systemReduced, rhythmAudioRef]);
 
   return <>
     <span className="narrative-text__accessible">{text}</span>

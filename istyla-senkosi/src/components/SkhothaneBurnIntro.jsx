@@ -89,9 +89,9 @@ export default function SkhothaneBurnIntro({ track, audioRef, children }) {
     <div className="skhothane-burn-intro__background" style={{ "--skhothane-background":`url("${skhothaneBackground}")` }} aria-hidden="true" />
     <OutfitAmbience audioRef={audioRef} />
     <div className="skhothane-burn-intro__copy">
-      <small><NarrativeText speed={0.12} onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="03 / SKHOTHANE · MY JOURNEY" delay={0} /></small>
-      <h1><NarrativeText speed={0.12} onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="A look made to be seen." delay={100} /></h1>
-      <p><NarrativeText speed={0.12} onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="I set this shirt alight like a true Skhothane to enter a world of colour, performance and memories I am still trying to understand." delay={250} /></p>
+      <small><NarrativeText rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="03 / SKHOTHANE · MY JOURNEY" delay={0} /></small>
+      <h1><NarrativeText rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="A look made to be seen." delay={100} /></h1>
+      <p><NarrativeText rhythmAudioRef={audioRef} speed={0.12} onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="I set this shirt alight like a true Skhothane to enter a world of colour, performance and memories I am still trying to understand." delay={250} /></p>
       <p className="skhothane-burn-intro__instruction" role="status">{copyReady ? notice : "Read to unlock the match."}</p>
     </div>
     <div className="skhothane-burn-intro__stage">

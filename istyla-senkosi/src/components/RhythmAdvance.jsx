@@ -53,6 +53,6 @@ export default function RhythmAdvance({ disabled = false, onComplete, label = "C
       <Footprint lit={steps >= 1} next={!disabled && steps === 0} />
       <Footprint right lit={steps >= 2} next={!disabled && steps === 1} />
     </button>
-    <span className="rhythm-advance__instruction">{steps === 2 ? "Moving with the rhythm" : disabled ? disabledInstruction : steps === 1 ? "One more step ? tap again" : "Two steps forward. Tap twice to continue."}</span>
+    <span className="rhythm-advance__instruction">{steps === 2 ? "Moving with the rhythm" : disabled ? disabledInstruction : steps === 1 ? "One more step. Tap again." : "Two steps forward. Tap twice to continue."}</span>
   </nav>;
 }

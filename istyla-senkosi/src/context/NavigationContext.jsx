@@ -41,6 +41,7 @@ export function NavigationProvider({ children }) {
     document.documentElement.dataset.reducedMotion = reducedMotion ? "true" : "false";
   }, [preferences, reducedMotion]);
   const [currentSection, setCurrentSection] = useSessionState("section", "about", (value) => ORDER.includes(value));
+  const [guideComplete, setGuideComplete] = useSessionState("guide-complete", currentSection !== "about", (value) => typeof value === "boolean");
   // Track journey progress separately from free chapter access.
   const [unlockedIndex, setUnlockedIndex] = useState(1);
   const [completedChapters, setCompletedChapters] = useSessionState("completed-chapters", [], (value) => Array.isArray(value) && value.every((id) => ORDER.includes(id)));
@@ -50,8 +51,8 @@ export function NavigationProvider({ children }) {
   }, [currentSection]);
 
   const isUnlocked = useCallback((id) => {
-    return ORDER.includes(id);
-  }, []);
+    return ORDER.includes(id) && (id === "about" || guideComplete);
+  }, [guideComplete]);
 
   const goBackChapter = useCallback(() => {
     const previous = ORDER[ORDER.indexOf(currentSection) - 1];
@@ -90,10 +91,11 @@ export function NavigationProvider({ children }) {
     } catch { /* A fresh chapter still mounts when storage is unavailable. */ }
     setNavigationLocked(false);
     setUnlockedIndex(1);
+    setGuideComplete(true);
     setCompletedChapters([]);
     setChapterVisit((visit) => visit + 1);
     setCurrentSection("introduction");
-  }, [setCurrentSection, setCompletedChapters]);
+  }, [setCurrentSection, setCompletedChapters, setGuideComplete]);
 
   const markChapterComplete = useCallback((id) => {
     setCompletedChapters((previous) => previous.includes(id) ? previous : [...previous, id]);
@@ -111,7 +113,7 @@ export function NavigationProvider({ children }) {
   }, [navigationLocked, goTo, setCompletedChapters]);
 
   return (
-    <NavigationContext.Provider value={{ currentSection, chapterVisit, unlockedIndex, goTo, goBackChapter, restartJourney, completeChapter, markChapterComplete, isUnlocked, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion, navigationLocked, setNavigationLocked }}>
+    <NavigationContext.Provider value={{ currentSection, guideComplete, chapterVisit, unlockedIndex, goTo, goBackChapter, restartJourney, completeChapter, markChapterComplete, isUnlocked, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion, navigationLocked, setNavigationLocked }}>
       {children}
     </NavigationContext.Provider>
   );

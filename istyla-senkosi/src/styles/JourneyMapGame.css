@@ -375,3 +375,68 @@ html[data-reduced-motion="true"] .journey-continue,html[data-reduced-motion="tru
   background-color:#181713;
 }
 .journey-stage::before { opacity:.015; }
+
+/* Assemble the atlas once when the map opens. */
+.journey-stage:not(.journey-calm) .journey-map-photo {
+  animation:journey-photo-arrive 700ms ease-out var(--assembly-delay,350ms) backwards;
+}
+.journey-connection-reveal {
+  stroke-dasharray:1;
+  stroke-dashoffset:0;
+}
+.journey-stage:not(.journey-calm) .journey-connection-reveal {
+  animation:journey-connect 1200ms ease-in-out var(--assembly-delay,650ms) backwards;
+}
+.journey-stage:not(.journey-calm) .journey-fashion-sketch,
+.journey-stage:not(.journey-calm) .journey-sketch-caption {
+  animation:journey-photo-arrive 1000ms ease-out 1800ms backwards;
+}
+.journey-stage:not(.journey-calm) .journey-thought,
+.journey-stage:not(.journey-calm) .journey-cluster-label {
+  animation:journey-photo-arrive 900ms ease-out 2400ms backwards;
+}
+@keyframes journey-photo-arrive { from { opacity:0; } to { opacity:1; } }
+@keyframes journey-connect { from { stroke-dashoffset:1; } to { stroke-dashoffset:0; } }
+@media(prefers-reduced-motion:reduce) {
+  .journey-stage .journey-connection-reveal { stroke-dashoffset:0; }
+}
+
+/* Place each photograph, secure its tape, then carry thread to it. */
+.journey-stage:not(.journey-calm) .journey-map-photo {
+  transform-box:fill-box; transform-origin:center;
+  animation:journey-place-photo 950ms cubic-bezier(.22,.61,.36,1) var(--assembly-delay) backwards;
+}
+.journey-stage:not(.journey-calm) .journey-photo-tape {
+  animation:journey-press-tape 350ms ease-in-out calc(var(--assembly-delay) + 800ms) backwards;
+}
+.journey-stage:not(.journey-calm) .journey-thought,
+.journey-stage:not(.journey-calm) .journey-sketch-caption {
+  animation:journey-write-note 1200ms ease-out 6200ms backwards;
+}
+.journey-stage:not(.journey-calm) .journey-fashion-sketch {
+  animation:journey-photo-arrive 900ms ease-out 4900ms backwards;
+}
+@keyframes journey-place-photo {
+  from { opacity:0; translate:-4px -6px; rotate:-2deg; scale:1.025; }
+  to { opacity:1; translate:0 0; rotate:0deg; scale:1; }
+}
+@keyframes journey-press-tape { from { opacity:0; } to { opacity:1; } }
+@keyframes journey-write-note { from { opacity:0; clip-path:inset(0 100% 0 0); } to { opacity:1; clip-path:inset(0); } }
+
+/* New pieces begin their assembly when the corresponding stop is selected. */
+.journey-stage:not(.journey-calm) .journey-fashion-sketch {
+  animation-delay:3200ms;
+}
+.journey-stage:not(.journey-calm) .journey-thought,
+.journey-stage:not(.journey-calm) .journey-sketch-caption {
+  animation-delay:4300ms;
+}
+
+.journey-start-invitation { pointer-events:none; }
+.journey-start-invitation path { fill:none; stroke:#ffe1a1; stroke-width:.8; stroke-linecap:round; stroke-linejoin:round; }
+.journey-start-invitation text { fill:#ffe1a1; font:600 6px Montserrat,Arial,sans-serif; paint-order:stroke; stroke:#181713; stroke-width:1.5px; }
+.journey-home-invitation { background:#d6ad5918!important; box-shadow:inset 0 0 0 1px #d6ad5970; }
+.journey-home-invitation small { display:block; margin-top:5px; color:#ffe1a1; font:600 12px/1.4 Montserrat,Arial,sans-serif; }
+.journey-stage:not(.journey-calm) .journey-home-invitation { animation:journey-home-invite 1.8s ease-in-out infinite; }
+@keyframes journey-home-invite { 50% { background:#d6ad5930; box-shadow:inset 0 0 0 1px #ffe1a1,0 0 15px #d6ad5920; } }
+@media(prefers-reduced-motion:reduce) { .journey-home-invitation { animation:none!important; } }

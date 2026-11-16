@@ -247,3 +247,56 @@ html[data-reduced-motion="true"] .chapter-player .fashion-wall--scrapbook .scrap
 #pantsula .fashion-wall--scrapbook .scrapbook-clipping--detail:nth-of-type(10) img {
   transform:scale(1.8);
 }
+
+/* Jama lays down the paper, places the clippings, then adds her notes. */
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping {
+  animation:scrapbook-place 950ms cubic-bezier(.22,.61,.36,1) var(--arrival) backwards;
+}
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping::before,
+.chapter-player .fashion-wall--scrapbook .scrapbook-clipping::after {
+  animation:scrapbook-tape 350ms ease-in-out calc(var(--arrival) + 800ms) backwards;
+}
+.fashion-wall--scrapbook .scrapbook-mixed-papers span {
+  animation:scrapbook-paper 1200ms ease-in-out backwards;
+}
+.fashion-wall--scrapbook .scrapbook-mixed-papers span:nth-child(2) { animation-delay:400ms; }
+.fashion-wall--scrapbook .scrapbook-mixed-papers span:nth-child(3) { animation-delay:800ms; }
+.fashion-wall--scrapbook .scrapbook-doodles {
+  animation:scrapbook-write 1700ms ease-out var(--assembly-end) backwards;
+}
+.fashion-wall--scrapbook .scrapbook-scribble {
+  animation:scrapbook-write 1200ms ease-out var(--note-arrival) backwards;
+}
+.fashion-wall--scrapbook .scrapbook-note {
+  animation:scrapbook-write 900ms ease-out var(--assembly-end) backwards;
+}
+@keyframes scrapbook-place {
+  from { opacity:0; translate:var(--placement-x) -14px; rotate:var(--placement-turn); scale:1.025; }
+  to { opacity:1; translate:0 0; rotate:0deg; scale:1; }
+}
+@keyframes scrapbook-tape { from { opacity:0; translate:0 -5px; scale:1.04; } to { opacity:1; translate:0 0; scale:1; } }
+@keyframes scrapbook-paper { from { opacity:0; translate:-20px -15px; } }
+@keyframes scrapbook-write { from { opacity:0; clip-path:inset(0 100% 0 0); } to { opacity:1; clip-path:inset(0); } }
+html[data-reduced-motion="true"] .fashion-wall--scrapbook *,
+html[data-reduced-motion="true"] .fashion-wall--scrapbook *::before,
+html[data-reduced-motion="true"] .fashion-wall--scrapbook *::after { animation:none!important; }
+@media(prefers-reduced-motion:reduce) {
+  .fashion-wall--scrapbook *, .fashion-wall--scrapbook *::before, .fashion-wall--scrapbook *::after { animation:none!important; }
+}
+
+/* Share the same careful placement pace with other photo collages. */
+.chapter-player .fashion-wall:not(.fashion-wall--scrapbook) figure {
+  animation:scrapbook-place 950ms cubic-bezier(.22,.61,.36,1) var(--arrival) backwards;
+}
+html[data-reduced-motion="true"] .fashion-wall figure { animation:none!important; }
+@media(prefers-reduced-motion:reduce) { .fashion-wall figure { animation:none!important; } }
+
+/* Visibility is controlled by assembly state, never by animation delays alone. */
+.chapter-player .fashion-wall--assembling .is-waiting,
+.chapter-player .fashion-wall--assembling .is-waiting::before,
+.chapter-player .fashion-wall--assembling .is-waiting::after {
+  visibility:hidden!important; animation:none!important;
+}
+.chapter-player .fashion-wall--assembling .scrapbook-clipping:not(.is-placed) { animation:none!important; }
+.chapter-player .fashion-wall--assembling .scrapbook-doodles.is-placed { animation:scrapbook-write 1700ms ease-out backwards; }
+.chapter-player__page:has(.fashion-wall--assembling) .chapter-player__collage-backdrop { display:none; }

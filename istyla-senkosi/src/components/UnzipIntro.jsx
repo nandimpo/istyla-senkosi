@@ -76,7 +76,7 @@ export default function UnzipIntro({ image, track, nextTrack, audioRef, children
   return <>
     {track && <audio ref={audioRef} src={track} loop={!nextTrack} preload="metadata" aria-hidden="true" />}
     {opened ? children : <section className={`unzip-intro ${opening ? "is-opening" : ""} ${copyReady ? "is-ready" : "is-reading"}`} aria-label="Unzip the Swenka chapter" style={{ "--zip-progress": progress }}>
-    <IntroAmbientAudio id="swenka" volumeScale={0.45} nextTrack={nextTrack} track={track} sharedAudioRef={audioRef} />
+    <IntroAmbientAudio id="swenka" volumeScale={0.8} nextTrack={nextTrack} track={track} sharedAudioRef={audioRef} />
     <img className="unzip-preview" src={image} alt="" />
     <div className="unzip-fabric unzip-fabric-left" aria-hidden="true" style={{ clipPath: `polygon(${polygon([[0, 0], ...leftEdge, [50, 100], [0, 100]])})` }} />
     <div className="unzip-fabric unzip-fabric-right" aria-hidden="true" style={{ clipPath: `polygon(${polygon([...rightEdge, [50, 100], [100, 100], [100, 0]])})` }} />
@@ -90,7 +90,7 @@ export default function UnzipIntro({ image, track, nextTrack, audioRef, children
         </svg>)}
       </g>)}
     </svg>
-    <div className="unzip-copy"><p><NarrativeText onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="01 / SWENKA" delay={150} /></p><h1><NarrativeText onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text={"Style starts\nwith a detail."} delay={1100} /></h1><p><NarrativeText onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="Pull the zip down to open the chapter." delay={3500} /></p></div>
+    <div className="unzip-copy"><p><NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="01 / SWENKA" delay={150} /></p><h1><NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text={"Style starts\nwith a detail."} delay={1100} /></h1><p><NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="Pull the zip down to open the chapter." delay={3500} /></p></div>
     <button className="unzip-pull" aria-label={copyReady ? "Unzip Swenka. Drag down or press Enter to open." : "Finish reading the introduction before unzipping."} disabled={opening || !copyReady}
       onPointerDown={(event) => {
         if (!copyReady) return;

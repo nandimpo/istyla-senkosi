@@ -11,7 +11,7 @@ function visible(selector) {
 
 function currentHelp(section) {
   if (visible(".journey-guide")) return "Read this short guide, then choose Step into the story to begin. You can open Help again at any time.";
-  if (section === "about") return "Choose Begin Journey to see a short guide and start the documentary. Chapters lets you go straight to a chapter.";
+  if (section === "about") return "Choose Begin Journey to see a short guide and start the documentary. Chapters becomes available after you read the guide and step into the story.";
   if (visible(".final-frame")) return "You have reached the end. Replay Journey starts again, Explore Chapters lets you revisit a chapter, and Credits lists the music and acknowledgements.";
   if (visible(".curved-gallery")) return "Explore all five album views by dragging, scrolling or using the arrows. Once you reach the last view, press and hold the glowing loafer circle to continue.";
   const control = visible(".spotlight-advance, .rhythm-advance, .stitch-advance");
@@ -21,14 +21,14 @@ function currentHelp(section) {
     if (control.matches(".rhythm-advance")) return "Tap the shoe control twice to continue: one tap for each step. A mouse click, trackpad click, touch or Enter on the focused button works.";
     return "Drag the needle to the right, along the seam, to continue. Use your mouse, trackpad or finger. You can also focus the control and use Enter or the right arrow.";
   }
-  if (visible("video")) return "Watch this film; the story continues when it finishes. A Skip button becomes available on supported clips. Use Sound or Menu to adjust the audio.";
+  if (visible("video")) return "Watch this film. The story continues when it finishes. A Skip button becomes available on supported clips. Use Sound or Menu to adjust the audio.";
   const prompt = visible('[class*="__instruction"], [class*="__hint"]');
   if (prompt?.textContent.trim()) {
     const instruction = prompt.textContent.trim();
     if (/scroll down/i.test(instruction)) return "Let the words finish, then scroll down to continue. Use your mouse wheel, a two-finger scroll on your trackpad, or swipe up on a touch screen.";
     return `On this page: ${instruction}. Follow this prompt to continue.`;
   }
-  return "Let the words finish, then follow the instruction on the page. Some pages continue with a scroll; others ask you to drag, tap or hold to unlock the next page. Complete the activity first if a control is dimmed.";
+  return "Let the words finish, then follow the instruction on the page. Some pages continue with a scroll. Others ask you to drag, tap or hold to unlock the next page. Complete the activity first if a control is dimmed.";
 }
 
 export default function HelpButton() {

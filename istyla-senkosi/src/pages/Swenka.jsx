@@ -14,7 +14,7 @@ import xhosaMen from "../assets/Chapter 1_Swenka/Images/Editorial/Xhosa men.jpg"
 import portraitImage from "../assets/Chapter 1_Swenka/Images/Editorial/Man with yellow and blue suit.jpg";
 import chapterImage from "../assets/images/Chapter images/swenka chapter image.jpg";
 import collageBackground from "../assets/Chapter 1_Swenka/Images/Historical Images/Collage background image.jpg";
-import backgroundTrack from "../assets/audio/New Music/Miriam Makeba - Khawuleza (Live 1966) _ Swenka.mp3";
+import backgroundTrack from "../assets/normalized-audio/Miriam Makeba - Khawuleza (Live 1966) _ Swenka.mp3";
 
 const fashionImages = Object.entries(
   import.meta.glob(
@@ -56,7 +56,7 @@ function Swenka() {
         chapter="01 / SWENKA"
         title="Precision. Discipline. Respect."
         subtitle="Looking back at the roots of township style."
-        context="I keep coming back to Ree getting ready. I noticed the finished outfit, but rarely thought about the care behind it. To understand his Skhothane style, I need to begin further back, with Swenka, one of the roots of township fashion. I watch these men and wonder what I missed in my own cousin."
+        context="I keep coming back to Ree getting ready. I noticed the finished outfit, but rarely thought about the care behind it. To understand his Skhothane style, I need to go all the way back to Swenka, one of the roots of township fashion. I watch these men and wonder what I missed in my own cousin."
         interaction="scroll"
         exitTransition="fade"
         titleImage={chapterImage}
@@ -115,7 +115,7 @@ function Swenka() {
             backgroundImage: blackLabelBackground,
             kind: "memory-photo", layout: "quiet",
             alt: "The same old photograph of Ree, recalled after Swenka",
-            text: "I look at Ree again. The photograph is familiar; the questions are changing. What did he notice as he got ready? What did I miss? Swenka has helped me look at the care behind his style. Next, I turn to Pantsula, to follow the clothes into movement.",
+            text: "I look at Ree again. The photograph is familiar. The questions are changing. What did he notice as he got ready? What did I miss? Swenka has helped me look at the care behind his style. Next, I turn to Pantsula, to follow the clothes into movement.",
             caption: "UP NEXT: PANTSULA",
             nextChapter: "pantsula",
             nextChapterLabel: "Explore Pantsula next",

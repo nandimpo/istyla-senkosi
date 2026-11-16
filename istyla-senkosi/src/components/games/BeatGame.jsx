@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigation } from "../../context/NavigationContext";
 import RhythmAdvance from "../RhythmAdvance";
 import ViewportFit from "../ViewportFit";
@@ -6,7 +6,6 @@ import StitchedNarrative from "../StitchedNarrative";
 import "../../styles/ChapterGames.css";
 
 const beats = ["STANCE", "STEP", "RHYTHM", "SWING", "FINALE"];
-const beatNotes = [110, 147, 165, 196, 220];
 const beatNarratives = [
   "I have spent so long looking at Ree's clothes in photographs. Now I want to feel a little of the movement in the culture that came before his Skhothane style. Read each observation, then tap the numbered beat that lights up. I begin one step at a time.",
   "First, I watched how he stood. Knees loose, weight low, ready to move. I softened my own stance and waited for the beat.",
@@ -17,13 +16,12 @@ const beatNarratives = [
 ];
 
 function BeatGame({ sceneImages, onComplete }) {
-  const { soundOn, volume, reducedMotion } = useNavigation();
+  const { reducedMotion } = useNavigation();
   const [copyReady, setCopyReady] = useState(false);
   const [activeBeat, setActiveBeat] = useState(0);
   const [replayFrame, setReplayFrame] = useState(0);
   const [paused, setPaused] = useState(false);
   const [hasPlayedCycle, setHasPlayedCycle] = useState(false);
-  const audioContext = useRef(null);
   const ready = activeBeat === beats.length;
 
   useEffect(() => {
@@ -39,28 +37,8 @@ function BeatGame({ sceneImages, onComplete }) {
 
   const displayedFrame = Math.min(sceneImages.length - 1, ready ? replayFrame : activeBeat);
 
-  const playBeat = (index) => {
-    if (!soundOn) return;
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    audioContext.current ??= new AudioContext();
-    const context = audioContext.current;
-    if (context.state === "suspended") context.resume();
-    const oscillator = context.createOscillator();
-    const gain = context.createGain();
-    oscillator.type = index % 2 ? "square" : "triangle";
-    oscillator.frequency.setValueAtTime(beatNotes[index], context.currentTime);
-    gain.gain.setValueAtTime(0.0001, context.currentTime);
-    gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, 0.32 * volume), context.currentTime + 0.015);
-    gain.gain.exponentialRampToValueAtTime(0.0001, context.currentTime + 0.26);
-    oscillator.connect(gain).connect(context.destination);
-    oscillator.start();
-    oscillator.stop(context.currentTime + 0.28);
-  };
-
   const activateBeat = (index) => {
     if (!copyReady || index !== activeBeat) return;
-    playBeat(index);
     setCopyReady(false);
     setActiveBeat(index + 1);
   };

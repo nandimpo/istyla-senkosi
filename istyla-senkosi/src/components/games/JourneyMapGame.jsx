@@ -67,6 +67,8 @@ const MAP_MEMORIES = selectedPhotographs.sort(([a], [b]) => a.localeCompare(b, u
 
 function JourneyMapGame({ mapImage, onComplete }) {
   const [progress, setProgress] = useSessionState("map:progress", 0, (value) => Number.isFinite(value) && value >= 0 && value <= 1);
+  const [revealedStop, setRevealedStop] = useState(progress >= 1 ? 2 : progress >= .5 ? 1 : -1);
+  const started = revealedStop >= 0;
   const [closedStop, setClosedStop] = useState(null);
   const [textReady, setTextReady] = useState(false);
   const textReadyRef = useRef(false);
@@ -76,7 +78,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
   const [systemReduced, setSystemReduced] = useState(() => window.matchMedia("(prefers-reduced-motion: reduce)").matches);
   const { reducedMotion, setNavigationLocked } = useNavigation();
   useEffect(() => {
-    const locked = !textReady || entering;
+    const locked = (started && !textReady) || entering;
     setNavigationLocked(locked);
     const controls = [...document.querySelectorAll(".global-home-link, .chapters-trigger, .menu-trigger, .help-trigger, .chapter-player__back-story, .chapter-player__sound")];
     const previous = controls.map((element) => element.inert);
@@ -85,7 +87,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
       controls.forEach((element, index) => { element.inert = previous[index]; });
       setNavigationLocked(false);
     };
-  }, [textReady, entering, setNavigationLocked]);
+  }, [started, textReady, entering, setNavigationLocked]);
   const calm = reducedMotion || systemReduced;
   const drag = useRef(null);
   const exitScroll = useRef(0);
@@ -141,11 +143,20 @@ function JourneyMapGame({ mapImage, onComplete }) {
       setClosedStop(null);
       drag.current = null;
     }
+    setRevealedStop((previous) => Math.max(previous, nextIndex));
     progressRef.current = next;
     setProgress(next);
     return next;
   };
   const selectStop = (index) => {
+    if (!started) {
+      if (index !== 0) return;
+      progressRef.current = 0;
+      setProgress(0);
+      setRevealedStop(0);
+      setClosedStop(null);
+      return;
+    }
     if (!textReadyRef.current || index > activeIndex + 1) return;
     if (index === activeIndex && !cardOpen) { textReadyRef.current = false; setTextReady(false); }
     move(STOPS[index].progress, false);
@@ -190,6 +201,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
   };
   const keyDown = (event) => {
     const keys = ["ArrowDown", "ArrowRight", "ArrowUp", "ArrowLeft", "Home", "End"];
+    if (!started && ["Enter", " "].includes(event.key)) { event.preventDefault(); selectStop(0); return; }
     if (!keys.includes(event.key)) return;
     event.preventDefault();
     event.stopPropagation();
@@ -221,8 +233,8 @@ function JourneyMapGame({ mapImage, onComplete }) {
       </header>
       <div className="journey-layout">
         <div className="journey-map-column">
-          <p className="journey-explore-note">20 photographs / a personal atlas<span>Explore the photographs. On smaller screens, swipe across the map.</span></p>
-          <div className="journey-viewport" inert={!textReady || entering} tabIndex={0} role="region" aria-label="Fashion atlas with 9 photographs. Scroll horizontally on smaller screens to explore." onPointerDown={(event) => event.stopPropagation()} onDragStart={(event) => event.preventDefault()}>
+          <p className="journey-explore-note">9 photographs / a personal atlas<span>Explore the photographs. On smaller screens, swipe across the map.</span></p>
+          <div className="journey-viewport" inert={(started && !textReady) || entering} tabIndex={0} role="region" aria-label="Fashion atlas with 9 photographs. Scroll horizontally on smaller screens to explore." onPointerDown={(event) => event.stopPropagation()} onDragStart={(event) => event.preventDefault()}>
             <div className="journey-camera" ref={cameraRef}>
               <div className="journey-depth-shadow" aria-hidden="true" />
               <div className="journey-paper" aria-hidden="true" />
@@ -235,63 +247,77 @@ function JourneyMapGame({ mapImage, onComplete }) {
                   <text x="821" y="964">N ↑</text><text x="945" y="1097">NOT TO SCALE</text>
                 </g>
                 {Object.entries(MEMORY_GROUPS).map(([folder, group]) => <g key={folder} className={`journey-cluster-label journey-thread-${group.thread}`} transform={`translate(${spreadX(group.label[0])} ${group.label[1]})`}><path d="M0 -1H12" /><text x="15" y="0" transform="rotate(-3 15 0)">{group.name}</text><path className="journey-label-underline" d={`M15 2 Q25 3 ${folder === "Beginning" ? 34 : 43} 1.5`} /></g>)}
-                <g className="journey-thought" transform={`translate(${spreadX(878)} 951) scale(1.15)`} aria-label="My thought: The care in a collar, the way a jacket sits. Is this how Ree wanted to be seen?">
+                {revealedStop >= 0 && <g className="journey-thought" transform={`translate(${spreadX(878)} 951) scale(1.15)`} aria-label="My thought: The care in a collar, the way a jacket sits. Is this how Ree wanted to be seen?">
                   <path d="M0 1 Q48 -3 100 0 L99 38 L30 38 L24 44 L25 38 L0 39 Z" />
                   <text x="4" y="9"><tspan x="4">the care in a collar...</tspan><tspan x="4" dy="8">the way a jacket sits.</tspan><tspan x="4" dy="9">Is this how Ree wanted</tspan><tspan x="4" dy="8">to be seen?</tspan></text>
-                </g>
-                <g className="journey-thought journey-thought-memory" transform={`translate(${spreadX(937)} 1045) scale(1.15)`} aria-label="My thought: Colour, confidence, belonging. What did the clothes say for Ree?">
+                </g>}
+                {revealedStop >= 1 && <g className="journey-thought journey-thought-memory" transform={`translate(${spreadX(937)} 1045) scale(1.15)`} aria-label="My thought: Colour, confidence, belonging. What did the clothes say for Ree?">
                   <path d="M0 0 L116 -1 L117 31 L82 31 L76 38 L75 31 L1 32 Z" />
                   <text x="4" y="9"><tspan x="4">colour / confidence / belonging</tspan><tspan x="4" dy="9">What did the clothes</tspan><tspan x="4" dy="8">say for Ree?</tspan></text>
-                </g>
-                <g className="journey-thought journey-thought-soweto" transform={`translate(${spreadX(871)} 1072) scale(1.15)`} aria-label="My thought: Follow the people, not just the look. A little closer to my cousin.">
+                </g>}
+                {revealedStop >= 2 && <g className="journey-thought journey-thought-soweto" transform={`translate(${spreadX(871)} 1072) scale(1.15)`} aria-label="My thought: Follow the people, not just the look. A little closer to my cousin.">
                   <path d="M0 0 Q48 -3 104 0 L105 31 L18 31 L12 37 L12 31 L0 31 Z" />
                   <text x="4" y="9"><tspan x="4">follow the people,</tspan><tspan x="4" dy="8">not just the look.</tspan><tspan x="4" dy="8">a little closer to my cousin.</tspan></text>
-                </g>
-                {MAP_MEMORIES.map((memory) => <path key={memory.id} className={`journey-reference-line journey-thread-${MEMORY_GROUPS[memory.folder].thread}`} d={`M${photoX(memory)} ${memory.y} Q${spreadX((memory.x + 900) / 2)} ${memory.y + 12} ${routePoint([0, .5, 1][["Beginning", "Middle", "Soweto"].indexOf(memory.folder)]).x} ${routePoint([0, .5, 1][["Beginning", "Middle", "Soweto"].indexOf(memory.folder)]).y}`} />)}
-                {MAP_MEMORIES.map((memory) => <g key={memory.id} className={`journey-map-photo ${selectedMemory?.id === memory.id ? "selected" : ""}`} role="button" tabIndex={textReady && !entering ? 0 : -1} aria-disabled={!textReady || entering} aria-label={`Open fashion memory: ${memory.title}, ${memory.reference}`} transform={`translate(${photoX(memory)} ${memory.y}) rotate(${memory.tilt}) scale(${memory.scale})`} onClick={(event) => { event.stopPropagation(); if (textReadyRef.current && !entering) setSelectedMemory(memory); }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.stopPropagation(); if (textReadyRef.current && !entering) setSelectedMemory(memory); } }}>
+                </g>}
+                {MAP_MEMORIES.filter((memory) => ["Beginning", "Middle", "Soweto"].indexOf(memory.folder) <= revealedStop).map((memory, index) => {
+                  const stop = routePoint([0, .5, 1][["Beginning", "Middle", "Soweto"].indexOf(memory.folder)]);
+                  const connection = `M${stop.x} ${stop.y} Q${spreadX((memory.x + 900) / 2)} ${memory.y + 12} ${photoX(memory)} ${memory.y}`;
+                  return <g key={memory.id}>
+                    <defs><mask id={`journey-connection-${index}`} maskUnits="userSpaceOnUse" x="0" y="0" width="2000" height="2000">
+                      <path className="journey-connection-reveal" d={connection} pathLength="1" fill="none" stroke="white" strokeWidth="8" style={{ "--assembly-delay": `${1600 + MAP_MEMORIES.filter((item) => item.folder === memory.folder).indexOf(memory) * 1250}ms` }} />
+                    </mask></defs>
+                    <path className={`journey-reference-line journey-thread-${MEMORY_GROUPS[memory.folder].thread}`} d={connection} mask={`url(#journey-connection-${index})`} />
+                  </g>;
+                })}
+                {MAP_MEMORIES.filter((memory) => ["Beginning", "Middle", "Soweto"].indexOf(memory.folder) <= revealedStop).map((memory) => <g key={memory.id} style={{ "--assembly-delay": `${600 + MAP_MEMORIES.filter((item) => item.folder === memory.folder).indexOf(memory) * 1250}ms` }} className={`journey-map-photo ${selectedMemory?.id === memory.id ? "selected" : ""}`} role="button" tabIndex={textReady && !entering ? 0 : -1} aria-disabled={!textReady || entering} aria-label={`Open fashion memory: ${memory.title}, ${memory.reference}`} transform={`translate(${photoX(memory)} ${memory.y}) rotate(${memory.tilt}) scale(${memory.scale})`} onClick={(event) => { event.stopPropagation(); if (textReadyRef.current && !entering) setSelectedMemory(memory); }} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.stopPropagation(); if (textReadyRef.current && !entering) setSelectedMemory(memory); } }}>
                   <rect className="journey-photo-paper" style={{ fill: "url(#journey-photo-map-paper)" }} x="-12" y="-16" width="24" height="35" />
                   <path className="journey-photo-tape" d="M-5 -17 L5 -18 L6 -14 L-4 -13 Z" />
                   <image href={memory.src} x="-11" y="-15" width="22" height="29" preserveAspectRatio="xMidYMid meet" />
                   <text x="-10" y="17">{memory.reference} / {MEMORY_GROUPS[memory.folder].name}</text>
                 </g>)}
-                <g className="journey-fashion-sketch" transform={`translate(${spreadX(876)} 984) rotate(-4)`} aria-label="Fashion illustration: patterned tailoring and a statement hat">
+                {revealedStop >= 0 && <g className="journey-fashion-sketch" transform={`translate(${spreadX(876)} 984) rotate(-4)`} aria-label="Fashion illustration: patterned tailoring and a statement hat">
                   <image className="journey-sketch-image" href={silhouetteSketch} x="-22.88" y="-21.5" width="45.76" height="71.5" preserveAspectRatio="xMidYMid meet" />
-                </g>
-                <g className="journey-fashion-sketch" transform={`translate(${spreadX(916)} 1019) rotate(-7)`} aria-label="Fashion illustration: embellished patterned high-heeled boot">
+                </g>}
+                {revealedStop >= 0 && <g className="journey-fashion-sketch" transform={`translate(${spreadX(916)} 1019) rotate(-7)`} aria-label="Fashion illustration: embellished patterned high-heeled boot">
                   <image className="journey-sketch-image" href={shoeSketch} x="-23.74" y="-19.78" width="51.48" height="65.78" preserveAspectRatio="xMidYMid meet" />
-                </g>
-                <g className="journey-fashion-sketch" transform={`translate(${spreadX(1032)} 1039) rotate(5)`} aria-label="Fashion illustration: red floral outfit and oversized hat">
+                </g>}
+                {revealedStop >= 1 && <g className="journey-fashion-sketch" transform={`translate(${spreadX(1032)} 1039) rotate(5)`} aria-label="Fashion illustration: red floral outfit and oversized hat">
                   <image className="journey-sketch-image" href={floralSketch} x="-25.74" y="-20.64" width="51.48" height="68.64" preserveAspectRatio="xMidYMid meet" />
-                </g>
-                <g className="journey-fashion-sketch" transform={`translate(${spreadX(828)} 1058) rotate(-5)`} aria-label="Fashion illustration: white draped gown with embellished sleeves">
+                </g>}
+                {revealedStop >= 2 && <g className="journey-fashion-sketch" transform={`translate(${spreadX(828)} 1058) rotate(-5)`} aria-label="Fashion illustration: white draped gown with embellished sleeves">
                   <image className="journey-sketch-image" href={drapedSketch} x="-30.03" y="-16.34" width="60.06" height="54.34" preserveAspectRatio="xMidYMid meet" />
-                </g>
-                <g className="journey-fashion-sketch" transform={`translate(${spreadX(924)} 980) rotate(4)`} aria-label="Fashion illustration: monochrome patterned textile and draped silhouette">
+                </g>}
+                {revealedStop >= 1 && <g className="journey-fashion-sketch" transform={`translate(${spreadX(924)} 980) rotate(4)`} aria-label="Fashion illustration: monochrome patterned textile and draped silhouette">
                   <image className="journey-sketch-image" href={textileSketch} x="-21.45" y="-16.34" width="42.9" height="54.34" preserveAspectRatio="xMidYMid meet" />
-                </g>
-                <g className="journey-fashion-sketch" transform={`translate(${spreadX(821)} 1000) rotate(-6)`} aria-label="Fashion illustration: sculptural platform shoe with beaded fringe">
+                </g>}
+                {revealedStop >= 2 && <g className="journey-fashion-sketch" transform={`translate(${spreadX(821)} 1000) rotate(-6)`} aria-label="Fashion illustration: sculptural platform shoe with beaded fringe">
                   <image className="journey-sketch-image" href={platformSketch} x="-25.74" y="-20.64" width="51.48" height="68.64" preserveAspectRatio="xMidYMid meet" />
-                </g>
-                <g className="journey-sketch-caption" transform={`translate(${spreadX(850)} 935) rotate(-3)`}><text>a silhouette remembered</text></g>
-                <g className="journey-sketch-caption" transform={`translate(${spreadX(940)} 1033) rotate(-3)`}><text>polish. pride. presence.</text></g>
-                <g className="journey-sketch-caption" transform={`translate(${spreadX(1010)} 1097) rotate(2)`}><text>colour that stays with me</text></g>
-                <g className="journey-sketch-caption" transform={`translate(${spreadX(850)} 946) rotate(-3)`}><text>the way fabric remembers</text></g>
-                <g className="journey-sketch-caption" transform={`translate(${spreadX(944)} 1020) rotate(2)`}><text>the stories in a pattern</text></g>
-                <g className="journey-sketch-caption" transform={`translate(${spreadX(791)} 1049) rotate(-4)`}><text>each detail, chosen</text></g>
+                </g>}
+                {revealedStop >= 0 && <g className="journey-sketch-caption" transform={`translate(${spreadX(850)} 935) rotate(-3)`}><text>a silhouette remembered</text></g>}
+                {revealedStop >= 1 && <g className="journey-sketch-caption" transform={`translate(${spreadX(940)} 1033) rotate(-3)`}><text>polish. pride. presence.</text></g>}
+                {revealedStop >= 1 && <g className="journey-sketch-caption" transform={`translate(${spreadX(1010)} 1097) rotate(2)`}><text>colour that stays with me</text></g>}
+                {revealedStop >= 0 && <g className="journey-sketch-caption" transform={`translate(${spreadX(850)} 946) rotate(-3)`}><text>the way fabric remembers</text></g>}
+                {revealedStop >= 1 && <g className="journey-sketch-caption" transform={`translate(${spreadX(944)} 1020) rotate(2)`}><text>the stories in a pattern</text></g>}
+                {revealedStop >= 2 && <g className="journey-sketch-caption" transform={`translate(${spreadX(791)} 1049) rotate(-4)`}><text>each detail, chosen</text></g>}
                 <path className="journey-route-base" d={spreadPath(routePath)} />
                 <path className="journey-route-grab" d={spreadPath(routePath)} tabIndex={-1} aria-label="Drag along the journey thread" onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp} onPointerCancel={() => { drag.current = null; }} onLostPointerCapture={() => { drag.current = null; }} />
                 <path className="journey-route-glow" d={spreadPath(travelledPath(progress))} />
                 <path className="journey-route-lit" d={spreadPath(travelledPath(progress))} />
                 {STOPS.map((stop, index) => {
                   const location = routePoint(stop.progress);
-                  return <g key={stop.id} className={`journey-map-stop ${progress >= stop.progress ? "reached" : ""} ${progress > stop.progress || ready ? "completed" : ""} ${index === activeIndex ? "active" : ""} ${index === 0 && progress === 0 ? "starting" : ""} ${index > activeIndex + 1 ? "locked" : ""}`} role="button" tabIndex={!textReady || index > activeIndex + 1 ? -1 : 0} aria-disabled={!textReady || index > activeIndex + 1} aria-label={`Remember ${stop.title}${progress > stop.progress || ready ? ", completed" : ""}`} onClick={() => selectStop(index)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.stopPropagation(); selectStop(index); } }}>
+                  return <g key={stop.id} className={`journey-map-stop ${progress >= stop.progress ? "reached" : ""} ${progress > stop.progress || ready ? "completed" : ""} ${index === activeIndex ? "active" : ""} ${index === 0 && progress === 0 ? "starting" : ""} ${index > activeIndex + 1 ? "locked" : ""}`} role="button" tabIndex={(started ? !textReady || index > activeIndex + 1 : index !== 0) ? -1 : 0} aria-disabled={(started ? !textReady || index > activeIndex + 1 : index !== 0)} aria-label={`Remember ${stop.title}${progress > stop.progress || ready ? ", completed" : ""}`} onClick={() => selectStop(index)} onKeyDown={(event) => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); event.stopPropagation(); selectStop(index); } }}>
                     <path className="journey-stop-pin-stem" d={`M${location.x} ${location.y - 1} V${location.y + 9}`} />
-                    <circle className="journey-stop-halo" cx={location.x} cy={location.y - 4} r="9" />
-                    <circle className="journey-stop-pin" cx={location.x} cy={location.y - 4} r="7" />
-                    <circle className="journey-stop-pin-core" cx={location.x} cy={location.y - 4} r="2.2" />
-                    <text x={location.x + stop.label.dx} y={location.y + stop.label.dy} textAnchor={stop.label.dx < 0 ? "end" : "start"}>{index === 0 ? "Home" : index === 1 ? "Memory" : "Soweto"}</text>
+                    <circle className="journey-stop-halo" cx={location.x} cy={location.y - 4} r="15" />
+                    <circle className="journey-stop-pin" cx={location.x} cy={location.y - 4} r="12" />
+                    <circle className="journey-stop-pin-core" cx={location.x} cy={location.y - 4} r="3.8" />
+                    <text x={location.x + (stop.label.dx < 0 ? -17 : 17)} y={location.y + stop.label.dy} textAnchor={stop.label.dx < 0 ? "end" : "start"}>{index === 0 ? "Home" : index === 1 ? "Memory" : "Soweto"}</text>
                   </g>;
                 })}
+                {!started && <g className="journey-start-invitation" aria-hidden="true" transform={`translate(${routePoint(0).x + 24} ${routePoint(0).y + 17})`}>
+                  <path d="M-5 -4 Q-15 -2 -21 -15" />
+                  <path d="M-22 -9 L-21 -15 L-15 -13" />
+                  <text x="0" y="0">Click Home to begin</text>
+                </g>}
                 <circle className="journey-traveller-shadow" cx={point.x} cy={point.y + 1} r="1.6" />
                 <circle className={`journey-drag-pulse ${progress === 0 ? "starting" : ""}`} cx={point.x} cy={point.y} r="8" />
                 <circle className="journey-traveller" cx={point.x} cy={point.y} r="3" />
@@ -299,7 +325,7 @@ function JourneyMapGame({ mapImage, onComplete }) {
                   aria-label="Journey marker" aria-describedby="journey-instruction" aria-orientation="vertical"
                   aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress * 100)}
                   aria-valuetext={`${Math.round(progress * 100)} percent. ${activeStop.title}`} aria-disabled={entering || !textReady}
-                  onClick={(event) => event.stopPropagation()} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp}
+                  onClick={(event) => { event.stopPropagation(); if (!started) selectStop(0); }} onPointerDown={pointerDown} onPointerMove={pointerMove} onPointerUp={pointerUp}
                   onPointerCancel={() => { drag.current = null; }} onLostPointerCapture={() => { drag.current = null; }} onKeyDown={keyDown} />
               </svg>
             </div>
@@ -310,17 +336,17 @@ function JourneyMapGame({ mapImage, onComplete }) {
             </article>}
           </div>
           <div className="journey-controls">
-            <div className="journey-map-guidance" id="journey-instruction"><span>HOW TO EXPLORE</span><p>Drag the gold circle or choose a stop. Tap photos to explore.</p></div>
+            <div className="journey-map-guidance" id="journey-instruction"><span>HOW TO EXPLORE</span><p>Start at Home, then move to Memory and Soweto. Tap the photos as they appear.</p></div>
             
             <div className="journey-stop-buttons" aria-label="Journey stops">
-              {STOPS.map((stop, index) => <button key={stop.id} disabled={entering || !textReady || index > activeIndex + 1} aria-current={index === activeIndex ? "step" : undefined} onClick={() => selectStop(index)}><span>0{index + 1}</span>{["Home", "Memory", "Soweto"][index]}</button>)}
+              {STOPS.map((stop, index) => <button key={stop.id} disabled={entering || (started ? !textReady || index > activeIndex + 1 : index !== 0)} className={!started && index === 0 ? "journey-home-invitation" : undefined} aria-current={index === activeIndex ? "step" : undefined} onClick={() => selectStop(index)}><span>0{index + 1}</span>{["Home", "Memory", "Soweto"][index]}{!started && index === 0 && <small>Click to begin ?</small>}</button>)}
             </div>
-            <small className="journey-map-note">Home, memory, then Soweto. Tap the next pin or use the destination buttons; each stop changes what I notice.</small>
+            <small className="journey-map-note">Home, memory, then Soweto. Tap the next pin or use the destination buttons. Each stop changes what I notice.</small>
           </div>
         </div>
         <aside className="journey-story-column" aria-label="Journey memories">
           <hr className="journey-memory-divider" />
-          {cardOpen ? <article className="journey-story-card" key={activeStop.id} aria-labelledby={`story-${activeStop.id}`}>
+          {!started ? <div className="journey-story-card"><h2>Begin at Home</h2><p>Click the glowing Home circle on the map to begin. My photographs and threads will appear from there.</p></div> : cardOpen ? <article className="journey-story-card" key={activeStop.id} aria-labelledby={`story-${activeStop.id}`}>
             <div className="journey-story-body">
             <span className="journey-story-number">0{activeIndex + 1}</span>
             <h2 id={`story-${activeStop.id}`}>{activeStop.title}</h2>

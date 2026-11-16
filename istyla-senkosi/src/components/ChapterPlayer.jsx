@@ -37,14 +37,16 @@ const STORY_BEATS = {
   reflection: "WHAT I CARRY FORWARD",
 };
 
-function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging = false, directGalleryDrag = false, visualOnly = false, showStory = true, onTextComplete, videoUnlocked = true, videoExiting = false, onVideoProgress, onVideoEnded, onVideoStarted, allowVideoSound = true, onNextChapter, onAlbumWritingReady, interactionsReady = true, hideNextChapter = false, continuationControl = null }) {
+function Frame({ musicAudioRef, frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging = false, directGalleryDrag = false, visualOnly = false, showStory = true, onTextComplete, videoUnlocked = true, videoExiting = false, onVideoProgress, onVideoEnded, onVideoStarted, allowVideoSound = true, onNextChapter, onCollageReady, onAlbumWritingReady, interactionsReady = true, hideNextChapter = false, continuationControl = null }) {
   const StoryContainer = continuationControl ? ViewportFit : "div";
   const { soundOn, volume } = useNavigation();
   const videoRef = useRef(null);
+  const ownsVideoAudio = useRef(false);
   const [videoNeedsStart, setVideoNeedsStart] = useState(false);
   const [videoFailed, setVideoFailed] = useState(false);
   const [videoWaiting, setVideoWaiting] = useState(false);
   const [clipStarted, setClipStarted] = useState(false);
+  const [videoAudioReady, setVideoAudioReady] = useState(false);
   const [userPaused, setUserPaused] = useState(false);
   const [observationTime, setObservationTime] = useState(0);
   const observation = frame.videoNotes?.find((note) => observationTime >= note.start && observationTime < note.end);
@@ -56,10 +58,10 @@ function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging
     const video = videoRef.current;
     if (!video) return;
     video.muted = visualOnly || !allowVideoSound || !clipStarted || !soundOn;
-    if (!videoExiting) video.volume = volume;
+    if (!videoExiting) video.volume = videoAudioReady ? volume : 0;
     if (userPaused || (!videoUnlocked && !videoExiting) || visualOnly || (allowVideoSound && !clipStarted)) { video.pause(); return; }
     if (video.paused) video.play().then(() => setVideoNeedsStart(false)).catch(() => setVideoNeedsStart(true));
-  }, [videoUnlocked, videoExiting, visualOnly, soundOn, allowVideoSound, clipStarted, userPaused, volume]);
+  }, [videoUnlocked, videoExiting, visualOnly, soundOn, allowVideoSound, clipStarted, userPaused, volume, videoAudioReady]);
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !videoExiting) return;
@@ -70,18 +72,32 @@ function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging
       const progress = Math.min(1, (now - started) / 3000);
       video.volume = initialVolume * (1 - progress);
       if (progress < 1) animation = requestAnimationFrame(fade);
-      else video.pause();
+      else { video.pause(); ownsVideoAudio.current = false; window.dispatchEvent(new Event("istyla:video-audio-end")); }
     };
     animation = requestAnimationFrame(fade);
     return () => cancelAnimationFrame(animation);
   }, [videoExiting]);
+  useEffect(() => {
+    if (!clipStarted || userPaused) return;
+    const timer = setTimeout(() => setVideoAudioReady(true), 450);
+    return () => clearTimeout(timer);
+  }, [clipStarted, userPaused]);
+  useEffect(() => () => {
+    if (videoRef.current) videoRef.current.pause();
+    if (ownsVideoAudio.current) window.dispatchEvent(new Event("istyla:video-audio-end"));
+  }, []);
   const startClipWithSound = (event) => {
     event.stopPropagation();
     const video = videoRef.current;
     if (!video || !videoUnlocked) return;
     video.defaultMuted = false;
     video.muted = !allowVideoSound || !soundOn;
-    video.volume = volume;
+    if (allowVideoSound) {
+      ownsVideoAudio.current = true;
+      window.dispatchEvent(new Event("istyla:video-audio-start"));
+    }
+    video.volume = 0;
+    setVideoAudioReady(false);
     setClipStarted(true);
     setUserPaused(false);
     video.play()
@@ -104,6 +120,11 @@ function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging
     const video = videoRef.current;
     if (video && frame.videoNotes) setObservationTime(Math.max(0, video.currentTime - (frame.videoStart || 0)));
     if ((!frame.playSeconds && !frame.playToEnd) || !video || !videoUnlocked || visualOnly || video.seeking) return;
+    // Natural endings need their fade before the media reaches its final frame.
+    if (videoAudioReady && frame.playToEnd && Number.isFinite(video.duration) && !videoExiting) {
+      const remaining = video.duration - video.currentTime;
+      video.volume = volume * Math.min(1, Math.max(0, remaining / 3));
+    }
     const delta = video.currentTime - lastVideoTime.current;
     lastVideoTime.current = video.currentTime;
     if (delta > 0 && delta < 1.5) watched.current += delta;
@@ -114,7 +135,7 @@ function Frame({ frame, galleryIndex = 0, galleryDragOffset = 0, galleryDragging
       <div inert={!visualOnly && !interactionsReady && frame.kind !== "memory-album"} className={`chapter-player__visual ${frame.layout === "quiet" ? "chapter-player__visual--quiet-layout" : ""} ${frame.motion ? `chapter-player__visual--${frame.motion}` : ""} ${frame.kind ? `chapter-player__visual--${frame.kind}` : ""}`}>
         {frame.backgroundImage && <div className="chapter-player__collage-backdrop" style={{ backgroundImage: `url("${frame.backgroundImage}")` }} aria-hidden="true" />}
         {frame.kind === "fashion-wall" ? (
-          <FashionAlbum images={frame.collage} label={frame.collageLabel || "My Swenka scrapbook"} scrapbook chapter={frame.scrapbookChapter} clippingKinds={frame.clippingKinds} customSlots={frame.scrapbookSlots} notes={frame.scrapbookNotes} visualOnly={visualOnly}/>
+          <FashionAlbum onAssemblyReady={onCollageReady} audioRef={musicAudioRef} images={frame.collage} label={frame.collageLabel || "My Swenka scrapbook"} scrapbook chapter={frame.scrapbookChapter} clippingKinds={frame.clippingKinds} customSlots={frame.scrapbookSlots} notes={frame.scrapbookNotes} visualOnly={visualOnly}/>
         ) : frame.galleryStyle === "crossfade" && frame.collage ? (
           <div className="chapter-player__gallery-track" style={{ "--gallery-columns":frame.collage.length }}>
             {frame.collage.map((src, index) => <CrossfadePhoto key={src} images={frame.collage} index={index} alt={frame.alt || "Pantsula fashion photograph"} paused={visualOnly}/>) }
@@ -170,6 +191,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const [pageIndex, setPageIndex] = useSessionState(`${id}:page`, 0, (value) => Number.isInteger(value) && value >= 0 && value < 1 + frames.length + Number(Boolean(gamePage)) + Number(Boolean(finalPage)));
   const [videoBridge, setVideoBridge] = useState(null);
   const [threadLeaving, setThreadLeaving] = useState(false);
+  const [collageReadyFor, setCollageReadyFor] = useState(null);
   const [albumReadyFor, setAlbumReadyFor] = useState(null);
   const [videoSeconds, setVideoSeconds] = useState(0);
   const [videoDuration, setVideoDuration] = useState(0);
@@ -181,6 +203,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const [finishedText, setFinishedText] = useState({});
   const goToPage = (target) => {
     setThreadLeaving(false);
+    setCollageReadyFor(null);
     setVideoSeconds(0);
     setVideoDuration(0);
     setVideoStarted(false);
@@ -224,14 +247,16 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   const lacesLocked = Boolean(currentFrame?.laceGate && !lacesUnlocked);
   const shoeLocked = Boolean(currentFrame?.shoeShine && !shoeUnlocked);
   const outfitLocked = Boolean(currentFrame?.outfitGate && !outfitUnlocked);
+  const collageLocked = currentFrame?.kind === "fashion-wall" && collageReadyFor !== pageIndex;
   const sewingLocked = Boolean(
+    collageLocked ||
     (pageIndex === 0 && context && !finishedText.context) ||
     (currentFrame?.text && !finishedText.frame) ||
     (pageIndex === framesEnd && outro && !finishedText.outro)
   );
   const calm = () => reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   useEffect(() => () => clearTimeout(transitionTimer.current), []);
-  useSectionAudio({ id, audioRef, soundOn, nextTrack, duckMusic: Boolean(currentFrame?.video && !outfitLocked && id !== "introduction"), continueWhileLocked: id === "introduction", fadeOut: exiting });
+  const { autoplayBlocked, resumeAudio } = useSectionAudio({ id, audioRef, soundOn, nextTrack, volumeScale: videoBridge ? 0.25 : currentFrame?.video && !shoeLocked && !lacesLocked && !outfitLocked && id !== "introduction" ? 0.12 : id === "introduction" && pageIndex === gamePageIndex ? 0.9 : (hasGamePage && pageIndex === gamePageIndex) || shoeLocked || lacesLocked || outfitLocked ? 0.8 : 1, duckMusic: Boolean(currentFrame?.video && videoStarted && !videoBridge && !outfitLocked && id !== "introduction"), continueWhileLocked: id === "introduction", fadeOut: exiting });
 
   useEffect(() => {
     if (!exiting || !(reducedMotion || window.matchMedia("(prefers-reduced-motion: reduce)").matches) || completedRef.current) return;
@@ -472,12 +497,13 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
           onKeyDown={(event) => event.stopPropagation()}
           onClick={(event) => {
             event.stopPropagation();
-            setSoundOn((current) => !current);
+            if (soundOn && autoplayBlocked) resumeAudio();
+            else setSoundOn((current) => !current);
           }}
-          aria-label={soundOn ? "Turn sound off" : "Turn sound on"}
+          aria-label={soundOn && autoplayBlocked ? "Resume sound" : soundOn ? "Turn sound off" : "Turn sound on"}
           aria-pressed={soundOn}
         >
-          {soundOn ? "SOUND ON" : "SOUND OFF"}
+          {soundOn && autoplayBlocked ? "RESUME SOUND" : soundOn ? "SOUND ON" : "SOUND OFF"}
         </button>
       </header>
 
@@ -502,7 +528,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
         ) : isFinalPage ? (
           finalPage
         ) : lacesLocked || outfitLocked ? null : (
-          <Frame frame={currentFrame} continuationControl={inlineContinuation ? continuationControl : null} hideNextChapter={["swenka", "pantsula", "skhothane"].includes(id)} onAlbumWritingReady={(ready, complete) => setAlbumReadyFor(ready && complete ? pageIndex : null)} showStory={!videoBridge?.outgoing} interactionsReady={!sewingLocked} galleryIndex={galleryIndex} directGalleryDrag={interaction === "drag"} galleryDragOffset={interaction === "drag" ? dragGesture.dragOffset : 0} galleryDragging={interaction === "drag" && dragGesture.dragging} videoExiting={Boolean(videoBridge?.outgoing)} videoUnlocked={!videoBridge && !shoeLocked && !lacesLocked && !outfitLocked} allowVideoSound={id !== "introduction"} onNextChapter={leaveForChapter} onVideoStarted={() => setVideoStarted(true)} onTextComplete={() => finishText("frame")} onVideoProgress={updateVideoProgress} onVideoEnded={advance} />
+          <Frame onCollageReady={(ready) => setCollageReadyFor(ready ? pageIndex : null)} musicAudioRef={audioRef} frame={currentFrame} continuationControl={inlineContinuation ? continuationControl : null} hideNextChapter={["swenka", "pantsula", "skhothane"].includes(id)} onAlbumWritingReady={(ready, complete) => setAlbumReadyFor(ready && complete ? pageIndex : null)} showStory={!videoBridge?.outgoing} interactionsReady={!sewingLocked} galleryIndex={galleryIndex} directGalleryDrag={interaction === "drag"} galleryDragOffset={interaction === "drag" ? dragGesture.dragOffset : 0} galleryDragging={interaction === "drag" && dragGesture.dragging} videoExiting={Boolean(videoBridge?.outgoing)} videoUnlocked={!videoBridge && !shoeLocked && !lacesLocked && !outfitLocked} allowVideoSound={id !== "introduction"} onNextChapter={leaveForChapter} onVideoStarted={() => setVideoStarted(true)} onTextComplete={() => finishText("frame")} onVideoProgress={updateVideoProgress} onVideoEnded={advance} />
         )}
         {isLastFrame && outro && <div className="chapter-player__outro"><StitchedNarrative key={outro} text={outro} placement="inline" showThread={!currentFrame?.text} onComplete={() => finishText("outro")} /></div>}
         {currentFrame?.kind === "memory-album" && <nav className="album-story-controls" aria-label="Continue the chapter" onClick={(event) => event.stopPropagation()} onPointerDown={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
@@ -512,7 +538,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
       </div>
 
       {!inlineContinuation && continuationControl}
-      {videoBridge && <VideoBridge outgoing={videoBridge.outgoing} text={videoBridge.text} onCovered={videoBridge.reveal} onComplete={() => { setVideoBridge(null); lockedRef.current = false; }} />}
+      {videoBridge && <VideoBridge prepareVideoAudio={!videoBridge.outgoing && id !== "introduction"} outgoing={videoBridge.outgoing} text={videoBridge.text} onCovered={videoBridge.reveal} onComplete={() => { setVideoBridge(null); lockedRef.current = false; }} />}
       {lacesLocked && <ConverseLacing key={pageIndex} onBack={guardedRetreat} onComplete={() => bridgeToVideo(currentFrame, () => setLacesUnlocked(true))} />}
       {outfitLocked && <SkhothaneOutfit audioRef={audioRef} onBack={guardedRetreat} onComplete={() => bridgeToVideo(currentFrame, () => setOutfitUnlocked(true))} />}
       {shoeLocked && <ShoeShine onComplete={() => bridgeToVideo(currentFrame, () => setShoeUnlocked(true))} />}

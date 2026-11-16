@@ -1,0 +1,135 @@
+[
+  {
+    "source": "Chapter 1_ Introduction\\Hugh Masekela - Mamoriri (Official Audio).mp3",
+    "output": "normalized-audio\\Chapter 1_ Introduction\\Hugh Masekela - Mamoriri (Official Audio).mp3",
+    "original_lufs": -13.14,
+    "normalized_lufs": -16.28,
+    "true_peak": -2.02
+  },
+  {
+    "source": "Chapter 1_ Introduction\\Miriam Makeba - Welela (Official Video).mp3",
+    "output": "normalized-audio\\Chapter 1_ Introduction\\Miriam Makeba - Welela (Official Video).mp3",
+    "original_lufs": -13.74,
+    "normalized_lufs": -16.32,
+    "true_peak": -2.25
+  },
+  {
+    "source": "Chapter 1_ Introduction\\Miriam Makeba - Welela 2.mp3",
+    "output": "normalized-audio\\Chapter 1_ Introduction\\Miriam Makeba - Welela 2.mp3",
+    "original_lufs": -11.72,
+    "normalized_lufs": -16.26,
+    "true_peak": -3.73
+  },
+  {
+    "source": "Chapter 2_Swenka\\Dorothy Masuka - Magumede (Official Music Video).mp3",
+    "output": "normalized-audio\\Chapter 2_Swenka\\Dorothy Masuka - Magumede (Official Music Video).mp3",
+    "original_lufs": -15.45,
+    "normalized_lufs": -16.24,
+    "true_peak": -2.26
+  },
+  {
+    "source": "Chapter 2_Swenka\\Unomeva (Isileyi Sami).mp3",
+    "output": "normalized-audio\\Chapter 2_Swenka\\Unomeva (Isileyi Sami).mp3",
+    "original_lufs": -16.3,
+    "normalized_lufs": -16.44,
+    "true_peak": -2.22
+  },
+  {
+    "source": "Chapter 3_Pantsula\\Mshoza Mzambiya - Kortes (Kasi Luv).mp3",
+    "output": "normalized-audio\\Chapter 3_Pantsula\\Mshoza Mzambiya - Kortes (Kasi Luv).mp3",
+    "original_lufs": -11.21,
+    "normalized_lufs": -16.25,
+    "true_peak": -3.37
+  },
+  {
+    "source": "Chapter 3_Pantsula\\Ngeke Balunge (feat. Teargas, Brown Dash, Brickz, Skhokho, Madluphuthu).mp3",
+    "output": "normalized-audio\\Chapter 3_Pantsula\\Ngeke Balunge (feat. Teargas, Brown Dash, Brickz, Skhokho, Madluphuthu).mp3",
+    "original_lufs": -10.09,
+    "normalized_lufs": -16.26,
+    "true_peak": -4.59
+  },
+  {
+    "source": "Chapter 3_Pantsula\\Tsikitsiki.mp3",
+    "output": "normalized-audio\\Chapter 3_Pantsula\\Tsikitsiki.mp3",
+    "original_lufs": -9.54,
+    "normalized_lufs": -16.26,
+    "true_peak": -5.06
+  },
+  {
+    "source": "Chapter 4_Skothane\\HEAVY-K x Moonchild Sanelly - Yebo Mama (Official Music Video).mp3",
+    "output": "normalized-audio\\Chapter 4_Skothane\\HEAVY-K x Moonchild Sanelly - Yebo Mama (Official Music Video).mp3",
+    "original_lufs": -10.16,
+    "normalized_lufs": -16.26,
+    "true_peak": -4.27
+  },
+  {
+    "source": "Chapter 4_Skothane\\Umswenko Weykhothane.mp3",
+    "output": "normalized-audio\\Chapter 4_Skothane\\Umswenko Weykhothane.mp3",
+    "original_lufs": -9.31,
+    "normalized_lufs": -16.27,
+    "true_peak": -4.67
+  },
+  {
+    "source": "Chapter 4_Skothane\\Y-Tjukuja (feat. Professor, Oskido, DJ Bucks).mp3",
+    "output": "normalized-audio\\Chapter 4_Skothane\\Y-Tjukuja (feat. Professor, Oskido, DJ Bucks).mp3",
+    "original_lufs": -9.61,
+    "normalized_lufs": -16.26,
+    "true_peak": -5.02
+  },
+  {
+    "source": "Chapter_5 Reflection\\EHLATINI.mp3",
+    "output": "normalized-audio\\Chapter_5 Reflection\\EHLATINI.mp3",
+    "original_lufs": -10.66,
+    "normalized_lufs": -16.39,
+    "true_peak": -2.21
+  },
+  {
+    "source": "Chapter_5 Reflection\\Kwesta - Spirit (Official Music Video) ft Wale ft. Wale _Conclusion.mp3",
+    "output": "normalized-audio\\Chapter_5 Reflection\\Kwesta - Spirit (Official Music Video) ft Wale ft. Wale _Conclusion.mp3",
+    "original_lufs": -11.51,
+    "normalized_lufs": -16.26,
+    "true_peak": -3.56
+  },
+  {
+    "source": "Intro music.m4a",
+    "output": "normalized-audio\\Intro music.mp3",
+    "original_lufs": -24.97,
+    "normalized_lufs": -16.47,
+    "true_peak": -2.05
+  },
+  {
+    "source": "Kwesta - Spirit (Official Music Video) ft Wale ft. Wale _Conclusion.mp3",
+    "output": "normalized-audio\\Kwesta - Spirit (Official Music Video) ft Wale ft. Wale _Conclusion.mp3",
+    "original_lufs": -12.73,
+    "normalized_lufs": -16.26,
+    "true_peak": -4.68
+  },
+  {
+    "source": "Miriam Makeba - Khawuleza (Live 1966) _ Swenka.mp3",
+    "output": "normalized-audio\\Miriam Makeba - Khawuleza (Live 1966) _ Swenka.mp3",
+    "original_lufs": -25.52,
+    "normalized_lufs": -16.43,
+    "true_peak": -2.26
+  },
+  {
+    "source": "Moonchild Sanelly - Yebo Teacher _Skhothane.mp3",
+    "output": "normalized-audio\\Moonchild Sanelly - Yebo Teacher _Skhothane.mp3",
+    "original_lufs": -9.61,
+    "normalized_lufs": -16.26,
+    "true_peak": -5.12
+  },
+  {
+    "source": "Stimela (The Coal Train).mp3",
+    "output": "normalized-audio\\Stimela (The Coal Train).mp3",
+    "original_lufs": -21.19,
+    "normalized_lufs": -16.45,
+    "true_peak": -1.88
+  },
+  {
+    "source": "TKZee - Dlala Mapantsula (archive and chapter intro song) _Pantsula.mp3",
+    "output": "normalized-audio\\TKZee - Dlala Mapantsula (archive and chapter intro song) _Pantsula.mp3",
+    "original_lufs": -14.36,
+    "normalized_lufs": -16.27,
+    "true_peak": -2.86
+  }
+]

@@ -5,7 +5,7 @@ import johannesburgMap from "../assets/Chapter 1_Swenka/Images/Editorial/map.jpg
 import johannesburgImage from "../assets/Additional Images/Street Visuals/Johannesburg/Johannesburg black and white.jpg";
 import reePhoto from "../assets/images/Cousin/Cousin_2_old.jpeg";
 import chapterImage from "../assets/Introduction/Enviroment/Johannesburg home image 1.png";
-import backgroundTrack from "../assets/audio/New Music/Stimela (The Coal Train).mp3";
+import backgroundTrack from "../assets/normalized-audio/Stimela (The Coal Train).mp3";
 import streetImage from "../assets/Additional Images/Street Visuals/Soweto/Spaza shop.jpg";
 import northImageOne from "../assets/Introduction/Enviroment/Johannesburg north 1.jpg";
 import northImageTwo from "../assets/Introduction/Images/Johannesburg north 2.jpg";

@@ -1,5 +1,5 @@
 // Follow-up music comes from each chapter's own folder; primary songs stay in the pages.
-const tracks = import.meta.glob("../assets/audio/New Music/**/*.{mp3,m4a,wav,ogg}", { eager:true, query:"?url", import:"default" });
+const tracks = import.meta.glob("../assets/normalized-audio/**/*.mp3", { eager:true, query:"?url", import:"default" });
 const folders = {
   introduction: "Chapter 1_ Introduction",
   swenka: "Chapter 2_Swenka",
@@ -12,7 +12,13 @@ export const CHAPTER_FOLLOWUPS = Object.fromEntries(Object.entries(folders).map(
     .filter(([path]) => path.includes(`/${folder}/`))
     // Spirit is already Reflection's opening track, so don't queue its duplicate.
     .filter(([path]) => id !== "reflection" || !path.includes("Kwesta - Spirit"))
-    .sort(([a], [b]) => a.localeCompare(b))
+    .sort(([a], [b]) => {
+      if (id === "introduction") {
+        const priority = (path) => path.includes("Miriam Makeba - Welela") ? 0 : 1;
+        return priority(a) - priority(b) || a.localeCompare(b);
+      }
+      return a.localeCompare(b);
+    })
     .map(([, url]) => url),
 ]));
 export function nextQueueIndex(current, length) {

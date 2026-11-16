@@ -12,13 +12,13 @@ const chapters = [
 
 function ChapterNav() {
   const [open, setOpen] = useState(false);
-  const { goTo, isUnlocked } = useNavigation();
+  const { goTo, isUnlocked, guideComplete } = useNavigation();
   const go = (id) => () => {
     setOpen(false);
     goTo(id);
   };
   return <>
-    <button className="chapters-trigger" onClick={() => setOpen(true)}>CHAPTERS <span>+</span></button>
+    <button className="chapters-trigger" disabled={!guideComplete} title={!guideComplete ? "Read the guide and step into the story to open chapters" : undefined} onClick={() => setOpen(true)}>CHAPTERS <span>+</span></button>
     {open && <div className="chapters-shade" onClick={() => setOpen(false)} />}
     <aside className={`chapters-drawer ${open ? "open" : ""}`} aria-hidden={!open}>
       <button className="chapters-close" onClick={() => setOpen(false)} aria-label="Close chapters">×</button>

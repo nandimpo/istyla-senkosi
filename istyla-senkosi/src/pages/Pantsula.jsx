@@ -16,7 +16,7 @@ import seatedPortrait from "../assets/Chapter 2_Pantsula/Images/Historical/Pants
 import cousinPhoto from "../assets/images/Cousin/Cousin_2_old.jpeg";
 import chapterImage from "../assets/images/Chapter images/pantsula chapter intro.jpg";
 import collageBackground from "../assets/Chapter 2_Pantsula/Background images/Pantsula_Collage.jpg";
-import backgroundTrack from "../assets/audio/New Music/TKZee - Dlala Mapantsula (archive and chapter intro song) _Pantsula.mp3";
+import backgroundTrack from "../assets/normalized-audio/TKZee - Dlala Mapantsula (archive and chapter intro song) _Pantsula.mp3";
 
 const sceneImages = [readyImage, stanceImage, stepImage, rhythmImage, swingImage, finaleImage];
 const collagePhotos = import.meta.glob("../assets/Chapter 2_Pantsula/Images/Editorial/Collage/Collage *.{jpg,jpeg,png,webp}", { eager: true, query: "?url", import: "default" });

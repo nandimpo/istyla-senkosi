@@ -54,13 +54,13 @@ export default function IspotiIntro({ track, audioRef, children }) {
     >
       <IntroAmbientAudio id="pantsula" track={track} sharedAudioRef={audioRef} />
       <div className="ispoti-copy">
-        <small><NarrativeText onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="02 / PANTSULA · INTO MY AMAPANTSULA JOURNEY" delay={0} speed={0.48} /></small>
+        <small><NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[0] ? done : { ...done, [0]: true })} text="02 / PANTSULA · INTO MY AMAPANTSULA JOURNEY" delay={0} speed={0.48} /></small>
         <h1>
-          <NarrativeText onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="Make it" delay={100} speed={0.48} />
-          <em><NarrativeText onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="your own." delay={250} speed={0.48} /></em>
+          <NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[1] ? done : { ...done, [1]: true })} text="Make it" delay={100} speed={0.48} />
+          <em><NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[2] ? done : { ...done, [2]: true })} text="your own." delay={250} speed={0.48} /></em>
         </h1>
-        <p><NarrativeText onComplete={() => setFinishedCopy((done) => done[3] ? done : { ...done, [3]: true })} text="I remember the care my cousin took with every detail. Now it’s my turn to try." delay={500} speed={0.48} /></p>
-        <p><NarrativeText onComplete={() => setFinishedCopy((done) => done[4] ? done : { ...done, [4]: true })} text="I shape my ispoti by rubbing the crown and pulling the brim upward. Ispoti that he loved to wear." delay={900} speed={0.48} /></p>
+        <p><NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[3] ? done : { ...done, [3]: true })} text="I remember the care my cousin took with every detail. Now it’s my turn to try." delay={500} speed={0.48} /></p>
+        <p><NarrativeText rhythmAudioRef={audioRef} onComplete={() => setFinishedCopy((done) => done[4] ? done : { ...done, [4]: true })} text="I shape my ispoti by rubbing the crown and pulling the brim upward. He loved to wear ispoti." delay={900} speed={0.48} /></p>
       </div>
       <div className="ispoti-station">
       <div className="ispoti-workbench" inert={!copyReady}>
