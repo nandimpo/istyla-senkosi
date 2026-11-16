@@ -22,7 +22,7 @@ function MenuNav() {
     const input = event.currentTarget;
     const bounds = input.getBoundingClientRect();
     // Match the thumb's travel, keeping its centre under the pointer.
-    updateVolume(Math.round((event.clientX - bounds.left - 10) / (bounds.width - 20) * 100));
+    updateVolume(Math.round((event.clientX - bounds.left - 22) / (bounds.width - 44) * 100));
   };
 
   useEffect(() => {
