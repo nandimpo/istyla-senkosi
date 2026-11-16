@@ -43,7 +43,7 @@ function MenuNav() {
       {view === "Settings" && <section aria-label="Settings">
         <div className="menu-section-heading"><h3>Make it yours</h3><span>Preferences</span></div>
         <div className="menu-setting"><div><h4>Background music</h4><p>The soundtrack for your journey.</p></div><button className="menu-toggle" aria-pressed={soundOn} onClick={() => setSoundOn(!soundOn)}>{soundOn ? "On" : "Off"}</button></div>
-        <div className="menu-volume"><label htmlFor="journey-volume">Music volume <output>{Math.round(volume * 100)}%</output></label><input id="journey-volume" type="range" min="0" max="100" value={Math.round(volume * 100)} onChange={(event) => { const next = Number(event.target.value) / 100; setVolume(next); if (next > 0) setSoundOn(true); }} /><div><span>Quiet</span><span>Loud</span></div></div>
+        <div className="menu-volume"><label htmlFor="journey-volume">Music volume <output>{Math.round(volume * 100)}%</output></label><input id="journey-volume" style={{ "--volume": `${Math.round(volume * 100)}%` }} aria-valuetext={`${Math.round(volume * 100)} percent`} type="range" min="0" max="100" value={Math.round(volume * 100)} onChange={(event) => { const next = Number(event.target.value) / 100; setVolume(next); if (next > 0) setSoundOn(true); }} /><div><span>Quiet</span><span>Loud</span></div></div>
         <div className="menu-setting"><div><h4>Reduced motion</h4><p>Keep transitions and movement minimal.</p></div><button className="menu-toggle" aria-pressed={reducedMotion} onClick={() => setReducedMotion(!reducedMotion)}>{reducedMotion ? "On" : "Off"}</button></div>
         <p className="menu-note">Your preferences are saved in this browser.</p>
       </section>}
