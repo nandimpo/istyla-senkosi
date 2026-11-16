@@ -1,7 +1,8 @@
 import { useNavigation } from "../context/NavigationContext";
 import Hero from "../components/Hero";
 import ChapterLoading from "../components/ChapterLoading";
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
+import { usePageReadiness } from "../hooks/usePageReadiness";
 import { loadSwenka } from "../utils/preloadSwenka";
 import { reverseScroll } from "../utils/reverseScroll";
 
@@ -14,16 +15,17 @@ const CHAPTERS = {
 };
 
 function Experience() {
-  const { currentSection, chapterVisit, goBackChapter } = useNavigation();
+  const { currentSection, chapterVisit, goBackChapter, setPageReady } = useNavigation();
+  const contentRef = useRef(null);
+  usePageReadiness(contentRef, `${currentSection}:${chapterVisit}`, setPageReady);
   useEffect(() => {
     if (currentSection === "introduction") loadSwenka().catch(() => {});
   }, [currentSection]);
 
-  if (currentSection === "about") return <Hero />;
   const Chapter = CHAPTERS[currentSection];
-  return Chapter ? <div onWheelCapture={(event) => {
+  return <div ref={contentRef} onWheelCapture={(event) => {
     if (!event.target.closest(".chapter-player, dialog[open]")) reverseScroll(event, goBackChapter);
-  }}><Suspense fallback={<ChapterLoading chapter={currentSection === "introduction" ? "Introduction" : currentSection.charAt(0).toUpperCase() + currentSection.slice(1)} />}><Chapter key={`${currentSection}:${chapterVisit}`} /></Suspense></div> : <Hero />;
+  }}>{Chapter ? <Suspense fallback={<ChapterLoading chapter={currentSection === "introduction" ? "Introduction" : currentSection.charAt(0).toUpperCase() + currentSection.slice(1)} />}><Chapter key={`${currentSection}:${chapterVisit}`} /></Suspense> : <Hero />}</div>;
 }
 
 export default Experience;

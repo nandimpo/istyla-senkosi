@@ -9,7 +9,7 @@ function MenuNav() {
   const [view, setView] = useState("Settings");
   const dialogRef = useRef(null);
   const triggerRef = useRef(null);
-  const { goTo, currentSection, unlockedIndex, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion } = useNavigation();
+  const { pageReady, goTo, currentSection, unlockedIndex, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion } = useNavigation();
   const currentLabel = links.find(([, id]) => id === currentSection)?.[0];
   const completed = Math.min(4, Math.max(0, unlockedIndex - 1));
 
@@ -30,7 +30,7 @@ function MenuNav() {
   };
 
   return <>
-    <button ref={triggerRef} className="menu-trigger" onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}><span>MENU</span><i /><i /><i /></button>
+    <button ref={triggerRef} className="menu-trigger" disabled={!pageReady} onClick={() => setOpen(true)} aria-haspopup="dialog" aria-expanded={open}><span>MENU</span><i /><i /><i /></button>
     <dialog ref={dialogRef} className="menu-drawer" aria-labelledby="menu-title" onCancel={() => setOpen(false)} onClick={(event) => { if (event.target === event.currentTarget && event.clientX < event.currentTarget.getBoundingClientRect().left) setOpen(false); }}>
       <button className="menu-close" onClick={() => setOpen(false)} aria-label="Close menu">×</button>
       <p className="menu-kicker">I&apos;STYLA SENKOSI</p>

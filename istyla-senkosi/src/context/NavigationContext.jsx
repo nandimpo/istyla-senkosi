@@ -26,6 +26,7 @@ const NavigationContext = createContext({
 
 export function NavigationProvider({ children }) {
   const [chapterVisit, setChapterVisit] = useState(0);
+  const [pageReady, setPageReady] = useState(false);
   const [navigationLocked, setNavigationLocked] = useState(false);
   const [preferences, setPreferences] = useState(readPreferences);
   const [soundOn, setSoundOnState] = useState(true);
@@ -122,7 +123,7 @@ export function NavigationProvider({ children }) {
   }, [navigationLocked, goTo, setCompletedChapters]);
 
   return (
-    <NavigationContext.Provider value={{ currentSection, guideComplete, chapterVisit, unlockedIndex, goTo, goBackChapter, restartJourney, completeChapter, markChapterComplete, isUnlocked, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion, navigationLocked, setNavigationLocked }}>
+    <NavigationContext.Provider value={{ pageReady, setPageReady, currentSection, guideComplete, chapterVisit, unlockedIndex, goTo, goBackChapter, restartJourney, completeChapter, markChapterComplete, isUnlocked, soundOn, setSoundOn, volume, setVolume, profileName, setProfileName, reducedMotion, setReducedMotion, navigationLocked, setNavigationLocked }}>
       {children}
     </NavigationContext.Provider>
   );

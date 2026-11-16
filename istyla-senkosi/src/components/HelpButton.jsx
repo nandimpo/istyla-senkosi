@@ -35,10 +35,10 @@ export default function HelpButton() {
   const dialog = useRef(null);
   const trigger = useRef(null);
   const [message, setMessage] = useState("");
-  const { currentSection } = useNavigation();
+  const { currentSection, pageReady } = useNavigation();
   const close = () => { dialog.current.close(); trigger.current?.focus(); };
   return <>
-    <button className="help-trigger" ref={trigger} aria-haspopup="dialog" onClick={() => { setMessage(currentHelp(currentSection)); dialog.current.showModal(); }}>HELP <span aria-hidden="true">?</span></button>
+    <button className="help-trigger" disabled={!pageReady} ref={trigger} aria-haspopup="dialog" onClick={() => { setMessage(currentHelp(currentSection)); dialog.current.showModal(); }}>HELP <span aria-hidden="true">?</span></button>
     <dialog className="journey-help" ref={dialog} aria-labelledby="journey-help-title" onCancel={close} onClick={(event) => {
       if (event.target !== event.currentTarget) return;
       const bounds = event.currentTarget.getBoundingClientRect();

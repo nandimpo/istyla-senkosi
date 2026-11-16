@@ -184,7 +184,7 @@ function Frame({ musicAudioRef, frame, galleryIndex = 0, galleryDragOffset = 0, 
           <img ref={photoRef} className={frame.photoMask ? `old-photo--${frame.photoMask}` : undefined} src={frame.image} alt={frame.alt || ""} loading="lazy" decoding="async" />
         )}
       </div>
-      {!visualOnly && showStory && !frame.video && <StoryContainer className={`chapter-player__story ${fittedStory ? "chapter-player__story--with-navigation" : ""} ${frame.storyRole ? `chapter-player__story--${frame.storyRole}` : ""}`}>
+      {!visualOnly && showStory && !frame.video && <StoryContainer data-page-loading={frame.kind === "fashion-wall" && !showCollageControl} className={`chapter-player__story ${fittedStory ? "chapter-player__story--with-navigation" : ""} ${frame.storyRole ? `chapter-player__story--${frame.storyRole}` : ""}`}>
       {frame.storyRole && <p className="chapter-player__story-beat">{STORY_BEATS[frame.storyRole]}</p>}
       {frame.label && <p className="chapter-player__label">{frame.label}</p>}
       {frame.text && <StitchedNarrative showThread={!continuationControl} key={frame.text} text={frame.text} animation={frame.textStyle === "float" ? "float" : "needle"} highlightedPhrases={frame.highlightedPhrases || ["my cousin", "Soweto", "rhythm", "style", "Johannesburg"]} chapterColour={frame.chapterColour} timing={frame.narrativeTiming} placement={frame.textPlacement || "lower-left"} onComplete={() => { setCompletedNarrative(frame.text); onTextComplete?.(); }} />}
@@ -498,6 +498,7 @@ function ChapterPlayer({ id, chapter, title, subtitle, context, accent = "mustar
   return (
     <section
       id={id}
+      data-page-loading={sewingLocked || collageLocked || gallerySettling || Boolean(frameTransition) || Boolean(videoBridge) || exiting || threadLeaving}
       className={`chapter-player chapter-player--${accent} ${exiting ? `chapter-player--exiting chapter-player--exit-${exitTransition}` : ""}`}
       tabIndex={0}
       onKeyDown={handleKeyDown}
